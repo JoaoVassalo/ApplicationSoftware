@@ -64,16 +64,11 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Erro", "O nome do projeto não pode estar vazio.")
             return
 
-        # Criar o caminho do projeto
-        # os.getcwd() pega o caminho do projeto python
         folder_raiz = self.session.query(Configuracao).filter_by(chave="folder_raiz").first().valor
         caminho_projeto = os.path.join(folder_raiz, nome_projeto)
+
         try:
             os.makedirs(caminho_projeto, exist_ok=False)
-            projeto = self.session.query(Projeto).filter_by(nome=nome_projeto).first()
-            self.mainapp = MainAppWindow(projeto)
-            self.mainapp.show()
-            self.close()
         except FileExistsError:
             QMessageBox.warning(self, "Erro", "Já existe um projeto com esse nome.")
             return
@@ -85,8 +80,15 @@ class MainWindow(QMainWindow):
 
         QMessageBox.information(self, "Sucesso", f"Projeto '{nome_projeto}' criado em: {caminho_projeto}")
 
-        # Atualizar listas de projetos ---------------------------------------------------------------------------------
-        self.load_project_lists()
+        try:
+            projeto = self.session.query(Projeto).filter_by(nome=nome_projeto).first()
+            catalogs_from_hycom = self.session.query(HycomCatalogo).all()
+            catalogs_from_copernicus = self.session.query(CopernicusCatalogo).all()
+            self.mainapp = MainAppWindow(projeto, catalogs_from_hycom, catalogs_from_copernicus)
+            self.mainapp.show()
+            self.close()
+        except Exception as e:
+            raise QMessageBox.warning(self, "Erro", f"{e}")
 
     def open_project(self):
         """
