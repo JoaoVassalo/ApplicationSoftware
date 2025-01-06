@@ -42,9 +42,9 @@ class CopernicusDownloader:
                      '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
             'data_format': 'netcdf',
             'download_format': 'unarchived',
-            'variable': ['10m_u_component_of_wind', '10m_v_component_of_wind'],
+            'variable': self.var_,
             'area': self.coordinates
         }
-
+        # ['10m_u_component_of_wind', '10m_v_component_of_wind']
         client = cdsapi.Client()
         client.retrieve(dataset, request).download(f'{self.projectpath}\\{self.file}')
