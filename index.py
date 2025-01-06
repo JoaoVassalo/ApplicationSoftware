@@ -51,6 +51,7 @@ class DownloadWorker(QThread):
             self.page.DownloadButton.setChecked(False)
             self.page.checkcomponents()
             self.page.DownloadButton.setDisabled(False)
+            self.page.set_combobox_files()
             self.finished.emit(f"Download concluído! Arquivo salvo em: {self.page.project.caminho}")
         except Exception as e:
             self.error.emit(f"Erro ao realizar o download: {str(e)}")
@@ -70,6 +71,8 @@ class FileWorker(QThread):
         try:
             self.progress.emit()
             self.package.run()
+            self.page.ExcuteButton.setChecked(False)
+            self.page.set_combobox_files()
             self.finished.emit()
         except Exception as e:
             self.error.emit(f"Erro!: {str(e)}")
@@ -2146,7 +2149,10 @@ class Ui_MainWindow(object):
         Function to set files that exist on project folder and list then into the combobox placed within view page
         :return:
         """
-        list_projects = os.listdir(self.project.caminho)
+        list_projects = [
+            f for f in os.listdir(self.project.caminho)
+            if os.path.isfile(os.path.join(self.project.caminho, f)) and f.endswith('.nc')
+        ]
         for i in range(len(list_projects)):
             self.comboBox.addItem("")
             self.comboBox.setItemText(i + 1, QCoreApplication.translate("MainWindow",
