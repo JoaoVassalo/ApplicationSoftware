@@ -1,24 +1,85 @@
 <RCC>
   <qresource prefix="icons">
-    <file>icons/informacion_branco.png</file>
-    <file>icons/informacion_verde.png</file>
-    <file>icons/menu_preto.png</file>
-    <file>icons/menu_verde.png</file>
-    <file>icons/salida.png</file>
-    <file>icons/aplicaciones.png</file>
-    <file>icons/acortar.png</file>
-    <file>icons/agregar-documento.png</file>
-    <file>icons/ajustes.png</file>
-    <file>icons/buscar-alt.png</file>
-    <file>icons/busqueda.png</file>
-    <file>icons/calendario.png</file>
-    <file>icons/carpeta.png</file>
-    <file>icons/descargar.png</file>
-    <file>icons/documento.png</file>
-    <file>icons/grafico-histograma.png</file>
-    <file>icons/hogar.png</file>
-    <file>icons/menu-hamburguesa.png</file>
-    <file>icons/ojo.png</file>
-    <file>icons/tocar.png</file>
+    <file>icons/cruz - branca.png</file>
+    <file>icons/cruz - laranja.png</file>
+    <file>icons/cruz - preta.png</file>
+    <file>icons/cruz - verde.png</file>
+    <file>icons/seta_baixo - laranja.png</file>
+    <file>icons/ajustes - branco.png</file>
+    <file>icons/ajustes - laranja.png</file>
+    <file>icons/ajustes - preto.png</file>
+    <file>icons/ajustes - verde.png</file>
+    <file>icons/arrow-left - branco.png</file>
+    <file>icons/arrow-left - laranja.png</file>
+    <file>icons/arrow-left - preto.png</file>
+    <file>icons/arrow-left - verde.png</file>
+    <file>icons/arrow-right - branco.png</file>
+    <file>icons/arrow-right - laranja.png</file>
+    <file>icons/arrow-right - preto.png</file>
+    <file>icons/arrow-right - verde.png</file>
+    <file>icons/backward - branco.png</file>
+    <file>icons/backward - laranja.png</file>
+    <file>icons/backward - preto.png</file>
+    <file>icons/backward - verde.png</file>
+    <file>icons/documentoPLUS - branco.png</file>
+    <file>icons/documentoPLUS - laranja.png</file>
+    <file>icons/documentoPLUS - preto.png</file>
+    <file>icons/documentoPLUS - verde.png</file>
+    <file>icons/download - branco.png</file>
+    <file>icons/download - laranja.png</file>
+    <file>icons/download - preto.png</file>
+    <file>icons/download - verde.png</file>
+    <file>icons/folder - branco.png</file>
+    <file>icons/folder - laranja.png</file>
+    <file>icons/folder - preto.png</file>
+    <file>icons/folder - verde.png</file>
+    <file>icons/forward - branco.png</file>
+    <file>icons/forward - laranja.png</file>
+    <file>icons/forward - preto.png</file>
+    <file>icons/forward - verde.png</file>
+    <file>icons/histograma - branco.png</file>
+    <file>icons/histograma - laranja.png</file>
+    <file>icons/histograma - preto.png</file>
+    <file>icons/histograma - verde.png</file>
+    <file>icons/home - branco.png</file>
+    <file>icons/home - laranja.png</file>
+    <file>icons/home - preto.png</file>
+    <file>icons/home - verde.png</file>
+    <file>icons/informação - branco.png</file>
+    <file>icons/informação - laranja.png</file>
+    <file>icons/informação - preto.png</file>
+    <file>icons/informação - verde.png</file>
+    <file>icons/layers - branco.png</file>
+    <file>icons/layers - laranja.png</file>
+    <file>icons/layers - preto.png</file>
+    <file>icons/layers - verde.png</file>
+    <file>icons/lupa - laranja.png</file>
+    <file>icons/lupa - preto.png</file>
+    <file>icons/lupa - verde.png</file>
+    <file>icons/lupa- branco.png</file>
+    <file>icons/menu - branco.png</file>
+    <file>icons/menu - laranja.png</file>
+    <file>icons/menu - preto.png</file>
+    <file>icons/menu - verde.png</file>
+    <file>icons/olho - branco.png</file>
+    <file>icons/olho - laranja.png</file>
+    <file>icons/olho - preto.png</file>
+    <file>icons/olho - verde.png</file>
+    <file>icons/pause - branco.png</file>
+    <file>icons/pause - laranja.png</file>
+    <file>icons/pause - preto.png</file>
+    <file>icons/pause - verde.png</file>
+    <file>icons/play - branco.png</file>
+    <file>icons/play - laranja.png</file>
+    <file>icons/play - preto.png</file>
+    <file>icons/play - verde.png</file>
+    <file>icons/remover - branco.png</file>
+    <file>icons/remover - laranja.png</file>
+    <file>icons/remover - preto.png</file>
+    <file>icons/remover - verde.png</file>
+    <file>icons/sair - branco.png</file>
+    <file>icons/sair - laranja.png</file>
+    <file>icons/sair - preto.png</file>
+    <file>icons/sair - verde.png</file>
   </qresource>
 </RCC>
