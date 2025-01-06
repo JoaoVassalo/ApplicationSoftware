@@ -1,7 +1,29 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 import os
-from LoginPage import Ui_Form  # Página de login gerada pelo Qt Designer
-from database import Session, Projeto  # Banco de dados e ORM
+from LoginPage import Ui_Form
+from database import Session, Projeto, Configuracao, HycomCatalogo, CopernicusCatalogo
+from index import Ui_MainWindow
+from PySide6.QtGui import QPainter, QColor
+from PySide6 import QtWidgets, QtCharts
+
+
+class MainAppWindow(QMainWindow):
+    def __init__(self, project, Hcatalog, Ccatalog):
+        super().__init__()
+        self.project = project
+        self.hycomCatalog = Hcatalog
+        self.copernicusCatalog = Ccatalog
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        for x in shadow_elements:
+            effect = QtWidgets.QGraphicsDropShadowEffect(self)
+            effect.setBlurRadius(18)
+            effect.setXOffset(0)
+            effect.setYOffset(0)
+            effect.setColor(QColor(0, 0, 0, 255))
+            getattr(self.ui, x).setGraphicsEffect(effect)
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -43,21 +65,27 @@ class MainWindow(QMainWindow):
             return
 
         # Criar o caminho do projeto
-        caminho_projeto = os.path.join(os.getcwd(), nome_projeto)
+        # os.getcwd() pega o caminho do projeto python
+        folder_raiz = self.session.query(Configuracao).filter_by(chave="folder_raiz").first().valor
+        caminho_projeto = os.path.join(folder_raiz, nome_projeto)
         try:
             os.makedirs(caminho_projeto, exist_ok=False)
+            projeto = self.session.query(Projeto).filter_by(nome=nome_projeto).first()
+            self.mainapp = MainAppWindow(projeto)
+            self.mainapp.show()
+            self.close()
         except FileExistsError:
             QMessageBox.warning(self, "Erro", "Já existe um projeto com esse nome.")
             return
 
-        # Salvar no banco de dados
+        # Salvar no banco de dados -------------------------------------------------------------------------------------
         novo_projeto = Projeto(nome=nome_projeto, caminho=caminho_projeto)
         self.session.add(novo_projeto)
         self.session.commit()
 
         QMessageBox.information(self, "Sucesso", f"Projeto '{nome_projeto}' criado em: {caminho_projeto}")
 
-        # Atualizar listas de projetos
+        # Atualizar listas de projetos ---------------------------------------------------------------------------------
         self.load_project_lists()
 
     def open_project(self):
@@ -71,7 +99,11 @@ class MainWindow(QMainWindow):
 
         projeto = self.session.query(Projeto).filter_by(nome=projeto_selecionado).first()
         if projeto:
-            QMessageBox.information(self, "Projeto Selecionado", f"Nome: {projeto.nome}\nCaminho: {projeto.caminho}")
+            catalogs_from_hycom = self.session.query(HycomCatalogo).all()
+            catalogs_from_copernicus = self.session.query(CopernicusCatalogo).all()
+            self.mainapp = MainAppWindow(projeto, catalogs_from_hycom, catalogs_from_copernicus)
+            self.mainapp.show()
+            self.close()
         else:
             QMessageBox.warning(self, "Erro", "Projeto não encontrado no banco de dados.")
 
@@ -93,14 +125,14 @@ class MainWindow(QMainWindow):
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
             )
             if confirmacao == QMessageBox.StandardButton.Yes:
-                # Remover do disco
+                # Remover do disco -------------------------------------------------------------------------------------
                 try:
                     os.rmdir(projeto.caminho)
                 except OSError:
                     QMessageBox.warning(self, "Erro", f"Não foi possível excluir a pasta '{projeto.caminho}'. Certifique-se de que está vazia.")
                     return
 
-                # Remover do banco de dados
+                # Remover do banco de dados ----------------------------------------------------------------------------
                 self.session.delete(projeto)
                 self.session.commit()
 
@@ -108,6 +140,14 @@ class MainWindow(QMainWindow):
                 self.load_project_lists()
         else:
             QMessageBox.warning(self, "Erro", "Projeto não encontrado no banco de dados.")
+
+
+shadow_elements = {
+    'icon_text_widget',
+    'icon_only_widget',
+    'header_widget',
+    'main_screen_widget'
+}
 
 if __name__ == "__main__":
     app = QApplication([])
