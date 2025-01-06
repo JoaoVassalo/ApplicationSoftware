@@ -1,0 +1,43 @@
+import matplotlib.pyplot as plt
+import xarray as xr
+import numpy as np
+from mpl_toolkits.basemap import Basemap
+import matplotlib.cm as cm
+
+
+arq = xr.open_dataset('remo_lse24_2d_20060105.nc')
+
+bathymetry = arq.bathymetry.values
+lon = arq.longitude.values
+lat = arq.latitude.values[::-1]
+
+fig, ax = plt.subplots(figsize=(8, 8), facecolor=None)
+
+lons, lats = np.meshgrid(lon, lat)
+
+mp = Basemap(projection='merc',
+             llcrnrlon=min(lon),
+             llcrnrlat=min(lat),
+             urcrnrlon=max(lon),
+             urcrnrlat=max(lat),
+             resolution='i')
+
+x, y = mp(lons, lats)
+
+mp.imshow(bathymetry)
+cbar = plt.colorbar()
+# cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
+cbar.set_label(f'Bathymetry [{arq.bathymetry.attrs['units']}]', fontsize=18)
+cbar.ax.tick_params(labelsize=12)
+
+mp.drawcoastlines()
+mp.drawstates()
+mp.drawcountries()
+
+mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=11)
+mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=11)
+
+ax.set_xlabel('Longitude', labelpad=30, fontsize=12)
+ax.set_ylabel('Latitude', labelpad=65, fontsize=12)
+
+plt.show()
