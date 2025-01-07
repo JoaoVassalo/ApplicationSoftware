@@ -1,10 +1,6 @@
 import cdsapi
 from datetime import datetime
-import os
-import sys
 from multiprocessing import Process, Manager
-
-from PIL.ImageStat import Global
 
 
 class CopernicusDownloader:
