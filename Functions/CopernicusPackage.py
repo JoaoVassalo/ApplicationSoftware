@@ -1,5 +1,10 @@
 import cdsapi
 from datetime import datetime
+import os
+import sys
+from multiprocessing import Process, Manager
+
+from PIL.ImageStat import Global
 
 
 class CopernicusDownloader:
@@ -12,6 +17,7 @@ class CopernicusDownloader:
         self.catalog_ = catalog
         self.file = file_name
         self.projectpath = project_path
+        self.processing_ = True
         self.set_list_to_package()
 
     def set_list_to_package(self):
@@ -29,6 +35,20 @@ class CopernicusDownloader:
 
         self.coordinates = [self.coords['N'], self.coords['W'], self.coords['S'], self.coords['E']]
 
+    def stop(self):
+        if hasattr(self, 'func') and self.func.is_alive():
+            self.func.terminate()
+            self.func.join()
+        self.processing_ = False
+
+    def process(self, dataset, request, shared_dict):
+        try:
+            self.client = cdsapi.Client()
+            self.client.retrieve(dataset, request).download(f'{self.projectpath}\\{self.file}')
+            shared_dict['processing'] = True
+        except Exception as e:
+            shared_dict['processing'] = str(e)
+
     def download(self):
         dataset = f"{self.catalog_.nome}"
         request = {
@@ -45,6 +65,15 @@ class CopernicusDownloader:
             'variable': self.var_,
             'area': self.coordinates
         }
-        # ['10m_u_component_of_wind', '10m_v_component_of_wind']
-        client = cdsapi.Client()
-        client.retrieve(dataset, request).download(f'{self.projectpath}\\{self.file}')
+        if self.processing_:
+            with Manager() as manager:
+                shared_dict = manager.dict()
+                shared_dict['processing'] = self.processing_
+
+                self.func = Process(target=self.process, args=(dataset, request, shared_dict))
+                self.func.start()
+                self.func.join()
+
+                self.processing_ = shared_dict.get('processing', "Unknown error")
+        return self.processing_
+
