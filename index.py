@@ -43,18 +43,30 @@ class DownloadWorker(QThread):
         super().__init__()
         self.package = package
         self.page = page
+        self._stop = False
 
     def run(self):
         try:
-            self.progress.emit("Iniciando o download...")
-            self.package.download()
+            self.progress.emit("Download in progress!")
+            process_result = self.package.download()
+            if process_result and process_result is bool:
+                self.finished.emit("Download is finished!")
+            elif process_result is not bool:
+                self.error.emit(f"Erro ao realizar o download: {str(process_result)}")
             self.page.DownloadButton.setChecked(False)
             self.page.checkcomponents()
             self.page.DownloadButton.setDisabled(False)
             self.page.set_combobox_files()
-            self.finished.emit(f"Download concluído! Arquivo salvo em: {self.page.project.caminho}")
         except Exception as e:
+            self.page.DownloadButton.setChecked(False)
+            self.page.checkcomponents()
+            self.page.DownloadButton.setDisabled(False)
             self.error.emit(f"Erro ao realizar o download: {str(e)}")
+
+    def stop_download(self):
+        self._stop = True
+        self.package.stop()
+        self.finished.emit(f"Download canceled!")
 
 
 class FileWorker(QThread):
@@ -688,6 +700,7 @@ class Ui_MainWindow(object):
         self.progressBar.setValue(24)
         self.progressBar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progressBar.setHidden(True)
+        self.is_running = False
 
         self.horizontalLayout_progressbar.addWidget(self.progressBar)
 
@@ -2041,7 +2054,7 @@ class Ui_MainWindow(object):
 
     def set_package(self):
         if self.Hycom_Button.isVisible():
-            package = HycomPackage.HycomDownloader(initial_date=self.initial_date_download,
+            self.package = HycomPackage.HycomDownloader(initial_date=self.initial_date_download,
                                                    final_date=self.final_date_download,
                                                    variables=self.variables_to_download,
                                                    coordenates=self.coords_required,
@@ -2049,7 +2062,7 @@ class Ui_MainWindow(object):
                                                    file_name=self.file_name,
                                                    project_path=self.project.caminho)
         else:
-            package = CopernicusPackage.CopernicusDownloader(initial_date=self.initial_date_download,
+            self.package = CopernicusPackage.CopernicusDownloader(initial_date=self.initial_date_download,
                                                              final_date=self.final_date_download,
                                                              variables=self.variables_to_download,
                                                              coordenates=self.coords_required,
@@ -2059,7 +2072,7 @@ class Ui_MainWindow(object):
                                                              )
 
         self.worker = DownloadWorker(
-            package=package,
+            package=self.package,
             page=self
         )
 
@@ -2070,13 +2083,16 @@ class Ui_MainWindow(object):
         self.worker.start()
 
     def update_progress(self, message):
-        QMessageBox.warning(self.download_page_screen, "Download in progress!", f"File {self.file_name} "
+        QMessageBox.warning(self.download_page_screen, message, f"File {self.file_name} "
                                                                                 f"will be saved "
                                                                                 f"on {self.project.caminho}.")
 
     def download_finished(self, message):
-        QMessageBox.warning(self.download_page_screen, "Download is finished!", f"File was saved on "
-                                                                                f"{self.project.caminho}.")
+        if 'canceled!' in message:
+            QMessageBox.warning(self.download_page_screen, message, f"Download was not concluded.")
+        else:
+            QMessageBox.warning(self.download_page_screen, message, f"File was saved on "
+                                                                    f"{self.project.caminho}.")
 
     def handle_error(self, error_message):
         QMessageBox.warning(self.download_page_screen, "Error!", f"{error_message}.")
@@ -2084,6 +2100,9 @@ class Ui_MainWindow(object):
     def stopdownload(self):
         self.DownloadButton.setDisabled(False)
         self.DownloadButton.setChecked(False)
+        self.worker.stop_download()
+        self.worker.wait()
+        del self.worker, self.package
         self.checkcomponents()
 
     def start_download(self):
