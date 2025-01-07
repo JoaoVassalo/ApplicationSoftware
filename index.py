@@ -51,12 +51,16 @@ class DownloadWorker(QThread):
             process_result = self.package.download()
             if process_result and process_result is bool:
                 self.finished.emit("Download is finished!")
-            elif process_result is not bool:
+                self.page.DownloadButton.setChecked(False)
+                self.page.checkcomponents()
+                self.page.DownloadButton.setDisabled(False)
+                self.page.set_combobox_files()
+            elif process_result is str:
                 self.error.emit(f"Erro ao realizar o download: {str(process_result)}")
-            self.page.DownloadButton.setChecked(False)
-            self.page.checkcomponents()
-            self.page.DownloadButton.setDisabled(False)
-            self.page.set_combobox_files()
+                self.page.DownloadButton.setChecked(False)
+                self.page.checkcomponents()
+                self.page.DownloadButton.setDisabled(False)
+                self.page.set_combobox_files()
         except Exception as e:
             self.page.DownloadButton.setChecked(False)
             self.page.checkcomponents()
@@ -700,6 +704,7 @@ class Ui_MainWindow(object):
         self.progressBar.setValue(24)
         self.progressBar.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progressBar.setHidden(True)
+        self.progressBar.setRange(0, 1) # Range fixo para não animar
         self.is_running = False
 
         self.horizontalLayout_progressbar.addWidget(self.progressBar)
@@ -2038,6 +2043,7 @@ class Ui_MainWindow(object):
             self.Catalog_Combox.setDisabled(True)
             self.DataBase_Frame.setDisabled(True)
             self.FileName.setDisabled(True)
+            self.toggle_progress()
             self.progressBar.setVisible(True)
             self.StopButton.setVisible(True)
             self.DownloadButton.setDisabled(True)
@@ -2049,6 +2055,7 @@ class Ui_MainWindow(object):
             self.Catalog_Combox.setDisabled(False)
             self.DataBase_Frame.setDisabled(False)
             self.FileName.setDisabled(False)
+            self.toggle_progress()
             self.progressBar.setVisible(False)
             self.StopButton.setVisible(False)
 
@@ -2100,10 +2107,10 @@ class Ui_MainWindow(object):
     def stopdownload(self):
         self.DownloadButton.setDisabled(False)
         self.DownloadButton.setChecked(False)
+        self.checkcomponents()
         self.worker.stop_download()
         self.worker.wait()
         del self.worker, self.package
-        self.checkcomponents()
 
     def start_download(self):
         self.get_variables_to_download()
@@ -2632,6 +2639,13 @@ class Ui_MainWindow(object):
 
     def handle_error_for_file_page(self, error_message):
         QMessageBox.warning(self.download_page_screen, "Error!", f"{error_message}.")
+
+    def toggle_progress(self):
+        self.is_running = not self.is_running
+        if self.is_running:
+            self.progressBar.setRange(0, 0)  # Modo indeterminado - animação rodando
+        else:
+            self.progressBar.setRange(0, 1)  # Range fixo para não animar
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
