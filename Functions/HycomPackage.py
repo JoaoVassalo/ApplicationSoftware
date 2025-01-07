@@ -17,7 +17,7 @@ class HycomDownloader:
         self.catalog_ = catalog
         self.file = file_name
         self.projectpath = project_path
-
+        self._stop = False
 
     def catalog_url(self, year: int) -> str:
         """
@@ -74,7 +74,6 @@ class HycomDownloader:
                 urls.append(url)
         return urls
 
-
     def download_data(self, path):
         """
 
@@ -107,7 +106,6 @@ class HycomDownloader:
             logging.warning(f"File {path} skipped (error {e}, {e.__doc__}")
             return
 
-
     def get_url_list(self, from_date: datetime.date, to_date: datetime.date) -> list:
         """
         Get the list of the netcdf url between the two input dates.
@@ -134,6 +132,8 @@ class HycomDownloader:
 
         return all_urls
 
+    def stop(self):
+        self._stop = True
 
     def download(self):
         """
@@ -162,18 +162,27 @@ class HycomDownloader:
             to_be_downloaded.extend(urls_for_data)
 
         count = 1
-        final_old = ''
-        final_file = ''
+        final_old = None
+        final_file = None
+        processing_ = True
         for dire in to_be_downloaded:
-            fi_ = self.download_data(path=dire)
-            if fi_:
-                if count == 1:
-                    final_file = fi_
-                    count += 1
-                else:
-                    final_file = xr.merge([final_old, fi_])
-                final_old = final_file
+            if self._stop:
+                processing_ = False
+                break
+            else:
+                fi_ = self.download_data(path=dire)
+                if fi_:
+                    if count == 1:
+                        final_file = fi_
+                        count += 1
+                    else:
+                        final_file = xr.merge([final_old, fi_])
+                    final_old = final_file
 
-        final_file.to_netcdf(f'{self.projectpath}\\{self.file}', format='NETCDF4')
-        del final_file
-        return
+        if processing_:
+            final_file.to_netcdf(f'{self.projectpath}\\{self.file}', format='NETCDF4')
+
+        if final_file:
+            del final_file
+
+        return processing_
