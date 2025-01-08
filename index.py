@@ -32,6 +32,10 @@ import os
 import xarray as xr
 from datetime import date, datetime, timedelta
 from Functions import HycomPackage, CopernicusPackage, FileFunctions
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import cartopy.crs as ccrs
+from matplotlib.patches import Rectangle
 
 
 class DownloadWorker(QThread):
@@ -263,6 +267,9 @@ class Ui_MainWindow(object):
         self.North_value.setSizePolicy(sizePolicy2)
         self.North_value.setMinimumSize(QSize(60, 30))
         self.North_value.setMaximumSize(QSize(60, 30))
+        self.North_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.North_value.setText('80')
+        self.North_value.textChanged.connect(self.rebuild_graph)
 
         self.verticalLayout_northbox.addWidget(self.North_value)
 
@@ -300,6 +307,9 @@ class Ui_MainWindow(object):
         self.Weast_value.setSizePolicy(sizePolicy2)
         self.Weast_value.setMinimumSize(QSize(60, 30))
         self.Weast_value.setMaximumSize(QSize(60, 30))
+        self.Weast_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.Weast_value.setText('-180')
+        self.Weast_value.textChanged.connect(self.rebuild_graph)
 
         self.verticalLayout_weastbox.addWidget(self.Weast_value)
 
@@ -327,6 +337,9 @@ class Ui_MainWindow(object):
         self.East_value.setSizePolicy(sizePolicy2)
         self.East_value.setMinimumSize(QSize(60, 30))
         self.East_value.setMaximumSize(QSize(60, 30))
+        self.East_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.East_value.setText('180')
+        self.East_value.textChanged.connect(self.rebuild_graph)
 
         self.verticalLayout_eastbox.addWidget(self.East_value)
 
@@ -364,6 +377,9 @@ class Ui_MainWindow(object):
         self.South_value.setSizePolicy(sizePolicy2)
         self.South_value.setMinimumSize(QSize(60, 30))
         self.South_value.setMaximumSize(QSize(60, 30))
+        self.South_value.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.South_value.setText('-80')
+        self.South_value.textChanged.connect(self.rebuild_graph)
 
         self.verticalLayout_southbox.addWidget(self.South_value)
 
@@ -387,6 +403,19 @@ class Ui_MainWindow(object):
         self.frame_map_coord.setFrameShadow(QFrame.Shadow.Raised)
 
         self.gridLayout_4.addWidget(self.frame_map_coord, 1, 1, 1, 1)
+
+        self.graphlayout_map = QVBoxLayout(self.frame_map_coord)
+        self.figure = Figure()
+        self.figure.set_size_inches(2.6, 2.6)
+        self.canva = FigureCanvas(self.figure)
+        sizePolicyCanvas = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicyCanvas.setHeightForWidth(self.canva.sizePolicy().hasHeightForWidth())
+        self.canva.setSizePolicy(sizePolicyCanvas)
+        self.canva.figure.set_facecolor("#3d505f")
+        self.graphlayout_map.addWidget(self.canva)
+
+        self.set_global_graph()
+        self.rebuild_graph()
 
         self.horizontalLayout_3.addWidget(self.frame_coordinates)
 
@@ -2766,6 +2795,38 @@ class Ui_MainWindow(object):
             self.progressBar.setRange(0, 0)  # Modo indeterminado - animação rodando
         else:
             self.progressBar.setRange(0, 1)  # Range fixo para não animar
+
+    def set_global_graph(self):
+        self.figure.clear()
+        self.canva.draw()
+
+        self.ax = self.figure.add_subplot(111, projection=ccrs.PlateCarree())
+        self.ax.set_global()
+        self.ax.coastlines()
+        self.ax.set_position([0, 0, 1, 1])
+        self.canva.draw()
+
+    def rebuild_graph(self):
+        north_value = float(self.North_value.text())
+        south_value = float(self.South_value.text())
+        weast_value = float(self.Weast_value.text())
+        east_value = float(self.East_value.text())
+
+        for patch in self.ax.patches:
+            patch.remove()
+
+        self.ax.add_patch(
+            Rectangle(
+                (weast_value, south_value),
+                east_value - weast_value,
+                north_value - south_value,
+                linewidth=2,
+                edgecolor='red',
+                facecolor='none'
+            )
+        )
+
+        self.canva.draw()
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
