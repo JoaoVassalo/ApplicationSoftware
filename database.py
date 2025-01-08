@@ -27,7 +27,8 @@ class HycomCatalogo(Base):
     url = Column(String, nullable=False)
     data_inicial = Column(Date, nullable=False)
     data_final = Column(Date or String, nullable=False)
-    regiao = Column(String, nullable=False)
+    type = Column(String, nullable=False)
+    region = Column(String, nullable=False)
     variaveis = relationship("VariavelHycomCatalogo", back_populates="catalogo", cascade="all, delete-orphan")
 
 class VariavelHycomCatalogo(Base):
@@ -44,6 +45,7 @@ class CopernicusCatalogo(Base):
     type = Column(String, nullable=False)
     data_inicial = Column(Date, nullable=False)
     data_final = Column(Date or String, nullable=False)
+    region = Column(String, nullable=False)
     variaveis = relationship("VariavelCopernicusCatalogo", back_populates="catalogo", cascade="all, delete-orphan")
 
 class VariavelCopernicusCatalogo(Base):
@@ -53,7 +55,7 @@ class VariavelCopernicusCatalogo(Base):
     catalogo_id = Column(Integer, ForeignKey('Catalogos_copernicus.id'), nullable=False)
     catalogo = relationship("CopernicusCatalogo", back_populates="variaveis")
 
-def criar_hycom_catalogo(nome, url, data_inicial, data_final, regiao, variaveis):
+def criar_hycom_catalogo(nome, url, data_inicial, data_final, type_catalog, regiao, variaveis):
     """Cria um novo catálogo com suas variáveis."""
     with Session() as session:
         catalogo_existente = session.query(HycomCatalogo).filter_by(nome=nome).first()
@@ -65,14 +67,15 @@ def criar_hycom_catalogo(nome, url, data_inicial, data_final, regiao, variaveis)
             url=url,
             data_inicial=data_inicial,
             data_final=data_final,
-            regiao=regiao,
+            type=type_catalog,
+            region=regiao,
             variaveis=[VariavelHycomCatalogo(nome=var) for var in variaveis]
         )
         session.add(novo_catalogo)
         session.commit()
         return novo_catalogo
 
-def criar_copernicus_catalogo(nome, product, data_inicial, data_final, variaveis):
+def criar_copernicus_catalogo(nome, product, data_inicial, data_final, region_, variaveis):
     """Cria um novo catálogo com suas variáveis."""
     with Session() as session:
         catalogo_existente = session.query(CopernicusCatalogo).filter_by(nome=nome).first()
@@ -84,6 +87,7 @@ def criar_copernicus_catalogo(nome, product, data_inicial, data_final, variaveis
             type=product,
             data_inicial=data_inicial,
             data_final=data_final,
+            region=region_,
             variaveis=[VariavelCopernicusCatalogo(nome=var) for var in variaveis]
         )
         session.add(novo_catalogo)
@@ -139,20 +143,9 @@ if __name__ == '__main__':
     create_main_folder()
 
     for key, item in hycom_catalogs.items():
-        criar_hycom_catalogo(nome=key, url=item.url, data_inicial=item.i_date, data_final=item.f_date, regiao=item.region,
-                       variaveis=item.variables)
+        criar_hycom_catalogo(nome=key, url=item.url, data_inicial=item.i_date, data_final=item.f_date,
+                             type_catalog=item.type, regiao=item.region, variaveis=item.variables)
 
     for key, item in copernicus_catalogs.items():
         criar_copernicus_catalogo(nome=key, product=item.type, data_inicial=item.i_date, data_final=item.f_date,
-                       variaveis=item.variables)
-
-        # Listar os catálogos
-        # with Session() as session:
-        #     catalogos = session.query(CopernicusCatalogo).all()
-        #     for catalogo in catalogos:
-        #         # Forçar o carregamento dentro da Session
-        #         variaveis = [var.nome for var in catalogo.variaveis]
-        #         print(f"Catálogo: {catalogo.nome}")
-        #         print(f"Data Inicial: {catalogo.data_inicial}, Data Final: {catalogo.data_final}")
-        #         print("Variáveis:", variaveis)
-        #         print("-" * 40)
+                       region_=item.region, variaveis=item.variables)
