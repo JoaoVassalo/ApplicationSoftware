@@ -30,7 +30,7 @@ from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Bu
 import resources_rc
 import os
 import xarray as xr
-from datetime import date
+from datetime import date, datetime, timedelta
 from Functions import HycomPackage, CopernicusPackage, FileFunctions
 
 
@@ -174,6 +174,12 @@ class Ui_MainWindow(object):
         self.widget_layout.setStyleSheet(u"")
         self.gridLayout_3 = QGridLayout(self.widget_layout)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.verticallayout_13 = QVBoxLayout()
+        self.verticallayout_13.setObjectName(u"verticallayout_13")
+
         self.coord_date_file_widgets = QWidget(self.widget_layout)
         self.coord_date_file_widgets.setObjectName(u"coord_date_file_widgets")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -893,7 +899,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_button_catalogList.addItem(self.horizontalSpacer_15)
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_button_catalogList, 1, 0, 1, 1)
+        # self.gridLayout_3.addLayout(self.horizontalLayout_button_catalogList, 1, 0, 1, 1)
 
         self.horizontalLayout_databaseName = QHBoxLayout()
         self.horizontalLayout_databaseName.setObjectName(u"horizontalLayout_databaseName")
@@ -925,7 +931,97 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_databaseName.addItem(self.horizontalSpacer_16)
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_databaseName, 0, 0, 1, 1)
+        self.verticallayout_13.addItem(self.horizontalLayout_databaseName)
+        self.verticallayout_13.addItem(self.horizontalLayout_button_catalogList)
+
+        # self.gridLayout_3.addLayout(self.horizontalLayout_databaseName, 0, 0, 1, 1)
+        self.gridLayout_3.addLayout(self.verticallayout_13, 0, 0, 1, 1)
+
+        self.horizontalLayout_6.addItem(self.verticallayout_13)
+
+        self.frame_to_info = QFrame(self.widget_layout)
+        self.frame_to_info.setObjectName(u"frame_to_info")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.frame_to_info.sizePolicy().hasHeightForWidth())
+        self.frame_to_info.setSizePolicy(sizePolicy1)
+        self.frame_to_info.setStyleSheet(u"QLineEdit{\n"
+                                         "	border: 2px solid #F98600;\n"
+                                         "}\n"
+                                         "\n"
+                                         "")
+        self.frame_to_info.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_to_info.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_8 = QHBoxLayout(self.frame_to_info)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.verticalLayout_14 = QVBoxLayout()
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.fromDateLabel = QLabel(self.frame_to_info)
+        self.fromDateLabel.setObjectName(u"fromDateLabel")
+        self.fromDateLabel.setMinimumSize(QSize(80, 20))
+        self.fromDateLabel.setMaximumSize(QSize(100, 20))
+        self.fromDateLabel.setText(QCoreApplication.translate("MainWindow", u"From date", None))
+
+        self.verticalLayout_14.addWidget(self.fromDateLabel)
+
+        self.fromDateEdit = QLineEdit(self.frame_to_info)
+        self.fromDateEdit.setObjectName(u"fromDateEdit")
+        self.fromDateEdit.setMinimumSize(QSize(80, 25))
+        self.fromDateEdit.setMaximumSize(QSize(100, 25))
+        self.fromDateEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.fromDateEdit.setReadOnly(True)
+
+        self.verticalLayout_14.addWidget(self.fromDateEdit)
+
+        self.horizontalLayout_8.addLayout(self.verticalLayout_14)
+
+        self.verticalLayout_15 = QVBoxLayout()
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.toDateLabel = QLabel(self.frame_to_info)
+        self.toDateLabel.setObjectName(u"toDateLabel")
+        self.toDateLabel.setMinimumSize(QSize(80, 20))
+        self.toDateLabel.setMaximumSize(QSize(100, 20))
+        self.toDateLabel.setText(QCoreApplication.translate("MainWindow", u"To date", None))
+
+        self.verticalLayout_15.addWidget(self.toDateLabel)
+
+        self.toDateEdit = QLineEdit(self.frame_to_info)
+        self.toDateEdit.setObjectName(u"toDateEdit")
+        self.toDateEdit.setMinimumSize(QSize(80, 25))
+        self.toDateEdit.setMaximumSize(QSize(100, 25))
+        self.toDateEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.toDateEdit.setReadOnly(True)
+
+        self.verticalLayout_15.addWidget(self.toDateEdit)
+
+        self.horizontalLayout_8.addLayout(self.verticalLayout_15)
+
+        self.verticalLayout_16 = QVBoxLayout()
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.regionLabel = QLabel(self.frame_to_info)
+        self.regionLabel.setObjectName(u"regionLabel")
+        self.regionLabel.setMinimumSize(QSize(80, 20))
+        self.regionLabel.setMaximumSize(QSize(100, 20))
+        self.regionLabel.setText(QCoreApplication.translate("MainWindow", u"Region", None))
+
+        self.verticalLayout_16.addWidget(self.regionLabel)
+
+        self.regionEdit = QLineEdit(self.frame_to_info)
+        self.regionEdit.setObjectName(u"regionEdit")
+        self.regionEdit.setMinimumSize(QSize(80, 25))
+        self.regionEdit.setMaximumSize(QSize(100, 25))
+        self.regionEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.regionEdit.setReadOnly(True)
+
+        self.verticalLayout_16.addWidget(self.regionEdit)
+
+        self.horizontalLayout_8.addLayout(self.verticalLayout_16)
+
+        self.horizontalLayout_6.addWidget(self.frame_to_info)
+
+        self.gridLayout_3.addLayout(self.horizontalLayout_6, 0, 0, 1, 1)
+
 
         self.variables_checkbox_widget = QWidget(self.widget_layout)
         self.variables_checkbox_widget.setObjectName(u"variables_checkbox_widget")
@@ -937,7 +1033,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.variables_checkbox_widget, 4, 0, 1, 1)
 
-        self.list_catalog = [f'{key}/{item.regiao}' for key, item in self.hycom_catalogs.items()]
+        self.list_catalog = [f'{key}/{item.type}' for key, item in self.hycom_catalogs.items()]
         self.Catalog_Combox.addItems(self.list_catalog)
         self.Catalog_Combox.setCurrentIndex(0)
 
@@ -2136,6 +2232,30 @@ class Ui_MainWindow(object):
             checkbox.setStyleSheet(u"border: none;")
             layout.addWidget(checkbox)
 
+        self.fromDateEdit.clear()
+        self.toDateEdit.clear()
+        self.regionEdit.clear()
+
+        if database == 'H':
+            list_date = {
+                'start': self.hycom_catalogs[self.current_catalog].data_inicial,
+                'finish': self.hycom_catalogs[self.current_catalog].data_final,
+            }
+            region_to_info = self.hycom_catalogs[self.current_catalog].region
+        else:
+            list_date = {
+                'start': self.copernicus_catalogs[self.current_catalog].data_inicial,
+                'finish': self.copernicus_catalogs[self.current_catalog].data_final,
+            }
+            region_to_info = self.copernicus_catalogs[self.current_catalog].region
+
+        if list_date['start'] == list_date['finish']:
+            list_date['finish'] = datetime.now().date() - timedelta(weeks=1)
+
+        self.fromDateEdit.setText(f'{list_date['start'].month}/{list_date['start'].day}/{list_date['start'].year}')
+        self.toDateEdit.setText(f'{list_date['finish'].month}/{list_date['finish'].day}/{list_date['finish'].year}')
+        self.regionEdit.setText(region_to_info)
+
     def change_variables(self):
         self.current_catalog = self.list_catalog[self.Catalog_Combox.currentIndex()].split('/')[0]
         self.adicionar_checkboxes(database='H') if self.Hycom_Button.isVisible() else self.adicionar_checkboxes(
@@ -2148,7 +2268,7 @@ class Ui_MainWindow(object):
             self.Hycom_Button.setVisible(True)
             self.HycomLabel.setStyleSheet(u"color: rgb(249, 134, 0);")
 
-            self.list_catalog = [f'{key}/{item.regiao}' for key, item in self.hycom_catalogs.items()]
+            self.list_catalog = [f'{key}/{item.type}' for key, item in self.hycom_catalogs.items()]
             self.Catalog_Combox.clear()
             self.Catalog_Combox.addItems(self.list_catalog)
             self.Catalog_Combox.setCurrentIndex(0)
