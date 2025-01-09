@@ -396,12 +396,16 @@ class Ui_WindButton_LonLatProfile(object):
         )
 
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[componente].attrs['units']}]', fontsize=18)
-        cbar.ax.tick_params(labelsize=16)
+        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[componente].attrs['units']}]', fontsize=6, color="white")
+        cbar.ax.tick_params(labelsize=8)
+        cbar.ax.yaxis.set_tick_params(color='white')
+        plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
 
         ax.set_ylim(max(depth_filtered), 0)
-        ax.set_xlabel('Latitude', fontsize=18) if var == 'longitude' else ax.set_xlabel('Longitude', fontsize=18)
-        ax.set_ylabel('Depth [m]', fontsize=18)
+        ax.set_xlabel('Latitude', fontsize=8, color='white') if var == 'longitude' \
+            else ax.set_xlabel('Longitude', fontsize=8, color='white')
+        ax.set_ylabel('Depth [m]', fontsize=8, color='white')
+        ax.tick_params(axis='both', which='major', labelsize=7, color='white', labelcolor='white')
 
         self.canvas.draw()
         self.canvas.figure.subplots_adjust(
