@@ -10,7 +10,7 @@
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
                             QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt)
+                            QSize, QTime, QUrl, Qt, QThread)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
                            QFont, QFontDatabase, QGradient, QIcon,
                            QImage, QKeySequence, QLinearGradient, QPainter,
@@ -30,6 +30,15 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import time
 import os
+
+
+class AnimationWorker(QThread):
+    def __init__(self, page):
+        super().__init__()
+        self.page = page
+
+    def run(self):
+        self.page.play_animation()
 
 
 class Ui_WindButton_LonLatProfile(object):
@@ -375,7 +384,7 @@ class Ui_WindButton_LonLatProfile(object):
             self.var_selected = None
             self.sel_time(self.time_selected)
             self.sel_depth()
-            self.plot_profile()
+            self.first_profile()
         except Exception as e:
             raise e
 
@@ -457,29 +466,58 @@ class Ui_WindButton_LonLatProfile(object):
 
     def play_temp_animation(self):
         self.var_selected = 'time'
-        self.play_animation()
+        self.start_animation()
 
     def play_depth_animation(self):
         self.var_selected = 'depth'
-        self.play_animation()
+        self.start_animation()
+
+    def cls_components(self):
+        self.pause_button_time.setChecked(False)
+        self.pause_button_depth.setChecked(False)
+        self.backward_button_time.setDisabled(True)
+        self.start_button_time.setDisabled(True)
+        self.play_button_time.setDisabled(True)
+        self.forward_button_time.setDisabled(True)
+        self.finish_button_time.setDisabled(True)
+        self.start_button_depth.setDisabled(True)
+        self.backward_button_depth.setDisabled(True)
+        self.play_button_depth.setDisabled(True)
+        self.forward_button_depth.setDisabled(True)
+        self.finish_button_depth.setDisabled(True)
+        self.SaveAnimationButton.setDisabled(True)
+        self.SaveFigButton.setDisabled(True)
+        self.frame.setDisabled(True)
+        self.mainpage.frame.setDisabled(True)
+
+    def opn_components(self):
+        self.frame_buttons_animation_2_depth.setDisabled(False)
+        self.frame_buttons_animation_time.setDisabled(False)
+        self.backward_button_time.setDisabled(False)
+        self.start_button_time.setDisabled(False)
+        self.play_button_time.setDisabled(False)
+        self.forward_button_time.setDisabled(False)
+        self.finish_button_time.setDisabled(False)
+        self.start_button_depth.setDisabled(False)
+        self.backward_button_depth.setDisabled(False)
+        self.play_button_depth.setDisabled(False)
+        self.forward_button_depth.setDisabled(False)
+        self.finish_button_depth.setDisabled(False)
+        self.SaveAnimationButton.setDisabled(False)
+        self.SaveFigButton.setDisabled(False)
+        self.frame.setDisabled(False)
+        self.mainpage.frame.setDisabled(False)
 
     def play_animation(self):
         if (self.var_selected == 'time' and self.time_selected == self.time[-1]) or (
                 self.var_selected == 'depth' and self.depth_selected == self.time[-1]):
             return
         else:
-            self.pause_button_time.setChecked(False)
-            self.pause_button_depth.setChecked(False)
-            self.SaveAnimationButton.setDisabled(True)
-            self.SaveFigButton.setDisabled(True)
-            self.frame.setDisabled(True)
-            self.mainpage.frame.setDisabled(True)
-            self.mainpage.header_widget.setDisabled(True)
-            self.mainpage.icon_text_widget.setDisabled(True)
-            self.mainpage.icon_only_widget.setDisabled(True)
+            self.cls_components()
 
             if self.var_selected == 'time':
                 self.frame_buttons_animation_2_depth.setDisabled(True)
+
                 while True:
                     index = np.where(self.time == self.time_selected)[0][0]
                     self.time_selected = self.time[index + 1]
@@ -496,6 +534,7 @@ class Ui_WindButton_LonLatProfile(object):
                     QApplication.processEvents()
             else:
                 self.frame_buttons_animation_time.setDisabled(True)
+
                 while True:
                     index = np.where(self.depth == self.depth_selected)[0][0]
                     self.depth_selected = self.depth[index + 1]
@@ -511,17 +550,15 @@ class Ui_WindButton_LonLatProfile(object):
                     time.sleep(.2)
                     QApplication.processEvents()
 
-            self.frame_buttons_animation_2_depth.setDisabled(False)
-            self.frame_buttons_animation_time.setDisabled(False)
-            self.SaveAnimationButton.setDisabled(False)
-            self.SaveFigButton.setDisabled(False)
-            self.frame.setDisabled(False)
-            self.mainpage.frame.setDisabled(False)
-            self.mainpage.header_widget.setDisabled(False)
-            self.mainpage.icon_text_widget.setDisabled(False)
-            self.mainpage.icon_only_widget.setDisabled(False)
+            self.opn_components()
 
     def plot_profile(self):
+        dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
+        water_temp_filtered = dataset_filtered['salinity'].values
+        self.im.set_data(water_temp_filtered)
+        self.canvas.draw()
+
+    def first_profile(self):
         self.figure.clear()
         self.canvas.draw()
 
@@ -533,7 +570,7 @@ class Ui_WindButton_LonLatProfile(object):
         cmap = cm.get_cmap('RdYlGn_r')
         norm = plt.Normalize(vmin=min_value, vmax=max_value)
 
-        ax = self.figure.add_subplot(111)
+        self.ax = self.figure.add_subplot(111)
 
         mp = Basemap(projection='merc',
                      llcrnrlon=min(lon),
@@ -541,10 +578,10 @@ class Ui_WindButton_LonLatProfile(object):
                      urcrnrlon=max(lon),
                      urcrnrlat=max(lat),
                      resolution='i',
-                     ax=ax)
+                     ax=self.ax)
 
-        mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
-        cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
+        self.im = mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
+        cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
         cbar.set_label(f'{self.dataset['salinity'].units}', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
@@ -566,11 +603,11 @@ class Ui_WindButton_LonLatProfile(object):
             for text in text_objects[1]:
                 text.set_color("white")
 
-        ax.set_xlabel('Longitude', labelpad=15, fontsize=8)
-        ax.set_ylabel('Latitude', labelpad=30, fontsize=8)
-        ax.xaxis.label.set_color('white')
-        ax.yaxis.label.set_color('white')
-        ax.set_aspect('equal')
+        self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8)
+        self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8)
+        self.ax.xaxis.label.set_color('white')
+        self.ax.yaxis.label.set_color('white')
+        self.ax.set_aspect('equal')
 
         self.canvas.draw()
         self.canvas.figure.subplots_adjust(
@@ -687,6 +724,10 @@ class Ui_WindButton_LonLatProfile(object):
         ani.save(f'{path_to_save}\\animacao_salinitymap_{self.var_selected}.gif', writer='pillow', fps=3)
         plt.close()
         print('Finish')
+
+    def start_animation(self):
+        self.worker = AnimationWorker(page=self)
+        self.worker.start()
 
     def retranslateUi(self, WindButton_LonLatProfile):
         WindButton_LonLatProfile.setWindowTitle(QCoreApplication.translate("WindButton_LonLatProfile", u"Form", None))
