@@ -2491,6 +2491,9 @@ class Ui_MainWindow(object):
 
     def on_item_selected(self):
         del self.file
+        self.clear_frame_container()
+        self.frame_container = QFrame()
+        self.gridLayout_5.addWidget(self.frame_container)
         with xr.open_dataset(f'{self.project.caminho}\\{self.comboBox.currentText()}') as self.file:
             variable_map = {
                 'u10': 'wind',
