@@ -2061,7 +2061,7 @@ class Ui_MainWindow(object):
         self.menu_button.toggled.connect(self.icon_text_widget.setHidden)
         self.menu_button.toggled.connect(self.icon_only_widget.setVisible)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(4)
 
         self.DB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
         self.DB_2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
