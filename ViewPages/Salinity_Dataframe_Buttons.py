@@ -43,6 +43,14 @@ class DataFrameModel(QAbstractTableModel):
             return str(value)
         return None
 
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return str(self._dataframe.columns[section])
+            elif orientation == Qt.Vertical:
+                return str(self._dataframe.index[section])
+        return None
+
 
 class Ui_WindButton_LonLatProfile(object):
     def setupUi(self, page, WindButton_LonLatProfile, dataset):
