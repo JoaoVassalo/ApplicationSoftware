@@ -9,15 +9,15 @@
 ################################################################################
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
+                            QMetaObject, QObject, QPoint, QRect,
+                            QSize, QTime, QUrl, Qt)
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+                           QFont, QFontDatabase, QGradient, QIcon,
+                           QImage, QKeySequence, QLinearGradient, QPainter,
+                           QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-    QLabel, QPushButton, QSizePolicy, QSpacerItem,
-    QVBoxLayout, QWidget)
+                               QLabel, QPushButton, QSizePolicy, QSpacerItem,
+                               QVBoxLayout, QWidget)
 import resources_rc
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -29,6 +29,7 @@ from pandas import DataFrame as Df
 import numpy as np
 from datetime import datetime
 import os
+
 
 class Ui_WindButton_LonLatProfile(object):
     def setupUi(self, page, WindButton_LonLatProfile, dataset):
@@ -87,19 +88,19 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame_buttons_animation_step.setMinimumSize(QSize(80, 50))
         self.frame_buttons_animation_step.setMaximumSize(QSize(80, 50))
         self.frame_buttons_animation_step.setStyleSheet(u"QPushButton {\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
-"    border-radius: 5px; /* Bordas arredondadas */\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
-"}")
+                                                        "    background-color: transparent;\n"
+                                                        "    border: none;\n"
+                                                        "    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
+                                                        "}\n"
+                                                        "\n"
+                                                        "QPushButton:hover {\n"
+                                                        "    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
+                                                        "    border-radius: 5px; /* Bordas arredondadas */\n"
+                                                        "}\n"
+                                                        "\n"
+                                                        "QPushButton:pressed {\n"
+                                                        "    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
+                                                        "}")
         self.frame_buttons_animation_step.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_buttons_animation_step.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_9 = QGridLayout(self.frame_buttons_animation_step)
@@ -124,13 +125,11 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.gridLayout_9.addWidget(self.forward_button_step, 0, 1, 1, 1)
 
-
         self.horizontalLayout_2.addWidget(self.frame_buttons_animation_step)
 
         self.horizontalSpacer_33 = QSpacerItem(18, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_33)
-
 
         self.verticalLayout_15.addLayout(self.horizontalLayout_2)
 
@@ -143,13 +142,11 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.verticalLayout_15.addWidget(self.StepValueLabel)
 
-
         self.horizontalLayout_14.addLayout(self.verticalLayout_15)
 
         self.horizontalSpacer_39 = QSpacerItem(28, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_14.addItem(self.horizontalSpacer_39)
-
 
         self.verticalLayout.addLayout(self.horizontalLayout_14)
 
@@ -181,19 +178,19 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame_buttons_animation_step_2.setMinimumSize(QSize(80, 50))
         self.frame_buttons_animation_step_2.setMaximumSize(QSize(80, 50))
         self.frame_buttons_animation_step_2.setStyleSheet(u"QPushButton {\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
-"    border-radius: 5px; /* Bordas arredondadas */\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
-"}")
+                                                          "    background-color: transparent;\n"
+                                                          "    border: none;\n"
+                                                          "    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
+                                                          "}\n"
+                                                          "\n"
+                                                          "QPushButton:hover {\n"
+                                                          "    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
+                                                          "    border-radius: 5px; /* Bordas arredondadas */\n"
+                                                          "}\n"
+                                                          "\n"
+                                                          "QPushButton:pressed {\n"
+                                                          "    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
+                                                          "}")
         self.frame_buttons_animation_step_2.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_buttons_animation_step_2.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_10 = QGridLayout(self.frame_buttons_animation_step_2)
@@ -214,13 +211,11 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.gridLayout_10.addWidget(self.forward_button_step_2, 0, 1, 1, 1)
 
-
         self.horizontalLayout_3.addWidget(self.frame_buttons_animation_step_2)
 
         self.horizontalSpacer_35 = QSpacerItem(18, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_35)
-
 
         self.verticalLayout_16.addLayout(self.horizontalLayout_3)
 
@@ -233,13 +228,11 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.verticalLayout_16.addWidget(self.StepValueLabel_2)
 
-
         self.horizontalLayout_16.addLayout(self.verticalLayout_16)
 
         self.horizontalSpacer_43 = QSpacerItem(28, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_16.addItem(self.horizontalSpacer_43)
-
 
         self.verticalLayout.addLayout(self.horizontalLayout_16)
 
@@ -256,19 +249,18 @@ class Ui_WindButton_LonLatProfile(object):
         self.SaveFigButton.setMinimumSize(QSize(120, 30))
         self.SaveFigButton.setMaximumSize(QSize(120, 30))
         self.SaveFigButton.setStyleSheet(u"QPushButton{\n"
-"	background-color: rgb(61, 80, 95);\n"
-"	border-radius: 15px;\n"
-"	border: 2px solid #F98600;\n"
-"}\n"
-"\n"
-"QPushButton:hover{\n"
-"	color: #F98600;\n"
-"	font-size: 14px;\n"
-"}")
+                                         "	background-color: rgb(61, 80, 95);\n"
+                                         "	border-radius: 15px;\n"
+                                         "	border: 2px solid #F98600;\n"
+                                         "}\n"
+                                         "\n"
+                                         "QPushButton:hover{\n"
+                                         "	color: #F98600;\n"
+                                         "	font-size: 14px;\n"
+                                         "}")
         self.SaveFigButton.clicked.connect(self.save_gif)
 
         self.horizontalLayout_6.addWidget(self.SaveFigButton)
-
 
         self.horizontalLayout_15.addLayout(self.horizontalLayout_6)
 
@@ -276,12 +268,9 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.horizontalLayout_15.addItem(self.horizontalSpacer_41)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_15)
 
-
         self.horizontalLayout.addWidget(self.frame_2)
-
 
         self.retranslateUi(WindButton_LonLatProfile)
 
@@ -305,12 +294,17 @@ class Ui_WindButton_LonLatProfile(object):
             self.time = self.dataset['valid_time'].values
             self.year, self.month = self.filter_data()
             self.year_selected, self.month_selected = self.year[0], self.month[0]
+            self.sel_year()
+            self.sel_month()
             self.plot_average_wind()
-
-
         except Exception as e:
             raise e
-    # setupUi
+
+    def sel_month(self):
+        self.StepValueLabel_2.setText(f'{self.month_selected}')
+
+    def sel_year(self):
+        self.StepValueLabel.setText(f'{self.year_selected}')
 
     def forward_in_month(self):
         if self.month_selected == self.month[-1]:
@@ -318,6 +312,7 @@ class Ui_WindButton_LonLatProfile(object):
         else:
             index = self.month.index(self.month_selected)
             self.month_selected = self.month[index + 1]
+            self.sel_month()
             self.plot_average_wind()
 
     def back_in_month(self):
@@ -326,6 +321,7 @@ class Ui_WindButton_LonLatProfile(object):
         else:
             index = self.month.index(self.month_selected)
             self.month_selected = self.month[index - 1]
+            self.sel_month()
             self.plot_average_wind()
 
     def forward_in_year(self):
@@ -335,6 +331,7 @@ class Ui_WindButton_LonLatProfile(object):
         else:
             index = self.year.index(self.year_selected)
             self.year_selected = self.year[index + 1]
+            self.sel_year()
             self.plot_average_wind()
 
     def back_in_year(self):
@@ -343,6 +340,7 @@ class Ui_WindButton_LonLatProfile(object):
         else:
             index = self.year.index(self.year_selected)
             self.year_selected = self.year[index - 1]
+            self.sel_year()
             self.plot_average_wind()
 
     def filter_data(self):
@@ -533,11 +531,12 @@ class Ui_WindButton_LonLatProfile(object):
         self.StepFilterLabel.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Year", None))
         self.backward_button_step.setText("")
         self.forward_button_step.setText("")
-        self.StepValueLabel.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de ano", None))
+        # self.StepValueLabel.setText(
+        #     QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de ano", None))
         self.StepFilterLabel_2.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Month", None))
         self.backward_button_step_2.setText("")
         self.forward_button_step_2.setText("")
-        self.StepValueLabel_2.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de m\u00eas", None))
+        # self.StepValueLabel_2.setText(
+        #     QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de m\u00eas", None))
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
     # retranslateUi
-
