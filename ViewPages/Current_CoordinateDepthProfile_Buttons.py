@@ -402,7 +402,7 @@ class Ui_WindButton_LonLatProfile(object):
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
 
         ax.set_ylim(max(depth_filtered), 0)
-        ax.set_xlabel('Latitude', fontsize=8, color='white') if var == 'longitude' \
+        ax.set_xlabel('Latitude', fontsize=8, color='white') if var == 'Longitude' \
             else ax.set_xlabel('Longitude', fontsize=8, color='white')
         ax.set_ylabel('Depth [m]', fontsize=8, color='white')
         ax.tick_params(axis='both', which='major', labelsize=7, color='white', labelcolor='white')
