@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QFrame,
                                QGridLayout, QHBoxLayout, QLabel, QLineEdit,
                                QMainWindow, QProgressBar, QPushButton, QScrollArea,
                                QSizePolicy, QSpacerItem, QStackedWidget, QVBoxLayout,
-                               QWidget, QCheckBox, QMessageBox)
+                               QWidget, QCheckBox, QMessageBox, QRadioButton)
 from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Buttons,
                        Wind_LonLat_Buttons, Wind_AverageWind_Buttons, Temperature_LonLat_Buttons,
                        Temperature_Average_Buttons, Temperature_LatDepthProfile_Buttons,
@@ -1121,8 +1121,8 @@ class Ui_MainWindow(object):
 
         self.frame = QFrame(self.view_page_main_screen)
         self.frame.setObjectName(u"frame")
-        self.frame.setMinimumSize(QSize(0, 100))
-        self.frame.setMaximumSize(QSize(16777215, 100))
+        self.frame.setMinimumSize(QSize(0, 110))
+        self.frame.setMaximumSize(QSize(16777215, 110))
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_6 = QGridLayout(self.frame)
@@ -1203,7 +1203,8 @@ class Ui_MainWindow(object):
                 border-radius: 10px; /* Arredondamento das bordas */
                 border: 2px solid #F98600;
                 min-width: 100px; /* Largura mínima */
-                min-height: 30px; /* Altura mínima */
+                max-width: 200px;
+                min-height: 20px; /* Altura mínima */
                 color: white;
             }
 
@@ -1217,8 +1218,26 @@ class Ui_MainWindow(object):
                 background-color: rgb(125, 63, 0);
                 font-size: 14px;
             }
+            
+            QRadioButton {
+                min-width: 55px;
+                max-width: 95px;
+                height:20px;
+            }
         """)
-        self.frame_4_buttons_layout = QHBoxLayout(self.frame_4)
+        self.gridLayout_forVar = QGridLayout(self.frame_4)
+        self.gridLayout_forVar.setSpacing(0)
+
+        self.frame_to_radio_variables = QFrame()
+        self.frame_to_radio_variables.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.layoutForRadioVar = QHBoxLayout(self.frame_to_radio_variables)
+        self.layoutForRadioVar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.gridLayout_forVar.addWidget(self.frame_to_radio_variables)
+
+        self.frame_to_buttons_variables = QFrame()
+        self.frame_to_buttons_variables.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.frame_4_buttons_layout = QHBoxLayout(self.frame_to_buttons_variables)
+        self.gridLayout_forVar.addWidget(self.frame_to_buttons_variables)
         self.frame_4_buttons_layout.setSpacing(5)
 
         self.gridLayout_6.addWidget(self.frame_4, 0, 1, 1, 1)
@@ -2344,6 +2363,21 @@ class Ui_MainWindow(object):
         self.current_checked_button = clicked_button
         func()
 
+    def set_oneradio_only(self, var_file):
+        labelFile = QLabel(text=f'Only {var_file} variable on file')
+        self.layoutForRadioVar.addWidget(labelFile)
+
+    def on_radio_selected(self, selected_radio):
+        self.clear_frame_container()
+        self.frame_container = QFrame()
+        self.gridLayout_5.addWidget(self.frame_container)
+        for i in reversed(range(self.frame_4_buttons_layout.count())):
+            widget_to_remove = self.frame_4_buttons_layout.itemAt(i).widget()
+            if widget_to_remove:
+                widget_to_remove.setParent(None)
+
+        self.set_graphbuttons(selected_radio.text())
+
     def clear_frame_container(self):
         if self.gridLayout_5.count() > 1:
             child = self.gridLayout_5.takeAt(1)
@@ -2448,29 +2482,24 @@ class Ui_MainWindow(object):
         self.gridLayout_5.addWidget(self.frame_container)
         self.ui_temperature_page.setupUi(self, self.frame_container, self.file)
 
-    def update_frame_buttons(self, variable):
-        for i in reversed(range(self.frame_4_buttons_layout.count())):
-            widget_to_remove = self.frame_4_buttons_layout.itemAt(i).widget()
-            if widget_to_remove:
-                widget_to_remove.setParent(None)
-
+    def set_graphbuttons(self, var_set):
         button_configs = {
-            'wind': [
+            'Wind': [
                 {"text": "Lon vs Lat", "func": self.plot_lonlat_windprofile},
                 {"text": "Average Wind", "func": self.plot_average_wind}
             ],
-            'current': [
+            'Current': [
                 {"text": "Lon vs Lat", "func": self.plot_lonlat_currentprofile},
                 {"text": "Section Profile", "func": self.plot_section_profile}
             ],
-            'salinity': [
+            'Salinity': [
                 {"text": "Lon vs Lat", "func": self.plot_lonlat_salinityprofile},
                 {"text": "Average Salinity", "func": self.plot_average_salinity},
                 {"text": "Depth vs Lat", "func": self.plot_depth_lat_salinity},
                 {"text": "Depth vs Lon", "func": self.plot_depth_lon_salinity},
                 {"text": "Table Salinity", "func": self.plot_table_salinity}
             ],
-            'temperature': [
+            'Temperature': [
                 {"text": "Lon vs Lat", "func": self.plot_lonlat_temperatureprofile},
                 {"text": "Average Temperature", "func": self.plot_average_temperature},
                 {"text": "Depth vs Lat", "func": self.plot_depth_lat_temperature},
@@ -2479,9 +2508,9 @@ class Ui_MainWindow(object):
             ]
         }
 
-        if variable in button_configs:
-            for button_config in button_configs[variable]:
-                button = QPushButton(button_config["text"], self.frame_4)
+        if var_set in button_configs:
+            for button_config in button_configs[var_set]:
+                button = QPushButton(button_config["text"], self.frame_to_buttons_variables)
                 button.setCheckable(True)
                 button.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
 
@@ -2489,25 +2518,58 @@ class Ui_MainWindow(object):
                                        self.on_button_clicked(b, f))
                 self.frame_4_buttons_layout.addWidget(button)
 
+    def update_frame_buttons(self, variable):
+        for i in reversed(range(self.layoutForRadioVar.count())):
+            widget_to_remove = self.layoutForRadioVar.itemAt(i).widget()
+            if widget_to_remove:
+                widget_to_remove.setParent(None)
+
+        for i in reversed(range(self.frame_4_buttons_layout.count())):
+            widget_to_remove = self.frame_4_buttons_layout.itemAt(i).widget()
+            if widget_to_remove:
+                widget_to_remove.setParent(None)
+
+        if len(variable) == 1:
+            self.set_oneradio_only(variable[0])
+            self.set_graphbuttons(variable[0])
+        else:
+            for var_ in variable:
+                radioB = QRadioButton(var_, self.frame_to_radio_variables)
+                radioB.clicked.connect(lambda checked, rb=radioB: self.on_radio_selected(rb))
+                self.layoutForRadioVar.addWidget(radioB)
+
     def on_item_selected(self):
         del self.file
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.gridLayout_5.addWidget(self.frame_container)
         with xr.open_dataset(f'{self.project.caminho}\\{self.comboBox.currentText()}') as self.file:
-            variable_map = {
-                'u10': 'wind',
-                'water_u': 'current',
-                'salinity': 'salinity',
-                'water_temp': 'temperature'
+            variable_name_map = {
+                'eastward_sea_water_velocity': 'Current',
+                'northward_sea_water_velocity': 'Current',
+                'sea_water_salinity': 'Salinity',
+                'sea_water_temperature': 'Temperature',
+                '10 metre U wind component': 'Wind',
+                '10 metre V wind component': 'Wind'
             }
 
-            for var, variable in variable_map.items():
-                if var in list(self.file.variables):
-                    self.update_frame_buttons(variable=variable)
-                    break
-            else:
-                print(False)  # Caso nenhuma variável seja encontrada
+            var_list = set()
+
+            for var in self.file.variables:
+                if self.file.variables[var].ndim > 1:
+                    attrs = self.file[var].attrs
+                    standard_name = attrs.get('standard_name', None)
+                    long_name = attrs.get('long_name', None)
+
+                    if standard_name in variable_name_map:
+                        var_list.add(variable_name_map[standard_name])
+                    elif long_name in variable_name_map:
+                        var_list.add(variable_name_map[long_name])
+                else:
+                    pass
+
+            var_list = list(var_list)
+            self.update_frame_buttons(variable=var_list)
 
     def on_item_selected_fileview(self):
         if self.FileListCombox.currentIndex() == 0:
