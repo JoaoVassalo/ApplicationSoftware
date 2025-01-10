@@ -102,10 +102,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1220, 738)
-        MainWindow.setMinimumSize(QSize(1220, 735))
-        MainWindow.setBaseSize(QSize(1220, 735))
         MainWindow.setStyleSheet(u"background-color: rgb(58, 58, 58);")
+        MainWindow.showFullScreen()
+        MainWindow.setFixedSize(MainWindow.size())
 
         self.project = MainWindow.project
         self.hycom_catalogs = {f'{catalog.nome}': catalog for catalog in MainWindow.hycomCatalog}
