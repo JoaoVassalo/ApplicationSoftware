@@ -700,8 +700,11 @@ class Ui_WindButton_LonLatProfile(object):
         self.mp.drawstates()
         self.mp.drawcountries()
 
-        parallels = self.mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=6)
-        meridians = self.mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=6)
+        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
+
+        parallels = self.mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
+        meridians = self.mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
 
         for lat, text_objects in parallels.items():
             for text in text_objects[1]:
