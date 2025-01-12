@@ -61,12 +61,14 @@ class Filter(FilesExtension):
         self.path = path
         self.filename = filename if '.nc' in filename else filename + '.nc'
         self.var_to_filter = None
+        self.dim_to_filter = None
         self.start = None
         self.finish = None
         super().__init__()
 
     def set_kargs(self, **kargs):
         self.var_to_filter = kargs['var']
+        self.dim_to_filter = kargs['dim']
         self.start = kargs['start']
         self.finish = kargs['stop']
 
@@ -82,21 +84,29 @@ class Filter(FilesExtension):
     def run(self):
         dataset = xr.open_dataset(f'{self.path}\\{self.filelist[0]}')
 
-        if self.var_to_filter == 'time' or self.var_to_filter == 'valid_time':
+        if self.dim_to_filter == 'time' or self.dim_to_filter == 'valid_time':
             start, finish = self.str2time(self.start), self.str2time(self.finish)
         else:
-            start, finish = self.start, self.finish
+            start, finish = float(self.start), float(self.finish)
 
         if start == finish:
             dict_key = {
-                f'{self.var_to_filter}': start
+                f'{self.dim_to_filter}': start
             }
         else:
             dict_key = {
-                f'{self.var_to_filter}': slice(start, finish)
+                f'{self.dim_to_filter}': slice(start, finish)
             }
 
-        dataset_filtered = dataset.sel(dict_key)
+        if self.var_to_filter == 'All variables':
+            list_var = [f'{var}' for var in list(dataset.variables) if dataset[var].ndim > 1]
+            dataset_filtered = dataset[list_var].sel(dict_key)
+        else:
+            if self.dim_to_filter == ' - ':
+                dataset_filtered = dataset[self.var_to_filter]
+            else:
+                dataset_filtered = dataset[self.var_to_filter].sel(dict_key)
+
         dataset_filtered.to_netcdf(f'{self.path}\\{self.filename}', format='NETCDF4')
         del dataset, dataset_filtered
 
@@ -115,6 +125,7 @@ class Dat(FilesExtension):
         self.v_component = kargs['v_component']
 
     def run(self):
+        os.makedirs(f'{self.path}\\DatFiles', exist_ok=True)
         if self.u_component != self.v_component:
             dataset = xr.open_dataset(f'{self.path}\\{self.filelist[0]}')
 
@@ -132,7 +143,7 @@ class Dat(FilesExtension):
                 'latitude'].values.size
 
             # Criação de arquivo .dat com base nos dados do arquivo netcdf -------------------------------------------------
-            with open(f'{self.path}/{self.filename}', 'w') as w_file:
+            with open(f'{self.path}\\DatFiles\\{self.filename}', 'w') as w_file:
                 w_file.write(
                     f"""xy  {x}  {y}
             projection  lonlat
@@ -165,7 +176,7 @@ class Imp(FilesExtension):
     def __init__(self, filelist, path, filename):
         self.filelist = filelist
         self.path = path
-        self.filename = filename if '.dat' in filename else filename + '.dat'
+        self.filename = filename if '.imp' in filename else filename + '.imp'
         self.type = None
         self.u_component = None
         self.v_component = None
@@ -177,10 +188,11 @@ class Imp(FilesExtension):
         self.v_component = kargs['v_component']
 
     def run(self):
+        os.makedirs(f'{self.path}\\ImpFiles', exist_ok=True)
         dataset = xr.open_dataset(f'{self.path}\\{self.filelist[0]}')
 
         if self.type == 'Wind':
-            with open(f'{self.path}/{self.filename}', 'w') as w_imp:
+            with open(f'{self.path}\\ImpFiles\\{self.filename}', 'w') as w_imp:
                 w_imp.write(
                     f"FORMAT	ASCII_3D\n"
                     f"FILE  ***path_to_file***.dat\n"
@@ -191,7 +203,7 @@ class Imp(FilesExtension):
             del dataset
         else:
             if self.u_component != self.v_component:
-                with open(f'{self.path}/{self.filename}', 'w') as w_imp:
+                with open(f'{self.path}\\ImpFiles\\{self.filename}', 'w') as w_imp:
                     w_imp.write(
                         f"FORMAT	NetCDF\n"
                         f"PROJECTION	LONLAT\n"
