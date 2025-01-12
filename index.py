@@ -36,6 +36,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import cartopy.crs as ccrs
 from matplotlib.patches import Rectangle
+import time
 
 
 class DownloadWorker(QThread):
@@ -91,6 +92,7 @@ class FileWorker(QThread):
         try:
             self.progress.emit()
             self.package.run()
+            time.sleep(5)
             self.page.ExcuteButton.setChecked(False)
             self.page.set_combobox_files()
             self.finished.emit()
@@ -2772,7 +2774,8 @@ class Ui_MainWindow(object):
         def update_kargs():
             self.func_file = FileFunctions.Filter(self.fileList_View, self.project.caminho,
                                                   self.filterframe.lineEdit.text())
-            self.func_file.set_kargs(var=self.filterframe.comboBox.currentText(),
+            self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
+                                     dim=self.filterframe.comboBox.currentText(),
                                      start=self.filterframe.comboBox_2.currentText(),
                                      stop=self.filterframe.comboBox_3.currentText())
 
@@ -2804,7 +2807,8 @@ class Ui_MainWindow(object):
 
                 self.func_file = FileFunctions.Filter(self.fileList_View, self.project.caminho,
                                                       self.filterframe.lineEdit.text())
-                self.func_file.set_kargs(var=self.filterframe.comboBox.currentText(),
+                self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
+                                         dim=self.filterframe.comboBox.currentText(),
                                          start=self.filterframe.comboBox_2.currentText(),
                                          stop=self.filterframe.comboBox_3.currentText())
 
