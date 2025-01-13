@@ -2579,11 +2579,14 @@ class Ui_MainWindow(object):
             current_file = self.FileListCombox.currentText()
             file = xr.open_dataset(f'{self.project.caminho}\\{current_file}')
             info_dict = [current_file, file]
-            file_widget = VarInfo_Widgets.FileFormWidget(info_dict, self.scrollAreaWidgetContents)
-            file_widget.remove_requested.connect(lambda: self.remove_file_widget(file_widget))
-            file_widget.checklist_requested.connect(lambda: self.file_to_list(file_widget))
-            self.layout_for_file_forms.addWidget(file_widget)
-            del file
+            try:
+                file_widget = VarInfo_Widgets.FileFormWidget(info_dict, self.scrollAreaWidgetContents)
+                file_widget.remove_requested.connect(lambda: self.remove_file_widget(file_widget))
+                file_widget.checklist_requested.connect(lambda: self.file_to_list(file_widget))
+                self.layout_for_file_forms.addWidget(file_widget)
+                del file
+            except Exception as e:
+                QMessageBox.warning(self.file_page_main_screen, "Warning", f'{e}')
 
     def file_to_list(self, widget):
         if widget.ui.checkBox.isChecked():
