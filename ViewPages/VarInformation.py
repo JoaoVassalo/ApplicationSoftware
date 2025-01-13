@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QGridLayout,
                                QWidget)
 import resources_rc
 import numpy as np
+from datetime import datetime
 
 
 class Ui_Form(object):
@@ -137,7 +138,7 @@ class Ui_Form(object):
 
                 elif self.header[header_idx] == "M\u00edm":
                     if self.variables[var] == 'time' or self.variables[var] == 'valid_time':
-                        min_value = '-'
+                        min_value = self.sel_time(min(self.file[self.variables[var]].values))
                     elif self.variables[var] == 'lon' or self.variables[var] == 'longitude':
                         min_value = np.nanmin(self.file[self.variables[var]].values)
                         if min_value > 180:
@@ -148,7 +149,7 @@ class Ui_Form(object):
 
                 elif self.header[header_idx] == 'M\u00e1x':
                     if self.variables[var] == 'time' or self.variables[var] == 'valid_time':
-                        min_value = '-'
+                        min_value = self.sel_time(max(self.file[self.variables[var]].values))
                     elif self.variables[var] == 'lon' or self.variables[var] == 'longitude':
                         min_value = np.nanmax(self.file[self.variables[var]].values)
                         if min_value > 180:
@@ -166,6 +167,12 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
+
+    @staticmethod
+    def sel_time(value_time):
+        time_to_format = str(value_time).split('.')[0]
+        t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
+        return t_formated
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
