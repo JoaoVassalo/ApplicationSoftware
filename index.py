@@ -95,6 +95,7 @@ class FileWorker(QThread):
             time.sleep(2)
             self.package.run()
             time.sleep(2)
+            self.page.clear_filterframe_container()
             self.page.toggle_progress_bar_execute()
             self.page.ExcuteButton.setChecked(False)
             self.page.ExcuteButton.setText('Execute')
@@ -2111,6 +2112,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5.addWidget(self.frame_container)
 
         self.file = None
+        self.currentButton_onfilepage = None
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -2359,6 +2361,13 @@ class Ui_MainWindow(object):
             f for f in os.listdir(self.project.caminho)
             if os.path.isfile(os.path.join(self.project.caminho, f)) and f.endswith('.nc')
         ]
+
+        self.comboBox.clear()
+        self.FileListCombox.clear()
+
+        self.comboBox.addItem('Choose a file...')
+        self.FileListCombox.addItem('Choose a file...')
+
         for i in range(len(list_projects)):
             self.comboBox.addItem("")
             self.comboBox.setItemText(i + 1, QCoreApplication.translate("MainWindow",
@@ -2367,6 +2376,9 @@ class Ui_MainWindow(object):
             self.FileListCombox.addItem("")
             self.FileListCombox.setItemText(i + 1, QCoreApplication.translate("MainWindow",
                                                                         f"{list_projects[i]}", None))
+
+        self.FileListCombox.setCurrentIndex(0)
+        self.comboBox.setCurrentIndex(0)
 
     def on_button_clicked(self, clicked_button, func):
         if self.current_checked_button and self.current_checked_button != clicked_button:
@@ -2551,40 +2563,44 @@ class Ui_MainWindow(object):
                 self.layoutForRadioVar.addWidget(radioB)
 
     def on_item_selected(self):
-        del self.file
+        if hasattr(self, 'file'):
+            del self.file
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.gridLayout_5.addWidget(self.frame_container)
-        with xr.open_dataset(f'{self.project.caminho}\\{self.comboBox.currentText()}') as self.file:
-            variable_name_map = {
-                'eastward_sea_water_velocity': 'Current',
-                'northward_sea_water_velocity': 'Current',
-                'sea_water_salinity': 'Salinity',
-                'sea_water_temperature': 'Temperature',
-                '10 metre U wind component': 'Wind',
-                '10 metre V wind component': 'Wind'
-            }
+        if self.comboBox.currentText() != '' and self.comboBox.currentText() != 'Choose a file...':
+            with xr.open_dataset(f'{self.project.caminho}\\{self.comboBox.currentText()}') as self.file:
+                variable_name_map = {
+                    'eastward_sea_water_velocity': 'Current',
+                    'northward_sea_water_velocity': 'Current',
+                    'sea_water_salinity': 'Salinity',
+                    'sea_water_temperature': 'Temperature',
+                    '10 metre U wind component': 'Wind',
+                    '10 metre V wind component': 'Wind'
+                }
 
-            var_list = set()
+                var_list = set()
 
-            for var in self.file.variables:
-                if self.file.variables[var].ndim > 1:
-                    attrs = self.file[var].attrs
-                    standard_name = attrs.get('standard_name', None)
-                    long_name = attrs.get('long_name', None)
+                for var in self.file.variables:
+                    if self.file.variables[var].ndim > 1:
+                        attrs = self.file[var].attrs
+                        standard_name = attrs.get('standard_name', None)
+                        long_name = attrs.get('long_name', None)
 
-                    if standard_name in variable_name_map:
-                        var_list.add(variable_name_map[standard_name])
-                    elif long_name in variable_name_map:
-                        var_list.add(variable_name_map[long_name])
-                else:
-                    pass
+                        if standard_name in variable_name_map:
+                            var_list.add(variable_name_map[standard_name])
+                        elif long_name in variable_name_map:
+                            var_list.add(variable_name_map[long_name])
+                    else:
+                        pass
 
-            var_list = list(var_list)
-            self.update_frame_buttons(variable=var_list)
+                var_list = list(var_list)
+                self.update_frame_buttons(variable=var_list)
 
     def on_item_selected_fileview(self):
         if self.FileListCombox.currentIndex() == 0:
+            return
+        elif self.FileListCombox.currentText() == '' or self.FileListCombox.currentText() == 'Choose a file...':
             return
         else:
             current_file = self.FileListCombox.currentText()
@@ -2606,6 +2622,10 @@ class Ui_MainWindow(object):
             self.fileList_View.remove(widget.ui.file_name)
 
     def remove_file_widget(self, widget):
+        if widget.ui.file_name in self.fileList_View:
+            self.currentButton_onfilepage.setChecked(False)
+            self.clear_filterframe_container()
+            self.fileList_View.remove(widget.ui.file_name)
         self.layout_for_file_forms.removeWidget(widget)
         widget.deleteLater()
 
@@ -2614,6 +2634,9 @@ class Ui_MainWindow(object):
             child = self.filterFieldFile_layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
+
+        if self.currentButton_onfilepage:
+            self.currentButton_onfilepage.setChecked(False)
 
     def concat_files(self):
 
@@ -2648,6 +2671,7 @@ class Ui_MainWindow(object):
                                                                              "concatenate.")
                     self.ConcatButrton.setChecked(False)
                 else:
+                    self.currentButton_onfilepage = self.ConcatButrton
                     self.clear_filterframe_container()
                     self.MergeButton.setChecked(False)
                     self.DatButton.setChecked(False)
@@ -2680,6 +2704,7 @@ class Ui_MainWindow(object):
                                                                            "to merge.")
                 self.MergeButton.setChecked(False)
             else:
+                self.currentButton_onfilepage = self.MergeButton
                 self.clear_filterframe_container()
                 self.ConcatButrton.setChecked(False)
                 self.DatButton.setChecked(False)
@@ -2716,8 +2741,8 @@ class Ui_MainWindow(object):
                                                                            "to create .dat file.")
                 self.DatButton.setChecked(False)
             else:
+                self.currentButton_onfilepage = self.DatButton
                 self.clear_filterframe_container()
-                # if self.DatButton.isChecked():
                 self.ConcatButrton.setChecked(False)
                 self.MergeButton.setChecked(False)
                 self.FilterButton.setChecked(False)
@@ -2758,6 +2783,7 @@ class Ui_MainWindow(object):
                                                                            "to create .imp file.")
                 self.ImpButton.setChecked(False)
             else:
+                self.currentButton_onfilepage = self.ImpButton
                 self.clear_filterframe_container()
                 self.ConcatButrton.setChecked(False)
                 self.MergeButton.setChecked(False)
@@ -2803,6 +2829,7 @@ class Ui_MainWindow(object):
                                                                            "to filter.")
                 self.FilterButton.setChecked(False)
             else:
+                self.currentButton_onfilepage = self.FilterButton
                 self.clear_filterframe_container()
                 self.ConcatButrton.setChecked(False)
                 self.MergeButton.setChecked(False)
@@ -2837,6 +2864,7 @@ class Ui_MainWindow(object):
                                                                            "to delete.")
                 self.DeleteButton.setChecked(False)
             else:
+                self.currentButton_onfilepage = self.DeleteButton
                 self.clear_filterframe_container()
                 self.ConcatButrton.setChecked(False)
                 self.MergeButton.setChecked(False)
