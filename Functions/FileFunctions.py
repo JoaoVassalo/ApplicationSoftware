@@ -86,6 +86,8 @@ class Filter(FilesExtension):
 
         if self.dim_to_filter == 'time' or self.dim_to_filter == 'valid_time':
             start, finish = self.str2time(self.start), self.str2time(self.finish)
+        elif self.dim_to_filter == ' - ':
+            start, finish = self.start, self.finish
         else:
             start, finish = float(self.start), float(self.finish)
 
