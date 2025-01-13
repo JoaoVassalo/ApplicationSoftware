@@ -54,13 +54,13 @@ class DownloadWorker(QThread):
         try:
             self.progress_download.emit("Download in progress!")
             process_result = self.package.download()
-            if process_result and process_result is bool:
+            if isinstance(process_result, bool) and process_result:
                 self.finished_download.emit("Download is finished!")
                 self.page.DownloadButton.setChecked(False)
                 self.page.checkcomponents()
                 self.page.DownloadButton.setDisabled(False)
                 self.page.set_combobox_files()
-            elif process_result is str:
+            elif type(process_result) is str:
                 self.error_download.emit(f"Erro ao realizar o download: {str(process_result)}")
                 self.page.DownloadButton.setChecked(False)
                 self.page.checkcomponents()
@@ -2565,9 +2565,10 @@ class Ui_MainWindow(object):
     def on_item_selected(self):
         if hasattr(self, 'file'):
             del self.file
-        self.clear_frame_container()
-        self.frame_container = QFrame()
-        self.gridLayout_5.addWidget(self.frame_container)
+        if hasattr(self, 'frame_container'):
+            self.clear_frame_container()
+            self.frame_container = QFrame()
+            self.gridLayout_5.addWidget(self.frame_container)
         if self.comboBox.currentText() != '' and self.comboBox.currentText() != 'Choose a file...':
             with xr.open_dataset(f'{self.project.caminho}\\{self.comboBox.currentText()}') as self.file:
                 variable_name_map = {
