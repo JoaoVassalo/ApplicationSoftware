@@ -40,9 +40,9 @@ import time
 
 
 class DownloadWorker(QThread):
-    progress = Signal(str)
-    finished = Signal(str)
-    error = Signal(str)
+    progress_download = Signal(str)
+    finished_download = Signal(str)
+    error_download = Signal(str)
 
     def __init__(self, package, page):
         super().__init__()
@@ -52,16 +52,16 @@ class DownloadWorker(QThread):
 
     def run(self):
         try:
-            self.progress.emit("Download in progress!")
+            self.progress_download.emit("Download in progress!")
             process_result = self.package.download()
             if process_result and process_result is bool:
-                self.finished.emit("Download is finished!")
+                self.finished_download.emit("Download is finished!")
                 self.page.DownloadButton.setChecked(False)
                 self.page.checkcomponents()
                 self.page.DownloadButton.setDisabled(False)
                 self.page.set_combobox_files()
             elif process_result is str:
-                self.error.emit(f"Erro ao realizar o download: {str(process_result)}")
+                self.error_download.emit(f"Erro ao realizar o download: {str(process_result)}")
                 self.page.DownloadButton.setChecked(False)
                 self.page.checkcomponents()
                 self.page.DownloadButton.setDisabled(False)
@@ -70,18 +70,18 @@ class DownloadWorker(QThread):
             self.page.DownloadButton.setChecked(False)
             self.page.checkcomponents()
             self.page.DownloadButton.setDisabled(False)
-            self.error.emit(f"Erro ao realizar o download: {str(e)}")
+            self.error_download.emit(f"Erro ao realizar o download: {str(e)}")
 
     def stop_download(self):
         self._stop = True
         self.package.stop()
-        self.finished.emit(f"Download canceled!")
+        self.finished_download.emit(f"Download canceled!")
 
 
 class FileWorker(QThread):
-    progress = Signal()
-    finished = Signal()
-    error = Signal(str)
+    progress_file = Signal()
+    finished_file = Signal()
+    error_file = Signal(str)
 
     def __init__(self, package, page):
         super().__init__()
@@ -90,14 +90,21 @@ class FileWorker(QThread):
 
     def run(self):
         try:
-            self.progress.emit()
+            self.progress_file.emit()
+            self.page.toggle_progress_bar_execute()
+            time.sleep(2)
             self.package.run()
-            time.sleep(5)
+            time.sleep(2)
+            self.page.toggle_progress_bar_execute()
             self.page.ExcuteButton.setChecked(False)
+            self.page.ExcuteButton.setText('Execute')
             self.page.set_combobox_files()
-            self.finished.emit()
+            self.finished_file.emit()
         except Exception as e:
-            self.error.emit(f"Erro!: {str(e)}")
+            self.page.toggle_progress_bar_execute()
+            self.page.ExcuteButton.setChecked(False)
+            self.page.ExcuteButton.setText('Execute')
+            self.error_file.emit(f"Erro!: {str(e)}")
 
 
 class Ui_MainWindow(object):
@@ -1593,6 +1600,7 @@ class Ui_MainWindow(object):
                                         "	font-size: 14px;\n"
                                         "}")
         self.ExcuteButton.setCheckable(True)
+        self.ExcuteButton.setChecked(False)
         self.ExcuteButton.clicked.connect(self.execute_function)
 
         self.gridLayout_8.addWidget(self.ExcuteButton, 0, 0, 1, 1)
@@ -1603,6 +1611,9 @@ class Ui_MainWindow(object):
         self.progressBarExecute.setMaximumSize(QSize(100, 30))
         self.progressBarExecute.setValue(24)
         self.progressBarExecute.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.progressBarExecute.setRange(0, 1) # Range fixo para não animar
+        self.progressBarExecute.setVisible(True)
+        self.pbe_is_running = False
 
         self.gridLayout_8.addWidget(self.progressBarExecute, 1, 0, 1, 1)
 
@@ -2228,9 +2239,9 @@ class Ui_MainWindow(object):
             page=self
         )
 
-        self.worker.progress.connect(self.update_progress)
-        self.worker.finished.connect(self.download_finished)
-        self.worker.error.connect(self.handle_error)
+        self.worker.progress_download.connect(self.update_progress)
+        self.worker.finished_download.connect(self.download_finished)
+        self.worker.error_download.connect(self.handle_error)
 
         self.worker.start()
 
@@ -2839,26 +2850,38 @@ class Ui_MainWindow(object):
             self.func_file = None
 
     def execute_function(self):
-        self.filepage_worker = FileWorker(
-            package=self.func_file,
-            page=self
-        )
+        if self.ExcuteButton.isChecked():
+            self.ExcuteButton.setText('Stop')
 
-        self.filepage_worker.progress.connect(self.update_progress_for_file_page)
-        self.filepage_worker.finished.connect(self.download_finished_for_file_page)
-        self.filepage_worker.error.connect(self.handle_error_for_file_page)
+            self.filepage_worker = FileWorker(
+                package=self.func_file,
+                page=self
+            )
 
-        self.filepage_worker.start()
+            self.filepage_worker.progress_file.connect(self.update_progress_for_file_page)
+            self.filepage_worker.finished_file.connect(self.download_finished_for_file_page)
+            self.filepage_worker.error_file.connect(self.handle_error_for_file_page)
+
+            self.filepage_worker.start()
+        else:
+            self.filepage_worker.terminate()
+            self.filepage_worker.wait()
+            self.ExcuteButton.setText('Execute')
+            self.toggle_progress_bar_execute()
+            self.user_stop_for_file_page()
 
     def update_progress_for_file_page(self):
         QMessageBox.warning(self.download_page_screen, "Working in progress!", f"Please wait until the function "
                                                                                f"is executed.")
 
     def download_finished_for_file_page(self):
-        QMessageBox.warning(self.download_page_screen, "Download is finished!", f"Function concluded.")
+        QMessageBox.warning(self.download_page_screen, "Progress is finished!", f"Function concluded.")
 
     def handle_error_for_file_page(self, error_message):
         QMessageBox.warning(self.download_page_screen, "Error!", f"{error_message}.")
+
+    def user_stop_for_file_page(self):
+        QMessageBox.warning(self.download_page_screen, "Error!", f"Function stopped by user.")
 
     def toggle_progress(self):
         self.is_running = not self.is_running
@@ -2866,6 +2889,13 @@ class Ui_MainWindow(object):
             self.progressBar.setRange(0, 0)  # Modo indeterminado - animação rodando
         else:
             self.progressBar.setRange(0, 1)  # Range fixo para não animar
+
+    def toggle_progress_bar_execute(self):
+        self.pbe_is_running = not self.pbe_is_running
+        if self.pbe_is_running:
+            self.progressBarExecute.setRange(0, 0)
+        else:
+            self.progressBarExecute.setRange(0, 1)
 
     def set_global_graph(self):
         self.figure.clear()
