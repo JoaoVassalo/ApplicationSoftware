@@ -27,6 +27,7 @@ from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Bu
                        Salinity_Average_Buttons, Salinity_LatDepthProfile_Buttons, Salinity_LonDepthProfile_Buttons,
                        Salinity_Dataframe_Buttons, VarInfo_Widgets, ConcatDatasetForm, MergeDatasetForm, DatDatasetForm,
                        ImpDatasetForm, FilterDatasetForm)
+import VarVerify
 import resources_rc
 import os
 import xarray as xr
@@ -2113,6 +2114,12 @@ class Ui_MainWindow(object):
 
         self.file = None
         self.currentButton_onfilepage = None
+        self.varname_obj = {
+            'Current': VarVerify.CurrentVar(),
+            'Wind': VarVerify.WindVar(),
+            'Temperature': VarVerify.TemperatureVar(),
+            'Salinity': VarVerify.SalinityVar()
+        }
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -2400,7 +2407,12 @@ class Ui_MainWindow(object):
             if widget_to_remove:
                 widget_to_remove.setParent(None)
 
-        self.set_graphbuttons(selected_radio.text())
+        obj = self.varname_obj[selected_radio.text()]
+        verify = obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+        if isinstance(verify, bool):
+            self.set_graphbuttons(selected_radio.text())
+        else:
+            QMessageBox.warning(self.view_page_main_screen, "Warning", f"{verify}")
 
     def clear_frame_container(self):
         if self.gridLayout_5.count() > 1:
@@ -2554,8 +2566,13 @@ class Ui_MainWindow(object):
                 widget_to_remove.setParent(None)
 
         if len(variable) == 1:
-            self.set_oneradio_only(variable[0])
-            self.set_graphbuttons(variable[0])
+            obj = self.varname_obj[variable[0]]
+            verify = obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+            if isinstance(verify, bool):
+                self.set_oneradio_only(variable[0])
+                self.set_graphbuttons(variable[0])
+            else:
+                QMessageBox.warning(self.view_page_main_screen, "Warning", f"{verify}")
         else:
             for var_ in variable:
                 radioB = QRadioButton(var_, self.frame_to_radio_variables)
