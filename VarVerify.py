@@ -44,10 +44,24 @@ class CheckVariables(ABC):
 
         return self.message
 
+    @staticmethod
+    def get_variables(varmap, dataset):
+        names = {}
+        for chave, valores in varmap.items():
+            for var in dataset.variables:
+                attrs = dataset[var].attrs
+                if any(valor in attrs.get('standard_name', '') or valor in attrs.get('long_name', '') for valor in
+                       valores):
+                    names[chave] = var
+                    break
+        del dataset
+        return names
+
 
 class CurrentVar(CheckVariables):
     def __init__(self):
         super().__init__()
+        self.variables = None
         self.var_names = {
             'eastward_sea_water_velocity': 'U component of current',
             'northward_sea_water_velocity': 'V component of current',
@@ -56,6 +70,14 @@ class CurrentVar(CheckVariables):
             'depth': 'depth variable',
             'Valid Time': 'time variable'
         }
+        self.varname_map = {
+            'u': ['eastward_sea_water_velocity'],
+            'v': ['northward_sea_water_velocity'],
+            'depth': ['depth'],
+            'time': ['Valid time', 'time', 'Valid Time'],
+            'longitude': ['longitude', 'Longitude'],
+            'latitude': ['latitude', 'Latitude']
+        }
 
     def check(self, path):
         dataset = xr.open_dataset(path)
@@ -63,10 +85,17 @@ class CurrentVar(CheckVariables):
         del dataset
         return response
 
+    def get_var_names(self, path):
+        dataset = xr.open_dataset(path)
+        self.variables = self.get_variables(self.varname_map, dataset)
+        del dataset
+        return self.variables
+
 
 class WindVar(CheckVariables):
     def __init__(self):
         super().__init__()
+        self.variables = None
         self.var_names = {
             '10 metre U wind component': 'U component of wind',
             '10 metre V wind component': 'V component of wind',
@@ -75,6 +104,13 @@ class WindVar(CheckVariables):
             'Valid Time': 'time variable',
             'time': 'time variable'
         }
+        self.varname_map = {
+            'u': ['10 metre U wind component', 'U component of wind', 'eastward_wind'],
+            'v': ['10 metre V wind component', 'V component of wind', 'northward_wind'],
+            'time': ['Valid time', 'time', 'Valid Time'],
+            'longitude': ['longitude', 'Longitude'],
+            'latitude': ['latitude', 'Latitude']
+        }
 
     def check(self, path):
         dataset = xr.open_dataset(path)
@@ -82,10 +118,17 @@ class WindVar(CheckVariables):
         del dataset
         return response
 
+    def get_var_names(self, path):
+        dataset = xr.open_dataset(path)
+        self.variables = self.get_variables(self.varname_map, dataset)
+        del dataset
+        return self.variables
+
 
 class TemperatureVar(CheckVariables):
     def __init__(self):
         super().__init__()
+        self.variables = None
         self.var_names = {
             'sea_water_temperature': 'Temperature',
             'latitude': 'latitude coordinate',
@@ -93,23 +136,12 @@ class TemperatureVar(CheckVariables):
             'depth': 'depth variable',
             'Valid Time': 'time variable'
         }
-
-    def check(self, path):
-        dataset = xr.open_dataset(path)
-        response = self.check_variables(self.var_names, dataset)
-        del dataset
-        return response
-
-
-class SalinityVar(CheckVariables):
-    def __init__(self):
-        super().__init__()
-        self.var_names = {
-            'sea_water_salinity': 'Salinity',
-            'latitude': 'latitude coordinate',
-            'longitude': 'longitude coordinate',
-            'depth': 'depth variable',
-            'Valid Time': 'time variable'
+        self.varname_map = {
+            'temperature': ['sea_water_temperature'],
+            'depth': ['depth'],
+            'time': ['Valid time', 'time', 'Valid Time'],
+            'longitude': ['longitude', 'Longitude'],
+            'latitude': ['latitude', 'Latitude']
         }
 
     def check(self, path):
@@ -117,3 +149,41 @@ class SalinityVar(CheckVariables):
         response = self.check_variables(self.var_names, dataset)
         del dataset
         return response
+
+    def get_var_names(self, path):
+        dataset = xr.open_dataset(path)
+        self.variables = self.get_variables(self.varname_map, dataset)
+        del dataset
+        return self.variables
+
+
+class SalinityVar(CheckVariables):
+    def __init__(self):
+        super().__init__()
+        self.variables = None
+        self.var_names = {
+            'sea_water_salinity': 'Salinity',
+            'latitude': 'latitude coordinate',
+            'longitude': 'longitude coordinate',
+            'depth': 'depth variable',
+            'Valid Time': 'time variable'
+        }
+        self.varname_map = {
+            'salinity': ['sea_water_salinity'],
+            'depth': ['depth'],
+            'time': ['Valid time', 'time', 'Valid Time'],
+            'longitude': ['longitude', 'Longitude'],
+            'latitude': ['latitude', 'Latitude']
+        }
+
+    def check(self, path):
+        dataset = xr.open_dataset(path)
+        response = self.check_variables(self.var_names, dataset)
+        del dataset
+        return response
+
+    def get_var_names(self, path):
+        dataset = xr.open_dataset(path)
+        self.variables = self.get_variables(self.varname_map, dataset)
+        del dataset
+        return self.variables
