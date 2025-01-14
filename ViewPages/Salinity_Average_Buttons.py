@@ -1,24 +1,8 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Salinity_Average_ButtonsBvGcEM.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
+from PySide6.QtGui import (QFont, QIcon)
+from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                               QVBoxLayout, QWidget)
-import resources_rc
+                               QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -29,13 +13,17 @@ import os
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.sali_name = variables['salinity']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -210,9 +198,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.graph_layout)
 
         try:
-            self.lat = [lat_value for lat_value in self.dataset['lat'].values]
-            self.lon = [lon_value for lon_value in self.dataset['lon'].values]
-            self.time = self.dataset['time'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.time = self.dataset[self.time_name].values
             self.time_selected = self.time[0]
             self.sel_time(self.time_selected)
             self.plot_graph()
@@ -262,12 +250,12 @@ class Ui_WindButton_LonLatProfile(object):
         self.figure.clear()
         self.canvas.draw()
 
-        dataset = self.dataset['salinity'].sel(time=self.time_selected)
+        dataset = self.dataset[self.sali_name].sel({self.time_name: self.time_selected})
 
         ax = self.figure.add_subplot(111)
 
-        depth = [dpt for dpt in dataset.depth.values][::-1]
-        variable_x = [np.nanmean(dataset.sel(depth=d).values) for d in depth]
+        depth = [dpt for dpt in dataset[self.depth_name].values][::-1]
+        variable_x = [np.nanmean(dataset.sel({self.depth_name: d}).values) for d in depth]
 
         x_values = np.arange(min(variable_x), max(variable_x), 0.5) if max(variable_x) - min(variable_x) <= 10 \
             else np.arange(min(variable_x), max(variable_x), 2)
@@ -276,7 +264,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_xticks(x_values)
         ax.set_xlabel(f'Salinity [{dataset.units}]', labelpad=5, fontsize=8, color='white')
 
-        ax.set_ylabel(f'Depth [{dataset.depth.units}]', labelpad=5, fontsize=8, color='white')
+        ax.set_ylabel(f'Depth [{dataset[self.depth_name].units}]', labelpad=5, fontsize=8, color='white')
         ax.grid()
         ax.tick_params(axis='both', which='major', labelsize=7, color='white', labelcolor='white')
         self.figure.figure.gca().invert_yaxis()
@@ -293,11 +281,11 @@ class Ui_WindButton_LonLatProfile(object):
         self.canvas.figure.set_facecolor("#3d505f")
 
     def save_fig(self):
-        dataset = self.dataset['salinity'].sel(time=self.time_selected)
+        dataset = self.dataset[self.sali_name].sel({self.time_name: self.time_selected})
         fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
 
-        depth = [dpt for dpt in dataset.depth.values][::-1]
-        variable_x = [np.nanmean(dataset.sel(depth=d).values) for d in depth]
+        depth = [dpt for dpt in dataset[self.depth_name].values][::-1]
+        variable_x = [np.nanmean(dataset.sel({self.depth_name: d}).values) for d in depth]
 
         x_values = np.arange(min(variable_x), max(variable_x), 0.5) if max(variable_x) - min(variable_x) <= 10 \
             else np.arange(min(variable_x), max(variable_x), 2)
@@ -306,7 +294,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_xticks(x_values)
         ax.set_xlabel(f'Salinity [{dataset.units}]', labelpad=20, fontsize=18)
 
-        ax.set_ylabel(f'Depth [{dataset.depth.units}]', labelpad=20, fontsize=18)
+        ax.set_ylabel(f'Depth [{dataset[self.depth_name].units}]', labelpad=20, fontsize=18)
         plt.grid()
         plt.tick_params(axis='both', which='major', labelsize=16)
         plt.gca().invert_yaxis()
@@ -328,4 +316,3 @@ class Ui_WindButton_LonLatProfile(object):
         self.forward_button_time.setText("")
         self.finish_button_time.setText("")
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
-    # retranslateUi

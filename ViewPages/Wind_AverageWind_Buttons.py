@@ -1,24 +1,8 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Wind_AverageWind_ButtonsQhquIf.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
+from PySide6.QtGui import (QFont, QIcon)
+from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                               QVBoxLayout, QWidget)
-import resources_rc
+                               QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -32,13 +16,16 @@ import os
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.u_name, self.v_name = variables['u'], variables['v']
+        self.time_name = variables['time']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -287,11 +274,11 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.graph_layout)
 
         try:
-            self.lat = [lat_value for lat_value in self.dataset['latitude'].values]
-            self.lon = [lon_value for lon_value in self.dataset['longitude'].values]
-            self.ucomponent = self.dataset['u10'].values
-            self.vcomponent = self.dataset['v10'].values
-            self.time = self.dataset['valid_time'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.ucomponent = self.dataset[self.u_name].values
+            self.vcomponent = self.dataset[self.v_name].values
+            self.time = self.dataset[self.time_name].values
             self.year, self.month = self.filter_data()
             self.year_selected, self.month_selected = self.year[0], self.month[0]
             self.sel_year()
@@ -362,9 +349,9 @@ class Ui_WindButton_LonLatProfile(object):
 
     def mag_all(self):
         f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
-        u_mag = self.dataset['u10'].values[:, :, :]
-        v_mag = self.dataset['v10'].values[:, :, :]
-        mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset['valid_time']))]
+        u_mag = self.dataset[self.u_name].values[:, :, :]
+        v_mag = self.dataset[self.v_name].values[:, :, :]
+        mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset[self.time_name]))]
         magnitude_min = np.nanmin(mag)
         magnitude_max = np.nanmax(mag)
         if magnitude_max == magnitude_min:
@@ -374,10 +361,10 @@ class Ui_WindButton_LonLatProfile(object):
     def save_gif(self):
         wind = self.dataset
 
-        time_index = pd.to_datetime(wind['valid_time'].values)
+        time_index = pd.to_datetime(wind[self.time_name].values)
         mask = (time_index.year == self.year_selected) & (time_index.month == self.month_selected)
-        dataset_filtrado = wind.sel(valid_time=wind['valid_time'][mask])
-        time_index_filter = pd.to_datetime(dataset_filtrado['valid_time'].values)
+        dataset_filtrado = wind.sel(valid_time=wind[self.time_name][mask])
+        time_index_filter = pd.to_datetime(dataset_filtrado[self.time_name].values)
         dias_unicos = time_index_filter.day.unique().to_list()
         horas_unicas = time_index_filter.hour.unique().to_list()
 
@@ -389,15 +376,19 @@ class Ui_WindButton_LonLatProfile(object):
         list_horas = []
         dict_average_data = {i: [] for i in range(1, dias_unicos[-1] + 1)}
 
-        for time in dataset_filtrado['valid_time'].values:
+        for time in dataset_filtrado[self.time_name].values:
             t_formated = datetime.strptime(time.astype(str).split('.')[0], '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%H')
             t_formated = datetime.strptime(t_formated, '%Y-%m-%d-%H')
 
             list_days.append(t_formated.day)
             list_horas.append(t_formated.hour)
 
-            u = dataset_filtrado['u10'].sel(valid_time=time)[:, :].values
-            v = dataset_filtrado['v10'].sel(valid_time=time)[:, :].values
+            dict_to_sel = {
+                self.time_name: time
+            }
+
+            u = dataset_filtrado[self.u_name].sel(dict_to_sel)[:, :].values
+            v = dataset_filtrado[self.v_name].sel(dict_to_sel)[:, :].values
 
             vec_u.append(np.mean(u))
             vec_v.append(np.mean(v))
@@ -425,7 +416,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_ylabel('Days', fontsize=18)
 
         cb = fig.colorbar(im, ax=ax, orientation='vertical')
-        cb.set_label('Wind velocity (m/s)', fontsize=18)
+        cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=18)
         cb.set_ticks(np.arange(min_v, max_v, 2))
         cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(min_v, max_v, 2)])
 
@@ -449,10 +440,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         wind = self.dataset
 
-        time_index = pd.to_datetime(wind['valid_time'].values)
+        time_index = pd.to_datetime(wind[self.time_name].values)
         mask = (time_index.year == self.year_selected) & (time_index.month == self.month_selected)
-        dataset_filtrado = wind.sel(valid_time=wind['valid_time'][mask])
-        time_index_filter = pd.to_datetime(dataset_filtrado['valid_time'].values)
+        dataset_filtrado = wind.sel(valid_time=wind[self.time_name][mask])
+        time_index_filter = pd.to_datetime(dataset_filtrado[self.time_name].values)
         dias_unicos = time_index_filter.day.unique().to_list()
         horas_unicas = time_index_filter.hour.unique().to_list()
 
@@ -464,15 +455,19 @@ class Ui_WindButton_LonLatProfile(object):
         list_horas = []
         dict_average_data = {i: [] for i in range(1, dias_unicos[-1] + 1)}
 
-        for time in dataset_filtrado['valid_time'].values:
+        for time in dataset_filtrado[self.time_name].values:
             t_formated = datetime.strptime(time.astype(str).split('.')[0], '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%H')
             t_formated = datetime.strptime(t_formated, '%Y-%m-%d-%H')
 
             list_days.append(t_formated.day)
             list_horas.append(t_formated.hour)
 
-            u = dataset_filtrado['u10'].sel(valid_time=time)[:, :].values
-            v = dataset_filtrado['v10'].sel(valid_time=time)[:, :].values
+            dict_to_sel = {
+                self.time_name: time
+            }
+
+            u = dataset_filtrado[self.u_name].sel(dict_to_sel)[:, :].values
+            v = dataset_filtrado[self.v_name].sel(dict_to_sel)[:, :].values
 
             vec_u.append(np.mean(u))
             vec_v.append(np.mean(v))
@@ -500,7 +495,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_ylabel('Days', fontsize=8, color='white')
 
         cb = self.figure.colorbar(im, ax=ax, orientation='vertical')
-        cb.set_label('Wind velocity (m/s)', fontsize=6, color="white")
+        cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=6, color="white")
         cb.set_ticks(np.arange(min_v, max_v, 2))
         cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(min_v, max_v, 2)])
         cb.ax.tick_params(labelsize=8)
@@ -531,12 +526,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.StepFilterLabel.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Year", None))
         self.backward_button_step.setText("")
         self.forward_button_step.setText("")
-        # self.StepValueLabel.setText(
-        #     QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de ano", None))
         self.StepFilterLabel_2.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Month", None))
         self.backward_button_step_2.setText("")
         self.forward_button_step_2.setText("")
-        # self.StepValueLabel_2.setText(
-        #     QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de m\u00eas", None))
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
-    # retranslateUi

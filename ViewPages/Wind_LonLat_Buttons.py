@@ -1,26 +1,8 @@
-# -*- coding: utf-8 -*-
-import os
-from ctypes import oledll
-
-################################################################################
-## Form generated from reading UI file 'Wind_LonLat_ButtonsBuZwdQ.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QThread)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QThread)
+from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                               QVBoxLayout, QWidget)
-import resources_rc
+                               QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -31,6 +13,7 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import time
 from datetime import datetime
+import os
 
 
 class AnimationWorker(QThread):
@@ -73,13 +56,16 @@ class CustomNavigationToolbar(NavigationToolbar):
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):  # , page
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):  # , page
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.u_name, self.v_name = variables['u'], variables['v']
+        self.time_name = variables['time']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -404,9 +390,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.hori_frame)
 
         try:
-            self.lat = [lat_value for lat_value in self.dataset['latitude'].values]
-            self.lon = [lon_value for lon_value in self.dataset['longitude'].values]
-            self.time = self.dataset['valid_time'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.time = self.dataset[self.time_name].values
             self.time_selected = self.time[0]
             self.sel_time(self.time_selected)
             self.step = 1
@@ -414,8 +400,6 @@ class Ui_WindButton_LonLatProfile(object):
             self.sel_step(self.step)
             self.plot_first_graph(data=self.dataset, time_=self.time_selected, step_=self.step)
             self.plot_first_average(data=self.dataset, t=self.time_selected)
-            # self.plot_vec_wind(data=self.dataset, time_=self.time_selected, step_=self.step)
-            # self.plot_average_vec_wind(data=self.dataset, t=self.time_selected)
         except Exception as e:
             raise e
 
@@ -531,8 +515,11 @@ class Ui_WindButton_LonLatProfile(object):
             self.plot_graph()
 
     def plot_average_vec_wind(self, data, t):
-        u = data['u10'].sel(valid_time=t).values
-        v = data['v10'].sel(valid_time=t).values
+        dict_to_sel = {
+            self.time_name: t
+        }
+        u = data[self.u_name].sel(dict_to_sel).values
+        v = data[self.v_name].sel(dict_to_sel).values
 
         u_mean = np.nanmean(u)
         v_mean = np.nanmean(v)
@@ -552,8 +539,11 @@ class Ui_WindButton_LonLatProfile(object):
         self.vecmean.clear()
         self.canvasmean.draw()
 
-        u = data['u10'].sel(valid_time=t).values
-        v = data['v10'].sel(valid_time=t).values
+        dict_to_sel = {
+            self.time_name: t
+        }
+        u = data[self.u_name].sel(dict_to_sel).values
+        v = data[self.v_name].sel(dict_to_sel).values
 
         u_mean = np.nanmean(u)
         v_mean = np.nanmean(v)
@@ -591,8 +581,11 @@ class Ui_WindButton_LonLatProfile(object):
             self.plot_first_graph(data, time_, step_)
         else:
             data_wind = data
-            u_plot = data_wind['u10'].sel(valid_time=time_).values[::step_, ::step_]
-            v_plot = data_wind['v10'].sel(valid_time=time_).values[::step_, ::step_]
+            dict_to_sel = {
+                self.time_name: time_
+            }
+            u_plot = data_wind[self.u_name].sel(dict_to_sel).values[::step_, ::step_]
+            v_plot = data_wind[self.v_name].sel(dict_to_sel).values[::step_, ::step_]
 
             lon_plot, lat_plot = self.lons[::step_, ::step_], self.lats[::step_, ::step_]
             x, y = self.mp(lon_plot, lat_plot)
@@ -609,9 +602,9 @@ class Ui_WindButton_LonLatProfile(object):
             f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
 
             def mag_all(step_tm):
-                u_mag = data_wind['u10'].values[:, ::step_tm, ::step_tm]
-                v_mag = data_wind['v10'].values[:, ::step_tm, ::step_tm]
-                mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(data_wind['valid_time']))]
+                u_mag = data_wind[self.u_name].values[:, ::step_tm, ::step_tm]
+                v_mag = data_wind[self.v_name].values[:, ::step_tm, ::step_tm]
+                mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(data_wind[self.time_name]))]
                 magnitude_min = np.nanmin(mag)
                 magnitude_max = np.nanmax(mag)
                 if magnitude_max == magnitude_min:
@@ -642,13 +635,17 @@ class Ui_WindButton_LonLatProfile(object):
         self.canvas.draw()
 
         data_wind = data
-        lon = data_wind['longitude'].values
-        lat = data_wind['latitude'].values
+        lon = data_wind[self.lon_name].values
+        lat = data_wind[self.lat_name].values
 
         self.ax_vec = self.figure.add_subplot(111)
 
-        u_plot = data_wind['u10'].sel(valid_time=time_).values[::step_, ::step_]
-        v_plot = data_wind['v10'].sel(valid_time=time_).values[::step_, ::step_]
+        dict_to_sel = {
+            self.time_name: time_
+        }
+
+        u_plot = data_wind[self.u_name].sel(dict_to_sel).values[::step_, ::step_]
+        v_plot = data_wind[self.v_name].sel(dict_to_sel).values[::step_, ::step_]
 
         self.lons, self.lats = np.meshgrid(lon, lat)
         lon_plot, lat_plot = self.lons[::step_, ::step_], self.lats[::step_, ::step_]
@@ -656,9 +653,9 @@ class Ui_WindButton_LonLatProfile(object):
         f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
 
         def mag_all(step_tm):
-            u_mag = data_wind['u10'].values[:, ::step_tm, ::step_tm]
-            v_mag = data_wind['v10'].values[:, ::step_tm, ::step_tm]
-            mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(data_wind['valid_time']))]
+            u_mag = data_wind[self.u_name].values[:, ::step_tm, ::step_tm]
+            v_mag = data_wind[self.v_name].values[:, ::step_tm, ::step_tm]
+            mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(data_wind[self.time_name]))]
             magnitude_min = np.nanmin(mag)
             magnitude_max = np.nanmax(mag)
             if magnitude_max == magnitude_min:
@@ -691,7 +688,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.quiver = self.mp.quiver(x, y, u_norm[::-1], v_norm[::-1], color=colors, scale=30)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax_vec, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{data_wind['u10'].attrs['units']}]', fontsize=6, color="white")
+        cbar.set_label(f'Magnitude dos Vetores [{data_wind[self.u_name].attrs['units']}]', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
@@ -737,13 +734,17 @@ class Ui_WindButton_LonLatProfile(object):
         data_wind = self.dataset
         time_wind = self.time_selected
         step_wind = self.step
-        lon = data_wind['longitude'].values
-        lat = data_wind['latitude'].values
+        lon = data_wind[self.lon_name].values
+        lat = data_wind[self.lat_name].values
 
         fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
 
-        u_plot = data_wind['u10'].sel(valid_time=time_wind).values[::step_wind, ::step_wind]
-        v_plot = data_wind['v10'].sel(valid_time=time_wind).values[::step_wind, ::step_wind]
+        dict_to_sel = {
+            self.time_name: time_wind
+        }
+
+        u_plot = data_wind[self.u_name].sel(dict_to_sel).values[::step_wind, ::step_wind]
+        v_plot = data_wind[self.v_name].sel(dict_to_sel).values[::step_wind, ::step_wind]
 
         lons, lats = np.meshgrid(lon, lat)
         lon_plot, lat_plot = lons[::step_wind, ::step_wind], lats[::step_wind, ::step_wind]
@@ -751,9 +752,9 @@ class Ui_WindButton_LonLatProfile(object):
         f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
 
         def mag_all(step_tm):
-            u_mag = data_wind['u10'].values[:, ::step_tm, ::step_tm]
-            v_mag = data_wind['v10'].values[:, ::step_tm, ::step_tm]
-            mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(data_wind['valid_time']))]
+            u_mag = data_wind[self.u_name].values[:, ::step_tm, ::step_tm]
+            v_mag = data_wind[self.v_name].values[:, ::step_tm, ::step_tm]
+            mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(data_wind[self.time_name]))]
             magnitude_min = np.nanmin(mag)
             magnitude_max = np.nanmax(mag)
             if magnitude_max == magnitude_min:
@@ -785,7 +786,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         mp.quiver(x, y, u_norm[::-1], v_norm[::-1], color=colors, scale=30)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{data_wind['u10'].attrs['units']}]', fontsize=18)
+        cbar.set_label(f'Magnitude dos Vetores [{data_wind[self.u_name].attrs['units']}]', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         mp.drawcoastlines()
@@ -814,29 +815,34 @@ class Ui_WindButton_LonLatProfile(object):
         f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
 
         def mag_all(step_tm):
-            u_mag = self.dataset['u10'].values[:, ::step_tm, ::step_tm]
-            v_mag = self.dataset['v10'].values[:, ::step_tm, ::step_tm]
-            mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset['valid_time']))]
+            u_mag = self.dataset[self.u_name].values[:, ::step_tm, ::step_tm]
+            v_mag = self.dataset[self.v_name].values[:, ::step_tm, ::step_tm]
+            mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset[self.time_name]))]
             magnitude_min = np.nanmin(mag)
             magnitude_max = np.nanmax(mag)
             if magnitude_max == magnitude_min:
                 magnitude_max += 1e-6
             return mag
 
-        time = list(self.dataset.valid_time.values)
+        time = list(self.dataset[self.time_name].values)
 
         def update(frame):
             if frame == 0:
                 return
-            data_wind = self.dataset.sel(valid_time=time[frame])
+
+            dict_to_sel = {
+                self.time_name: time[frame]
+            }
+
+            data_wind = self.dataset.sel(dict_to_sel)
 
             axs.cla()
 
-            lon = data_wind['longitude'].values
-            lat = data_wind['latitude'].values
+            lon = data_wind[self.lon_name].values
+            lat = data_wind[self.lat_name].values
 
-            u_plot = data_wind['u10'].values[::self.step, ::self.step]
-            v_plot = data_wind['v10'].values[::self.step, ::self.step]
+            u_plot = data_wind[self.u_name].values[::self.step, ::self.step]
+            v_plot = data_wind[self.v_name].values[::self.step, ::self.step]
 
             lons, lats = np.meshgrid(lon, lat)
             lon_plot, lat_plot = lons[::self.step, ::self.step], lats[::self.step, ::self.step]
@@ -884,7 +890,7 @@ class Ui_WindButton_LonLatProfile(object):
         norm = plt.Normalize(vmin=magnitude_min, vmax=magnitude_max)
 
         cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset['u10'].attrs['units']}]', fontsize=18)
+        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         ani = FuncAnimation(fig, update, frames=len(time) - 1, interval=1000)

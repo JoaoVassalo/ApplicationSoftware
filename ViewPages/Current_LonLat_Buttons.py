@@ -1,24 +1,8 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Wind_LonLat_ButtonsTwjpsQ.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QThread)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QThread)
+from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                               QVBoxLayout, QWidget)
-import resources_rc
+                               QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -30,7 +14,6 @@ import matplotlib.pyplot as plt
 import time
 from datetime import datetime
 import os
-from multiprocessing import Process, Manager
 
 
 class AnimationWorker(QThread):
@@ -43,13 +26,17 @@ class AnimationWorker(QThread):
         self.page.play_animation()
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.u_name, self.v_name = variables['u'], variables['v']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -485,10 +472,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         try:
             self.f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
-            self.lat = [lat_value for lat_value in self.dataset['lat'].values]
-            self.lon = [lon_value for lon_value in self.dataset['lon'].values]
-            self.time = self.dataset['time'].values
-            self.depth = self.dataset['depth'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.time = self.dataset[self.time_name].values
+            self.depth = self.dataset[self.depth_name].values
             self.time_selected = self.time[0]
             self.sel_time(self.time_selected)
             self.step = 1
@@ -619,8 +606,13 @@ class Ui_WindButton_LonLatProfile(object):
         self.worker.start()
 
     def plot_average_vec_current(self):
-        u = self.dataset['water_u'].sel(time=self.time_selected, depth=self.depth_selected).values
-        v = self.dataset['water_v'].sel(time=self.time_selected, depth=self.depth_selected).values
+        dict_to_sel = {
+            self.time_name: self.time_selected,
+            self.depth_name: self.depth_selected
+        }
+
+        u = self.dataset[self.u_name].sel(dict_to_sel).values
+        v = self.dataset[self.v_name].sel(dict_to_sel).values
 
         u_mean = np.nanmean(u)
         v_mean = np.nanmean(v)
@@ -641,8 +633,13 @@ class Ui_WindButton_LonLatProfile(object):
         self.vecmean.clear()
         self.canvasmean.draw()
 
-        u = self.dataset['water_u'].sel(time=self.time_selected, depth=self.depth_selected).values
-        v = self.dataset['water_v'].sel(time=self.time_selected, depth=self.depth_selected).values
+        dict_to_sel = {
+            self.time_name: self.time_selected,
+            self.depth_name: self.depth_selected
+        }
+
+        u = self.dataset[self.u_name].sel(dict_to_sel).values
+        v = self.dataset[self.v_name].sel(dict_to_sel).values
 
         u_mean = np.nanmean(u)
         v_mean = np.nanmean(v)
@@ -679,7 +676,7 @@ class Ui_WindButton_LonLatProfile(object):
         QApplication.processEvents()
 
         time = list(self.dataset.time.values)
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
 
         def update(frame):
             if frame == 0:
@@ -687,9 +684,14 @@ class Ui_WindButton_LonLatProfile(object):
 
             axs.cla()
 
-            u_plot = self.dataset['water_u'].sel(time=self.time[frame], depth=self.depth_selected).values[::self.step,
+            dict_to_sel = {
+                self.time_name: self.time[frame],
+                self.depth_name: self.depth_selected
+            }
+
+            u_plot = self.dataset[self.u_name].sel(dict_to_sel).values[::self.step,
                      ::self.step]
-            v_plot = self.dataset['water_v'].sel(time=self.time[frame], depth=self.depth_selected).values[::self.step,
+            v_plot = self.dataset[self.v_name].sel(dict_to_sel).values[::self.step,
                      ::self.step]
 
             lons, lats = np.meshgrid(lon, lat)
@@ -753,7 +755,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.mainpage.centralwidget.setDisabled(False)
 
     def save_figure(self):
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
 
         fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
 
@@ -764,8 +766,13 @@ class Ui_WindButton_LonLatProfile(object):
                      urcrnrlat=max(lat),
                      resolution='i')
 
-        u_plot = self.dataset['water_u'].sel(time=self.time_selected, depth=self.depth_selected).values[::self.step, ::self.step]
-        v_plot = self.dataset['water_v'].sel(time=self.time_selected, depth=self.depth_selected).values[::self.step, ::self.step]
+        dict_to_sel = {
+            self.time_name: self.time_selected,
+            self.depth_name: self.depth_selected
+        }
+
+        u_plot = self.dataset[self.u_name].sel(dict_to_sel).values[::self.step, ::self.step]
+        v_plot = self.dataset[self.v_name].sel(dict_to_sel).values[::self.step, ::self.step]
 
         lons, lats = np.meshgrid(lon, lat)
         lon_plot, lat_plot = lons[::self.step, ::self.step], lats[::self.step, ::self.step]
@@ -784,7 +791,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         mp.quiver(x, y, u_norm, v_norm, color=colors_, scale=30)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset['water_u'].units}]', fontsize=18)
+        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].units}]', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         mp.drawcoastlines()
@@ -894,7 +901,7 @@ class Ui_WindButton_LonLatProfile(object):
         :param data:
         :return: min and max value to normalize the color map
         """
-        mag = [self.f_magnitude(data['water_u'][:, :, :, :], data['water_v'][:, :, :, :])]
+        mag = [self.f_magnitude(data[self.u_name][:, :, :, :], data[self.v_name][:, :, :, :])]
         magnitude_min = np.nanmin(mag)
         magnitude_max = np.nanmax(mag)
         if magnitude_max == magnitude_min:
@@ -905,9 +912,16 @@ class Ui_WindButton_LonLatProfile(object):
         if self.step != self.lats_step:
             self.plot_first_graph()
         else:
-            u_plot = self.dataset['water_u'].sel(time=self.time_selected, depth=self.depth_selected).values[::self.step,
+            dict_to_sel = {
+                self.time_name: self.time_selected,
+                self.depth_name: self.depth_selected
+            }
+
+            u_plot = self.dataset[self.u_name].sel(dict_to_sel).values[
+                     ::self.step,
                      ::self.step]
-            v_plot = self.dataset['water_v'].sel(time=self.time_selected, depth=self.depth_selected).values[::self.step,
+            v_plot = self.dataset[self.v_name].sel(dict_to_sel).values[
+                     ::self.step,
                      ::self.step]
 
             lon_plot, lat_plot = self.lons[::self.step, ::self.step], self.lats[::self.step, ::self.step]
@@ -932,7 +946,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.figure.clear()
         self.canvas.draw()
 
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
 
         self.ax = self.figure.add_subplot(111)
 
@@ -944,9 +958,14 @@ class Ui_WindButton_LonLatProfile(object):
                      resolution='i',
                      ax=self.ax)
 
-        u_plot = self.dataset['water_u'].sel(time=self.time_selected, depth=self.depth_selected).values[::self.step,
+        dict_to_sel = {
+            self.time_name: self.time_selected,
+            self.depth_name: self.depth_selected
+        }
+
+        u_plot = self.dataset[self.u_name].sel(dict_to_sel).values[::self.step,
                  ::self.step]
-        v_plot = self.dataset['water_v'].sel(time=self.time_selected, depth=self.depth_selected).values[::self.step,
+        v_plot = self.dataset[self.v_name].sel(dict_to_sel).values[::self.step,
                  ::self.step]
 
         self.lons, self.lats = np.meshgrid(lon, lat)
@@ -966,7 +985,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.quiver = self.mp.quiver(x, y, u_norm, v_norm, color=colors_, scale=30)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset['water_u'].units}]', fontsize=6, color="white")
+        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].units}]', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')

@@ -1,24 +1,8 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Salinity_LonLat_ButtonslLcoHP.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QThread)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QThread)
+from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                               QVBoxLayout, QWidget)
-import resources_rc
+                               QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -42,13 +26,17 @@ class AnimationWorker(QThread):
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.sali_name = variables['salinity']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -375,11 +363,11 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.graph_layout)
 
         try:
-            self.lat = [lat_value for lat_value in self.dataset['lat'].values]
-            self.lon = [lon_value for lon_value in self.dataset['lon'].values]
-            self.time = self.dataset['time'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.time = self.dataset[self.time_name].values
             self.time_selected = self.time[0]
-            self.depth = self.dataset['depth'].values
+            self.depth = self.dataset[self.depth_name].values
             self.depth_selected = self.depth[0]
             self.var_selected = None
             self.sel_time(self.time_selected)
@@ -553,8 +541,8 @@ class Ui_WindButton_LonLatProfile(object):
             self.opn_components()
 
     def plot_profile(self):
-        dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
-        water_temp_filtered = dataset_filtered['salinity'].values
+        dataset_filtered = self.dataset.sel({self.time_name: self.time_selected, self.depth_name: self.depth_selected})
+        water_temp_filtered = dataset_filtered[self.sali_name].values
         self.im.set_data(water_temp_filtered)
         self.canvas.draw()
 
@@ -562,9 +550,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.figure.clear()
         self.canvas.draw()
 
-        dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
-        water_temp, water_temp_filtered = self.dataset['salinity'].values, dataset_filtered['salinity'].values
+        dataset_filtered = self.dataset.sel({self.time_name: self.time_selected, self.depth_name: self.depth_selected})
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        water_temp, water_temp_filtered = self.dataset[self.sali_name].values, dataset_filtered[self.sali_name].values
 
         min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
         cmap = cm.get_cmap('RdYlGn_r')
@@ -582,7 +570,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.im = mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset['salinity'].units}', fontsize=6, color="white")
+        cbar.set_label(f'{self.dataset[self.sali_name].units}', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
@@ -624,9 +612,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.canvas.figure.set_facecolor("#3d505f")
 
     def save_fig(self):
-        dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
-        salinity, salinity_filtered = self.dataset['salinity'].values, dataset_filtered['salinity'].values
+        dataset_filtered = self.dataset.sel({self.time_name: self.time_selected, self.depth_name: self.depth_selected})
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        salinity, salinity_filtered = self.dataset[self.sali_name].values, dataset_filtered[self.sali_name].values
 
         min_value, max_value = np.nanmin(salinity), np.nanmax(salinity)
         cmap = cm.get_cmap('RdYlGn_r')
@@ -643,7 +631,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         mp.imshow(salinity_filtered, cmap=cmap, norm=norm)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset['salinity'].units}', fontsize=18)
+        cbar.set_label(f'{self.dataset[self.sali_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         mp.drawcoastlines()
@@ -672,20 +660,20 @@ class Ui_WindButton_LonLatProfile(object):
         self.mainpage.centralwidget.setDisabled(True)
         QApplication.processEvents()
 
-        salinity = self.dataset['salinity'].values
+        salinity = self.dataset[self.sali_name].values
         min_value, max_value = np.nanmin(salinity), np.nanmax(salinity)
         cmap = cm.get_cmap('RdYlGn_r')
         norm = plt.Normalize(vmin=min_value, vmax=max_value)
 
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
 
-        time = list(self.dataset.time.values)
+        time = list(self.dataset[self.time_name].values)
 
         def update(frame):
             if frame == 0:
                 return
 
-            data = self.dataset.salinity.sel(time=time[frame], depth=self.depth_selected)
+            data = self.dataset[self.sali_name].sel({self.time_name: time[frame], self.depth_name: self.depth_selected})
 
             axs.cla()
 
@@ -716,7 +704,7 @@ class Ui_WindButton_LonLatProfile(object):
         axs = subfigs.subplots(1, 1)
 
         cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset['salinity'].units}', fontsize=18)
+        cbar.set_label(f'{self.dataset[self.sali_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         ani = FuncAnimation(fig, update, frames=len(time) - 1, interval=1000)
@@ -751,4 +739,3 @@ class Ui_WindButton_LonLatProfile(object):
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
         self.SaveAnimationButton.setText(
             QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE ANIMATION", None))
-    # retranslateUi

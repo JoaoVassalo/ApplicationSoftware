@@ -42,13 +42,17 @@ class AnimationWorker(QThread):
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.temp_name = variables['temperature']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -376,11 +380,11 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.graph_layout)
 
         try:
-            self.lat = [lat_value for lat_value in self.dataset['lat'].values]
-            self.lon = [lon_value for lon_value in self.dataset['lon'].values]
-            self.time = self.dataset['time'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.time = self.dataset[self.time_name].values
             self.time_selected = self.time[0]
-            self.depth = self.dataset['depth'].values
+            self.depth = self.dataset[self.depth_name].values
             self.depth_selected = self.depth[0]
             self.var_selected = None
             self.sel_time(self.time_selected)
@@ -562,7 +566,7 @@ class Ui_WindButton_LonLatProfile(object):
 
     def plot_profile(self):
         dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
-        water_temp_filtered = dataset_filtered['water_temp'].values
+        water_temp_filtered = dataset_filtered[self.temp_name].values
         self.im.set_data(water_temp_filtered)
         self.canvas.draw()
 
@@ -571,8 +575,8 @@ class Ui_WindButton_LonLatProfile(object):
         self.canvas.draw()
 
         dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
-        water_temp, water_temp_filtered = self.dataset['water_temp'].values, dataset_filtered['water_temp'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        water_temp, water_temp_filtered = self.dataset[self.temp_name].values, dataset_filtered[self.temp_name].values
 
         min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
         cmap = cm.get_cmap('RdYlGn_r')
@@ -591,7 +595,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.im = mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset['water_temp'].units}', fontsize=6, color="white")
+        cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
@@ -634,8 +638,8 @@ class Ui_WindButton_LonLatProfile(object):
 
     def save_fig(self):
         dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
-        water_temp, water_temp_filtered = self.dataset['water_temp'].values, dataset_filtered['water_temp'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        water_temp, water_temp_filtered = self.dataset[self.temp_name].values, dataset_filtered[self.temp_name].values
 
         min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
         cmap = cm.get_cmap('RdYlGn_r')
@@ -652,7 +656,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset['water_temp'].units}', fontsize=18)
+        cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         mp.drawcoastlines()
@@ -681,20 +685,25 @@ class Ui_WindButton_LonLatProfile(object):
         self.mainpage.centralwidget.setDisabled(True)
         QApplication.processEvents()
 
-        water_temp = self.dataset['water_temp'].values
+        water_temp = self.dataset[self.temp_name].values
         min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
         cmap = cm.get_cmap('RdYlGn_r')
         norm = plt.Normalize(vmin=min_value, vmax=max_value)
 
-        lon, lat = self.dataset['lon'].values, self.dataset['lat'].values
+        lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
 
-        time = list(self.dataset.time.values)
+        time = list(self.dataset[self.time_name].values)
 
         def update(frame):
             if frame == 0:
                 return
 
-            data = self.dataset.water_temp.sel(time=time[frame], depth=self.depth_selected)
+            dict_to_sel = {
+                self.time_name: time[frame],
+                self.depth_name: self.depth_selected
+            }
+
+            data = self.dataset[self.temp_name].sel(dict_to_sel)
 
             axs.cla()
 
@@ -725,7 +734,7 @@ class Ui_WindButton_LonLatProfile(object):
         axs = subfigs.subplots(1, 1)
 
         cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset['water_temp'].units}', fontsize=18)
+        cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         ani = FuncAnimation(fig, update, frames=len(time) - 1, interval=1000)

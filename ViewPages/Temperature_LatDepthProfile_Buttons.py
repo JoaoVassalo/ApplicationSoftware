@@ -1,29 +1,12 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Temperature_LatDepthProfile_ButtonstaKKEw.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
+from PySide6.QtGui import (QFont, QIcon)
+from PySide6.QtWidgets import (QComboBox, QFrame, QGridLayout,
                                QHBoxLayout, QLabel, QPushButton, QSizePolicy,
-                               QSpacerItem, QVBoxLayout, QWidget)
-import resources_rc
+                               QSpacerItem, QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 import numpy as np
-from matplotlib import colors
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -31,13 +14,17 @@ import os
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.temp_name = variables['temperature']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -244,9 +231,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.graph_layout)
 
         try:
-            self.lat = [lat_value for lat_value in self.dataset['lat'].values]
-            self.lon = [lon_value for lon_value in self.dataset['lon'].values]
-            self.time = self.dataset['time'].values
+            self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
+            self.time = self.dataset[self.time_name].values
             self.time_selected = self.time[0]
             self.sel_time(self.time_selected)
             for value in self.lon:
@@ -297,8 +284,8 @@ class Ui_WindButton_LonLatProfile(object):
             self.plot_var_profile_withdepth()
 
     def set_normvalues(self) -> tuple:
-        vmax = np.nanmax(self.dataset.water_temp[:, :, :, :])
-        vmin = np.nanmin(self.dataset.water_temp[:, :, :, :])
+        vmax = np.nanmax(self.dataset[self.temp_name][:, :, :, :])
+        vmin = np.nanmin(self.dataset[self.temp_name][:, :, :, :])
         return vmin, vmax
 
     def plot_var_profile_withdepth(self):
@@ -309,11 +296,16 @@ class Ui_WindButton_LonLatProfile(object):
         cmap = cm.get_cmap('RdYlGn_r')
         norm = plt.Normalize(vmin=vmin, vmax=vmax)
 
-        dataset_to_plot = self.dataset.sel(lon=float(self.comboBox.currentText()), time=self.time_selected)
+        dict_to_sel = {
+            self.time_name: self.time_selected,
+            self.lon_name: float(self.comboBox.currentText())
+        }
 
-        var_value = dataset_to_plot.water_temp.values
-        depth = dataset_to_plot.depth.values
-        x_axis = dataset_to_plot.lat.values
+        dataset_to_plot = self.dataset.sel(dict_to_sel)
+
+        var_value = dataset_to_plot[self.temp_name].values
+        depth = dataset_to_plot[self.depth_name].values
+        x_axis = dataset_to_plot[self.lat_name].values
 
         linhas_validas = ~np.isnan(var_value).all(axis=1)
         ulcd = np.where(linhas_validas)
@@ -333,12 +325,12 @@ class Ui_WindButton_LonLatProfile(object):
 
         cbar = self.figure.figure.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical',
                                            pad=0.05)
-        cbar.set_label(f'{self.dataset.water_temp.units}', fontsize=6, color="white")
+        cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
 
-        ax.set_xlabel(f'Latitude [{self.dataset['lat'].attrs['units']}]', labelpad=5, fontsize=8, color='white')
+        ax.set_xlabel(f'Latitude [{self.dataset[self.lat_name].attrs['units']}]', labelpad=5, fontsize=8, color='white')
         ax.set_ylabel('Depth [m]', labelpad=5, fontsize=8, color='white')
         ax.tick_params(axis='both', which='major', labelsize=7, color='white', labelcolor='white')
 
@@ -358,11 +350,16 @@ class Ui_WindButton_LonLatProfile(object):
         cmap = cm.get_cmap('RdYlGn_r')
         norm = plt.Normalize(vmin=vmin, vmax=vmax)
 
-        dataset_to_plot = self.dataset.sel(lon=float(self.comboBox.currentText()), time=self.time_selected)
+        dict_to_sel = {
+            self.time_name: self.time_selected,
+            self.lon_name: float(self.comboBox.currentText())
+        }
 
-        var_value = dataset_to_plot.water_temp.values
-        depth = dataset_to_plot.depth.values
-        x_axis = dataset_to_plot.lat.values
+        dataset_to_plot = self.dataset.sel(dict_to_sel)
+
+        var_value = dataset_to_plot[self.temp_name].values
+        depth = dataset_to_plot[self.depth_name].values
+        x_axis = dataset_to_plot[self.lat_name].values
 
         linhas_validas = ~np.isnan(var_value).all(axis=1)
         ulcd = np.where(linhas_validas)
@@ -381,10 +378,10 @@ class Ui_WindButton_LonLatProfile(object):
                    interpolation='bicubic', aspect='auto')  # , vmin=vmin, vmax=vmax
 
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'{self.dataset.water_temp.units}', fontsize=18)
+        cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
-        ax.set_xlabel(f'Latitude [{self.dataset['lat'].attrs['units']}]', labelpad=20, fontsize=18)
+        ax.set_xlabel(f'Latitude [{self.dataset[self.lat_name].attrs['units']}]', labelpad=20, fontsize=18)
         ax.set_ylabel('Depth [m]', labelpad=20, fontsize=18)
         plt.tick_params(axis='both', which='major', labelsize=16)
 
@@ -408,4 +405,3 @@ class Ui_WindButton_LonLatProfile(object):
         self.TimeFilterLabel_2.setText(
             QCoreApplication.translate("WindButton_LonLatProfile", u"Longitude coordinate", None))
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
-    # retranslateUi

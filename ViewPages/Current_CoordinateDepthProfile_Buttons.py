@@ -1,30 +1,12 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Current_CoordinateDepthProfile_ButtonslwXMpM.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
+from PySide6.QtGui import (QFont, QIcon)
+from PySide6.QtWidgets import (QComboBox, QFrame, QGridLayout,
                                QHBoxLayout, QLabel, QPushButton, QRadioButton,
-                               QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
-
-import resources_rc
+                               QSizePolicy, QSpacerItem, QVBoxLayout)
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 import numpy as np
-from matplotlib import colors
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from datetime import datetime
@@ -32,13 +14,17 @@ import os
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.u_name, self.v_name = variables['u'], variables['v']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.horizontalLayout = QHBoxLayout(WindButton_LonLatProfile)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -289,15 +275,15 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setLayout(self.graph_layout)
 
         try:
-            self.lat = [f'{lat_value}' for lat_value in self.dataset['lat'].values]
-            self.lon = [f'{lon_value}' for lon_value in self.dataset['lon'].values]
+            self.lat = [f'{lat_value}' for lat_value in self.dataset[self.lat_name].values]
+            self.lon = [f'{lon_value}' for lon_value in self.dataset[self.lon_name].values]
             self.LatRadioButton.setChecked(True)
 
-            self.time = self.dataset['time'].values
+            self.time = self.dataset[self.time_name].values
             self.time_selected = self.time[0]
             self.sel_time(self.time_selected)
 
-            self.depth = [f'{depth_value}' for depth_value in self.dataset.depth.values]
+            self.depth = [f'{depth_value}' for depth_value in self.dataset[self.depth_name].values]
             self.depthComboBox.addItems(self.depth)
             self.depthComboBox.setCurrentIndex(25)
             self.depthComboBox.currentIndexChanged.connect(self.plot_graph)
@@ -350,20 +336,30 @@ class Ui_WindButton_LonLatProfile(object):
         self.figure.clear()
         self.canvas.draw()
 
-        all_depth = self.dataset.depth.values
+        all_depth = self.dataset[self.depth_name].values
         index = self.depth.index(self.depthComboBox.currentText())
         depth = all_depth[:index + 1]
 
         if self.LatRadioButton.isChecked():
             var = 'Latitude'
-            componente = 'water_u'
-            dados_filtrados = self.dataset[componente].sel(time=self.time_selected, lat=float(self.coordComboBox.currentText()), depth=depth)[:, :].values
-            eixo_x = self.dataset.lon.values
+            componente = self.u_name
+            dict_to_sel = {
+                self.time_name: self.time_selected,
+                self.lat_name: float(self.coordComboBox.currentText()),
+                self.depth_name: depth
+            }
+            dados_filtrados = self.dataset[componente].sel(dict_to_sel)[:, :].values
+            eixo_x = self.dataset[self.lon_name].values
         else:
             var = 'Longitude'
-            componente = 'water_v'
-            dados_filtrados = self.dataset[componente].sel(time=self.time_selected, lon=float(self.coordComboBox.currentText()), depth=depth)[:, :].values
-            eixo_x = self.dataset.lat.values
+            componente = self.v_name
+            dict_to_sel = {
+                self.time_name: self.time_selected,
+                self.lon_name: float(self.coordComboBox.currentText()),
+                self.depth_name: depth
+            }
+            dados_filtrados = self.dataset[componente].sel(dict_to_sel)[:, :].values
+            eixo_x = self.dataset[self.lat_name].values
 
         min_value, max_value = self.set_normvalues(self.dataset[componente])
 
@@ -385,7 +381,6 @@ class Ui_WindButton_LonLatProfile(object):
 
         x, y = np.meshgrid(x_axis_filtered, depth_filtered)
 
-        # fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
         ax = self.figure.add_subplot(111)
 
         ax.quiver(

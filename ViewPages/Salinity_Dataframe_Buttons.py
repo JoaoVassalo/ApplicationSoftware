@@ -1,25 +1,6 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Salinity_Dataframe_ButtonsWOkNuq.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QAbstractTableModel)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QPushButton,
-                               QSizePolicy, QSpacerItem, QVBoxLayout, QWidget, QMainWindow, QTableView)
-import resources_rc
-import sys
-import pandas as pd
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QAbstractTableModel)
+from PySide6.QtWidgets import (QFrame, QHBoxLayout, QPushButton,
+                               QSizePolicy, QSpacerItem, QVBoxLayout, QTableView)
 from datetime import datetime
 from pandas import DataFrame as Df
 import numpy as np
@@ -37,29 +18,33 @@ class DataFrameModel(QAbstractTableModel):
     def columnCount(self, index=None):
         return self._dataframe.shape[1]
 
-    def data(self, index, role=Qt.DisplayRole):
-        if role == Qt.DisplayRole:
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.DisplayRole:
             value = self._dataframe.iloc[index.row(), index.column()]
             return str(value)
         return None
 
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
+    def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.DisplayRole:
+            if orientation == Qt.Orientation.Horizontal:
                 return str(self._dataframe.columns[section])
-            elif orientation == Qt.Vertical:
+            elif orientation == Qt.Orientation.Vertical:
                 return str(self._dataframe.index[section])
         return None
 
 
 class Ui_WindButton_LonLatProfile(object):
-    def setupUi(self, page, WindButton_LonLatProfile, dataset):
+    def setupUi(self, page, WindButton_LonLatProfile, dataset, variables):
         if not WindButton_LonLatProfile.objectName():
             WindButton_LonLatProfile.setObjectName(u"WindButton_LonLatProfile")
         WindButton_LonLatProfile.resize(546, 436)
 
         self.mainpage = page
         self.dataset = dataset
+        self.sali_name = variables['salinity']
+        self.time_name = variables['time']
+        self.depth_name = variables['depth']
+        self.lon_name, self.lat_name = variables['longitude'], variables['latitude']
 
         self.verticalLayout_2 = QVBoxLayout(WindButton_LonLatProfile)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -144,14 +129,14 @@ class Ui_WindButton_LonLatProfile(object):
 
     def average_sali_df(self):
         df_sali = {
-            'Depth [m]': [round(dpt, ndigits=2) for dpt in self.dataset['depth'].values]
+            'Depth [m]': [round(dpt, ndigits=2) for dpt in self.dataset[self.depth_name].values]
         }
-        for t in range(len(self.dataset['time'].values)):
-            t_ = str(self.dataset['time'].values[t]).split('.')[0]
+        for t in range(len(self.dataset[self.time_name].values)):
+            t_ = str(self.dataset[self.time_name].values[t]).split('.')[0]
             t_formated = datetime.strptime(t_, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%H')
 
-            df_sali[f'{t_formated}'] = [np.nanmean(self.dataset.salinity[t, dpt, :, :]) for dpt in
-                                        range(len(self.dataset.salinity['depth'].values))]
+            df_sali[f'{t_formated}'] = [np.nanmean(self.dataset[self.sali_name][t, dpt, :, :]) for dpt in
+                                        range(len(self.dataset[self.sali_name][self.depth_name].values))]
 
         df_sali = Df(df_sali)
         df_sali['Média'] = df_sali.iloc[:, 1:].mean(axis=1)
