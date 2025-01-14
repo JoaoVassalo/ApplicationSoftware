@@ -2120,6 +2120,7 @@ class Ui_MainWindow(object):
             'Temperature': VarVerify.TemperatureVar(),
             'Salinity': VarVerify.SalinityVar()
         }
+        self.variables_names = None
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -2407,12 +2408,13 @@ class Ui_MainWindow(object):
             if widget_to_remove:
                 widget_to_remove.setParent(None)
 
-        obj = self.varname_obj[selected_radio.text()]
-        verify = obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
-        if isinstance(verify, bool):
+        self.obj = self.varname_obj[selected_radio.text()]
+        self.verify = self.obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+        if isinstance(self.verify, bool):
+            self.variables_names = self.obj.get_var_names(f'{self.project.caminho}\\{self.comboBox.currentText()}')
             self.set_graphbuttons(selected_radio.text())
         else:
-            QMessageBox.warning(self.view_page_main_screen, "Warning", f"{verify}")
+            QMessageBox.warning(self.view_page_main_screen, "Warning", f"{self.verify}")
 
     def clear_frame_container(self):
         if self.gridLayout_5.count() > 1:
@@ -2425,98 +2427,98 @@ class Ui_MainWindow(object):
         self.frame_container = QFrame()
         self.ui_wind_page = Wind_LonLat_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_wind_page.setupUi(self, self.frame_container, self.file)
+        self.ui_wind_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_average_wind(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_wind_page = Wind_AverageWind_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_wind_page.setupUi(self, self.frame_container, self.file)
+        self.ui_wind_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_lonlat_currentprofile(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_current_page = Current_LonLat_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_current_page.setupUi(self, self.frame_container, self.file)
+        self.ui_current_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_section_profile(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_current_page = Current_CoordinateDepthProfile_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_current_page.setupUi(self, self.frame_container, self.file)
+        self.ui_current_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_lonlat_salinityprofile(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_salinity_page = Salinity_LonLat_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_salinity_page.setupUi(self, self.frame_container, self.file)
+        self.ui_salinity_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_average_salinity(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_salinity_page = Salinity_Average_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_salinity_page.setupUi(self, self.frame_container, self.file)
+        self.ui_salinity_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_depth_lat_salinity(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_salinity_page = Salinity_LatDepthProfile_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_salinity_page.setupUi(self, self.frame_container, self.file)
+        self.ui_salinity_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_depth_lon_salinity(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_salinity_page = Salinity_LonDepthProfile_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_salinity_page.setupUi(self, self.frame_container, self.file)
+        self.ui_salinity_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_table_salinity(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_salinity_page = Salinity_Dataframe_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_salinity_page.setupUi(self, self.frame_container, self.file)
+        self.ui_salinity_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_lonlat_temperatureprofile(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_temperature_page = Temperature_LonLat_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_temperature_page.setupUi(self, self.frame_container, self.file)
+        self.ui_temperature_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_average_temperature(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_temperature_page = Temperature_Average_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_temperature_page.setupUi(self, self.frame_container, self.file)
+        self.ui_temperature_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_depth_lat_temperature(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_temperature_page = Temperature_LatDepthProfile_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_temperature_page.setupUi(self, self.frame_container, self.file)
+        self.ui_temperature_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_depth_lon_temperature(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_temperature_page = Temperature_LonDepthProfile_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_temperature_page.setupUi(self, self.frame_container, self.file)
+        self.ui_temperature_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def plot_table_temperature(self):
         self.clear_frame_container()
         self.frame_container = QFrame()
         self.ui_temperature_page = Temperature_Dataframe_Buttons.Ui_WindButton_LonLatProfile()
         self.gridLayout_5.addWidget(self.frame_container)
-        self.ui_temperature_page.setupUi(self, self.frame_container, self.file)
+        self.ui_temperature_page.setupUi(self, self.frame_container, self.file, self.variables_names)
 
     def set_graphbuttons(self, var_set):
         button_configs = {
@@ -2566,13 +2568,14 @@ class Ui_MainWindow(object):
                 widget_to_remove.setParent(None)
 
         if len(variable) == 1:
-            obj = self.varname_obj[variable[0]]
-            verify = obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
-            if isinstance(verify, bool):
+            self.obj = self.varname_obj[variable[0]]
+            self.verify = self.obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+            if isinstance(self.verify, bool):
+                self.variables_names = self.obj.get_var_names(f'{self.project.caminho}\\{self.comboBox.currentText()}')
                 self.set_oneradio_only(variable[0])
                 self.set_graphbuttons(variable[0])
             else:
-                QMessageBox.warning(self.view_page_main_screen, "Warning", f"{verify}")
+                QMessageBox.warning(self.view_page_main_screen, "Warning", f"{self.verify}")
         else:
             for var_ in variable:
                 radioB = QRadioButton(var_, self.frame_to_radio_variables)
