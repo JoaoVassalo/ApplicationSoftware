@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
                                QVBoxLayout, QWidget)
+from ViewPages import ColorEscale as Cs
 import resources_rc
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -60,6 +61,35 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.hori_frame = QHBoxLayout(self.frame)
+
+        self.verticalLayout_ScaleButton = QVBoxLayout()
+        self.verticalLayout_ScaleButton.setAlignment(Qt.AlignmentFlag.AlignBottom)
+
+        self.ColorScaleButton = QPushButton()
+        self.ColorScaleButton.setObjectName(u"ColorScale")
+        self.ColorScaleButton.setMinimumSize(QSize(100, 30))
+        self.ColorScaleButton.setMaximumSize(QSize(100, 30))
+        self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
+                                         "	background-color: rgb(61, 80, 95);\n"
+                                         "	border-radius: 15px;\n"
+                                         "	border: 2px solid #F98600;\n"
+                                         "}\n"
+                                         "\n"
+                                         "QPushButton:hover{\n"
+                                         "	color: #F98600;\n"
+                                         "	font-size: 14px;\n"
+                                         "}")
+        self.ColorScaleButton.clicked.connect(self.open_color_scale_widget)
+
+        self.verticalLayout_ScaleButton.addWidget(self.ColorScaleButton)
+        self.hori_frame.addLayout(self.verticalLayout_ScaleButton)
+
+        self.color_scale_widget = None
+        self.current_min = np.nanmin(self.dataset[self.temp_name].values)
+        self.current_max = np.nanmax(self.dataset[self.temp_name].values)
+        self.current_scale = "RdYlGn_r"
 
         self.horizontalLayout.addWidget(self.frame)
 
@@ -377,7 +407,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.graph_layout.addWidget(self.toolbar)
         self.graph_layout.addWidget(self.canvas)
 
-        self.frame.setLayout(self.graph_layout)
+        self.hori_frame.addLayout(self.graph_layout)
+
+        self.frame.setLayout(self.hori_frame)
 
         try:
             self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
@@ -471,6 +503,22 @@ class Ui_WindButton_LonLatProfile(object):
             self.time_selected = self.time[index - 1]
             self.sel_time(self.time_selected)
             self.plot_graph()
+
+    def open_color_scale_widget(self):
+        if self.color_scale_widget is None:
+            self.color_scale_widget = Cs.ColorScaleWidget(self.current_scale)
+
+        self.color_scale_widget.scale_updated.connect(self.update_color_scale)
+        self.color_scale_widget.setWindowModality(Qt.WindowModality.ApplicationModal)
+        self.color_scale_widget.setWindowFlag(Qt.WindowType.Window)
+        self.color_scale_widget.show()
+
+    def update_color_scale(self, min_value, max_value, scale):
+        self.current_min = min_value
+        self.current_max = max_value
+        self.current_scale = scale
+        self.first_profile()
+        self.color_scale_widget.close()
 
     def cls_components(self):
         self.pause_button_time.setChecked(False)
@@ -578,11 +626,9 @@ class Ui_WindButton_LonLatProfile(object):
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
         water_temp, water_temp_filtered = self.dataset[self.temp_name].values, dataset_filtered[self.temp_name].values
 
-        min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=min_value, vmax=max_value)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
-        # fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
         self.ax = self.figure.add_subplot(111)
 
         mp = Basemap(projection='merc',
@@ -641,9 +687,8 @@ class Ui_WindButton_LonLatProfile(object):
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
         water_temp, water_temp_filtered = self.dataset[self.temp_name].values, dataset_filtered[self.temp_name].values
 
-        min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=min_value, vmax=max_value)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
         fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
 
@@ -685,10 +730,8 @@ class Ui_WindButton_LonLatProfile(object):
         self.mainpage.centralwidget.setDisabled(True)
         QApplication.processEvents()
 
-        water_temp = self.dataset[self.temp_name].values
-        min_value, max_value = np.nanmin(water_temp), np.nanmax(water_temp)
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=min_value, vmax=max_value)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
 
@@ -767,8 +810,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.play_button_depth.setText("")
         self.forward_button_depth.setText("")
         self.finish_button_depth.setText("")
-        # self.DepthValueLabel.setText(
-        #     QCoreApplication.translate("WindButton_LonLatProfile", u"Aqui vai o valor de profundidade", None))
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
+        self.ColorScaleButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Set Color Scale", None))
         self.SaveAnimationButton.setText(
             QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE ANIMATION", None))

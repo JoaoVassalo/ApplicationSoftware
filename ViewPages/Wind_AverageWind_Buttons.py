@@ -3,6 +3,7 @@ from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
                                QVBoxLayout)
+from ViewPages import ColorEscale as Cs
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -33,6 +34,30 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.hori_frame = QHBoxLayout(self.frame)
+
+        self.verticalLayout_ScaleButton = QVBoxLayout()
+        self.verticalLayout_ScaleButton.setAlignment(Qt.AlignmentFlag.AlignBottom)
+
+        self.ColorScaleButton = QPushButton()
+        self.ColorScaleButton.setObjectName(u"ColorScale")
+        self.ColorScaleButton.setMinimumSize(QSize(100, 30))
+        self.ColorScaleButton.setMaximumSize(QSize(100, 30))
+        self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
+                                            "	background-color: rgb(61, 80, 95);\n"
+                                            "	border-radius: 15px;\n"
+                                            "	border: 2px solid #F98600;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:hover{\n"
+                                            "	color: #F98600;\n"
+                                            "	font-size: 14px;\n"
+                                            "}")
+        self.ColorScaleButton.clicked.connect(self.open_color_scale_widget)
+
+        self.verticalLayout_ScaleButton.addWidget(self.ColorScaleButton)
+        self.hori_frame.addLayout(self.verticalLayout_ScaleButton)
 
         self.horizontalLayout.addWidget(self.frame)
 
@@ -271,9 +296,12 @@ class Ui_WindButton_LonLatProfile(object):
         self.graph_layout.addWidget(self.toolbar)
         self.graph_layout.addWidget(self.canvas)
 
-        self.frame.setLayout(self.graph_layout)
+        self.hori_frame.addLayout(self.graph_layout)
+
+        self.frame.setLayout(self.hori_frame)
 
         try:
+            self.f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
             self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
             self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
             self.ucomponent = self.dataset[self.u_name].values
@@ -283,6 +311,9 @@ class Ui_WindButton_LonLatProfile(object):
             self.year_selected, self.month_selected = self.year[0], self.month[0]
             self.sel_year()
             self.sel_month()
+            self.color_scale_widget = None
+            self.current_min, self.current_max = self.set_magvector()
+            self.current_scale = "RdYlGn_r"
             self.plot_average_wind()
         except Exception as e:
             raise e
@@ -330,6 +361,32 @@ class Ui_WindButton_LonLatProfile(object):
             self.sel_year()
             self.plot_average_wind()
 
+    def set_magvector(self):
+        u_mag = self.dataset[self.u_name].values[:, :, :]
+        v_mag = self.dataset[self.v_name].values[:, :, :]
+        mag = [self.f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset[self.time_name]))]
+        magnitude_min = np.nanmin(mag)
+        magnitude_max = np.nanmax(mag)
+        if magnitude_max == magnitude_min:
+            magnitude_max += 1e-6
+        return magnitude_min, magnitude_max
+
+    def open_color_scale_widget(self):
+        if self.color_scale_widget is None:
+            self.color_scale_widget = Cs.ColorScaleWidget(self.current_scale)
+
+        self.color_scale_widget.scale_updated.connect(self.update_color_scale)
+        self.color_scale_widget.setWindowModality(Qt.WindowModality.ApplicationModal)
+        self.color_scale_widget.setWindowFlag(Qt.WindowType.Window)
+        self.color_scale_widget.show()
+
+    def update_color_scale(self, min_value, max_value, scale):
+        self.current_min = min_value
+        self.current_max = max_value
+        self.current_scale = scale
+        self.plot_average_wind()
+        self.color_scale_widget.close()
+
     def filter_data(self):
         """
 
@@ -348,10 +405,9 @@ class Ui_WindButton_LonLatProfile(object):
         return list_year, list_months
 
     def mag_all(self):
-        f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
         u_mag = self.dataset[self.u_name].values[:, :, :]
         v_mag = self.dataset[self.v_name].values[:, :, :]
-        mag = [f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset[self.time_name]))]
+        mag = [self.f_magnitude(u_mag[t, :, :], v_mag[t, :, :]) for t in range(len(self.dataset[self.time_name]))]
         magnitude_min = np.nanmin(mag)
         magnitude_max = np.nanmax(mag)
         if magnitude_max == magnitude_min:
@@ -403,9 +459,8 @@ class Ui_WindButton_LonLatProfile(object):
         data_average = Df.from_dict(dict_average_data, orient='index')
 
         fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
-        cmap = plt.get_cmap('jet')
-        min_v, max_v = self.mag_all()
-        norm = colors.Normalize(vmin=min_v, vmax=max_v)
+        cmap = plt.get_cmap(self.current_scale)
+        norm = colors.Normalize(vmin=self.current_min, vmax=self.current_max)
 
         im = ax.imshow(data_average, aspect='auto', cmap=cmap, norm=norm,
                        interpolation='bicubic', origin='lower',
@@ -417,8 +472,8 @@ class Ui_WindButton_LonLatProfile(object):
 
         cb = fig.colorbar(im, ax=ax, orientation='vertical')
         cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=18)
-        cb.set_ticks(np.arange(min_v, max_v, 2))
-        cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(min_v, max_v, 2)])
+        cb.set_ticks(np.arange(self.current_min, self.current_max, 2))
+        cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(self.current_min, self.current_max, 2)])
 
         ax.margins(x=0.01, y=0.01)
         ax.set_xlim(horas_unicas[0] - 0.5, horas_unicas[-1] + .5)
@@ -482,9 +537,8 @@ class Ui_WindButton_LonLatProfile(object):
         data_average = Df.from_dict(dict_average_data, orient='index')
 
         ax = self.figure.add_subplot(111)
-        cmap = plt.get_cmap('jet')
-        min_v, max_v = self.mag_all()
-        norm = colors.Normalize(vmin=min_v, vmax=max_v)
+        cmap = plt.get_cmap(self.current_scale)
+        norm = colors.Normalize(vmin=self.current_min, vmax=self.current_max)
 
         im = ax.imshow(data_average, aspect='auto', cmap=cmap, norm=norm,
                        interpolation='bicubic', origin='lower',
@@ -496,8 +550,8 @@ class Ui_WindButton_LonLatProfile(object):
 
         cb = self.figure.colorbar(im, ax=ax, orientation='vertical')
         cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=6, color="white")
-        cb.set_ticks(np.arange(min_v, max_v, 2))
-        cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(min_v, max_v, 2)])
+        cb.set_ticks(np.arange(self.current_min, self.current_max, 2))
+        cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(self.current_min, self.current_max, 2)])
         cb.ax.tick_params(labelsize=8)
         cb.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color='white')
@@ -530,3 +584,4 @@ class Ui_WindButton_LonLatProfile(object):
         self.backward_button_step_2.setText("")
         self.forward_button_step_2.setText("")
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
+        self.ColorScaleButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Set Color Scale", None))

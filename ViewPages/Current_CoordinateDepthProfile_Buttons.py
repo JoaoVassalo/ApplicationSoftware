@@ -3,6 +3,7 @@ from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QComboBox, QFrame, QGridLayout,
                                QHBoxLayout, QLabel, QPushButton, QRadioButton,
                                QSizePolicy, QSpacerItem, QVBoxLayout)
+from ViewPages import ColorEscale as Cs
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -32,6 +33,30 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.hori_frame = QHBoxLayout(self.frame)
+
+        self.verticalLayout_ScaleButton = QVBoxLayout()
+        self.verticalLayout_ScaleButton.setAlignment(Qt.AlignmentFlag.AlignBottom)
+
+        self.ColorScaleButton = QPushButton()
+        self.ColorScaleButton.setObjectName(u"ColorScale")
+        self.ColorScaleButton.setMinimumSize(QSize(100, 30))
+        self.ColorScaleButton.setMaximumSize(QSize(100, 30))
+        self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
+                                            "	background-color: rgb(61, 80, 95);\n"
+                                            "	border-radius: 15px;\n"
+                                            "	border: 2px solid #F98600;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:hover{\n"
+                                            "	color: #F98600;\n"
+                                            "	font-size: 14px;\n"
+                                            "}")
+        self.ColorScaleButton.clicked.connect(self.open_color_scale_widget)
+
+        self.verticalLayout_ScaleButton.addWidget(self.ColorScaleButton)
+        self.hori_frame.addLayout(self.verticalLayout_ScaleButton)
 
         self.horizontalLayout.addWidget(self.frame)
 
@@ -272,7 +297,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.graph_layout.addWidget(self.toolbar)
         self.graph_layout.addWidget(self.canvas)
 
-        self.frame.setLayout(self.graph_layout)
+        self.hori_frame.addLayout(self.graph_layout)
+
+        self.frame.setLayout(self.hori_frame)
 
         try:
             self.lat = [f'{lat_value}' for lat_value in self.dataset[self.lat_name].values]
@@ -287,6 +314,10 @@ class Ui_WindButton_LonLatProfile(object):
             self.depthComboBox.addItems(self.depth)
             self.depthComboBox.setCurrentIndex(25)
             self.depthComboBox.currentIndexChanged.connect(self.plot_graph)
+
+            self.color_scale_widget = None
+            self.current_min, self.current_max = self.set_normvalues(self.dataset[self.u_name])
+            self.current_scale = "RdYlGn_r"
 
             self.updateLat()
 
@@ -320,6 +351,22 @@ class Ui_WindButton_LonLatProfile(object):
         vmax = np.nanmax(dset[:, :, :, :])
         vmin = np.nanmin(dset[:, :, :, :])
         return vmin, vmax
+
+    def open_color_scale_widget(self):
+        if self.color_scale_widget is None:
+            self.color_scale_widget = Cs.ColorScaleWidget(self.current_scale)
+
+        self.color_scale_widget.scale_updated.connect(self.update_color_scale)
+        self.color_scale_widget.setWindowModality(Qt.WindowModality.ApplicationModal)
+        self.color_scale_widget.setWindowFlag(Qt.WindowType.Window)
+        self.color_scale_widget.show()
+
+    def update_color_scale(self, min_value, max_value, scale):
+        self.current_min = min_value
+        self.current_max = max_value
+        self.current_scale = scale
+        self.plot_graph()
+        self.color_scale_widget.close()
 
     def plot_graph(self):
         """
@@ -361,7 +408,7 @@ class Ui_WindButton_LonLatProfile(object):
             dados_filtrados = self.dataset[componente].sel(dict_to_sel)[:, :].values
             eixo_x = self.dataset[self.lat_name].values
 
-        min_value, max_value = self.set_normvalues(self.dataset[componente])
+        # min_value, max_value = self.set_normvalues(self.dataset[componente])
 
         linhas_validas = ~np.isnan(dados_filtrados).all(axis=1)
         ulcd = np.where(linhas_validas)
@@ -370,8 +417,8 @@ class Ui_WindButton_LonLatProfile(object):
 
         matriz_filtrada = dados_filtrados[np.ix_(linhas_validas, colunas_validas)]
 
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=min_value, vmax=max_value)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
         colors_ = cmap(norm(matriz_filtrada))
         colors_ = colors_.reshape(-1, 4)
@@ -427,3 +474,4 @@ class Ui_WindButton_LonLatProfile(object):
         self.TimeFilterLabel_3.setText(
             QCoreApplication.translate("WindButton_LonLatProfile", u"Select a coordinate", None))
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
+        self.ColorScaleButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Set Color Scale", None))

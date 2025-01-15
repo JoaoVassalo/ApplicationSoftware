@@ -3,6 +3,7 @@ from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
                                QVBoxLayout)
+from ViewPages import ColorEscale as Cs
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -45,6 +46,28 @@ class Ui_WindButton_LonLatProfile(object):
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.hori_frame = QHBoxLayout(self.frame)
+
+        self.verticalLayout_ScaleButton = QVBoxLayout()
+        self.verticalLayout_ScaleButton.setAlignment(Qt.AlignmentFlag.AlignBottom)
+
+        self.ColorScaleButton = QPushButton()
+        self.ColorScaleButton.setObjectName(u"ColorScale")
+        self.ColorScaleButton.setMinimumSize(QSize(100, 30))
+        self.ColorScaleButton.setMaximumSize(QSize(100, 30))
+        self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
+                                            "	background-color: rgb(61, 80, 95);\n"
+                                            "	border-radius: 15px;\n"
+                                            "	border: 2px solid #F98600;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:hover{\n"
+                                            "	color: #F98600;\n"
+                                            "	font-size: 14px;\n"
+                                            "}")
+        self.ColorScaleButton.clicked.connect(self.open_color_scale_widget)
+
+        self.verticalLayout_ScaleButton.addWidget(self.ColorScaleButton)
+        self.hori_frame.addLayout(self.verticalLayout_ScaleButton)
 
         self.horizontalLayout.addWidget(self.frame)
 
@@ -484,6 +507,9 @@ class Ui_WindButton_LonLatProfile(object):
             self.depth_selected = self.depth[0]
             self.sel_depth()
             self.var_selected = None
+            self.color_scale_widget = None
+            self.current_min, self.current_max = self.set_magvector(data=self.dataset)
+            self.current_scale = "RdYlGn_r"
             self.plot_first_graph()
             self.plot_first_average_graph()
         except Exception as e:
@@ -595,6 +621,22 @@ class Ui_WindButton_LonLatProfile(object):
             self.plot_current_vec()
             self.plot_average_vec_current()
 
+    def open_color_scale_widget(self):
+        if self.color_scale_widget is None:
+            self.color_scale_widget = Cs.ColorScaleWidget(self.current_scale)
+
+        self.color_scale_widget.scale_updated.connect(self.update_color_scale)
+        self.color_scale_widget.setWindowModality(Qt.WindowModality.ApplicationModal)
+        self.color_scale_widget.setWindowFlag(Qt.WindowType.Window)
+        self.color_scale_widget.show()
+
+    def update_color_scale(self, min_value, max_value, scale):
+        self.current_min = min_value
+        self.current_max = max_value
+        self.current_scale = scale
+        self.plot_first_graph()
+        self.color_scale_widget.close()
+
     def play_depth_animation(self):
         self.var_selected = 'depth'
         self.worker = AnimationWorker(page=self)
@@ -702,11 +744,10 @@ class Ui_WindButton_LonLatProfile(object):
             vec_mag = self.f_magnitude(u_plot, v_plot)
             u_norm = u_plot / vec_mag
             v_norm = v_plot / vec_mag
-            magnitude_min, magnitude_max = self.set_magvector(data=self.dataset)
 
-            cmap = cm.get_cmap('RdYlGn_r')
-            norm = plt.Normalize(vmin=magnitude_min, vmax=magnitude_max)
-            colors_ = cmap(norm(vec_mag))
+            cmap_ = cm.get_cmap(self.current_scale)
+            norm_ = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
+            colors_ = cmap_(norm_(vec_mag))
             colors_ = colors_.reshape(-1, 4)
 
             mp.quiver(x, y, u_norm, v_norm, color=colors_, scale=30)
@@ -733,12 +774,8 @@ class Ui_WindButton_LonLatProfile(object):
                      resolution='i',
                      ax=axs)
 
-        magnitude_min, magnitude_max = self.set_magvector(self.dataset)
-        if magnitude_max == magnitude_min:
-            magnitude_max += 1e-6
-
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=magnitude_min, vmax=magnitude_max)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
         cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
         cbar.set_label(f'Magnitude dos Vetores [{self.dataset['water_u'].attrs['units']}]', fontsize=18)
@@ -782,10 +819,9 @@ class Ui_WindButton_LonLatProfile(object):
         vec_mag = self.f_magnitude(u_plot, v_plot)
         u_norm = u_plot / vec_mag
         v_norm = v_plot / vec_mag
-        magnitude_min, magnitude_max = self.set_magvector(data=self.dataset)
 
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=magnitude_min, vmax=magnitude_max)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
         colors_ = cmap(norm(vec_mag))
         colors_ = colors_.reshape(-1, 4)
 
@@ -930,10 +966,9 @@ class Ui_WindButton_LonLatProfile(object):
             vec_mag = self.f_magnitude(u_plot, v_plot)
             u_norm = u_plot / vec_mag
             v_norm = v_plot / vec_mag
-            magnitude_min, magnitude_max = self.set_magvector(data=self.dataset)
 
-            cmap = cm.get_cmap('RdYlGn_r')
-            norm = plt.Normalize(vmin=magnitude_min, vmax=magnitude_max)
+            cmap = cm.get_cmap(self.current_scale)
+            norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
             colors_ = cmap(norm(vec_mag))
             colors_ = colors_.reshape(-1, 4)
 
@@ -976,10 +1011,9 @@ class Ui_WindButton_LonLatProfile(object):
         vec_mag = self.f_magnitude(u_plot, v_plot)
         u_norm = u_plot / vec_mag
         v_norm = v_plot / vec_mag
-        magnitude_min, magnitude_max = self.set_magvector(data=self.dataset)
 
-        cmap = cm.get_cmap('RdYlGn_r')
-        norm = plt.Normalize(vmin=magnitude_min, vmax=magnitude_max)
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
         colors_ = cmap(norm(vec_mag))
         colors_ = colors_.reshape(-1, 4)
 
@@ -1050,3 +1084,4 @@ class Ui_WindButton_LonLatProfile(object):
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
         self.SaveAnimationButton.setText(
             QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE ANIMATION", None))
+        self.ColorScaleButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Set Color Scale", None))
