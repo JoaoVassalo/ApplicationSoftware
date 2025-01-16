@@ -102,7 +102,7 @@ class Filter(FilesExtension):
 
         if self.var_to_filter == 'All variables':
             list_var = [f'{var}' for var in list(dataset.variables) if dataset[var].ndim > 1]
-            dataset_filtered = dataset[list_var].sel(dict_key)
+            dataset_filtered = dataset[list_var].sortby(self.dim_to_filter).sel(dict_key)
         else:
             if self.dim_to_filter == ' - ':
                 dataset_filtered = dataset[self.var_to_filter]
