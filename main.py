@@ -3,8 +3,8 @@ import os
 from LoginPage import Ui_Form
 from database import Session, Projeto, Configuracao, HycomCatalogo, CopernicusCatalogo
 from index import Ui_MainWindow
-from PySide6.QtGui import QPainter, QColor
-from PySide6 import QtWidgets, QtCharts
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 
 
 class MainAppWindow(QMainWindow):
@@ -145,14 +145,21 @@ class MainWindow(QMainWindow):
 
 
 shadow_elements = {
-    'icon_text_widget',
-    'icon_only_widget',
+    'icon_only_widget', # 'icon_text_widget',
     'header_widget',
     'main_screen_widget'
 }
 
 if __name__ == "__main__":
     app = QApplication([])
+    app.setStyleSheet("""
+            QToolTip {
+                color: white;  /* Cor do texto branca */
+                border: 1px solid black;  /* Borda preta */
+                border-radius: 4px;  /* Bordas arredondadas */
+                padding: 4px;  /* Espaçamento interno */
+            }
+        """)
     window = MainWindow()
     window.show()
     app.exec()

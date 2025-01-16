@@ -1,23 +1,9 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'indexNvZbFf.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QThread, Signal)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QFrame,
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect,
+                            QSize, Qt, QThread, Signal)
+from PySide6.QtGui import (QFont, QIcon, QPixmap)
+from PySide6.QtWidgets import (QComboBox, QDateEdit, QFrame,
                                QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-                               QMainWindow, QProgressBar, QPushButton, QScrollArea,
+                               QProgressBar, QPushButton, QScrollArea,
                                QSizePolicy, QSpacerItem, QStackedWidget, QVBoxLayout,
                                QWidget, QCheckBox, QMessageBox, QRadioButton)
 from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Buttons,
@@ -28,7 +14,6 @@ from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Bu
                        Salinity_Dataframe_Buttons, VarInfo_Widgets, ConcatDatasetForm, MergeDatasetForm, DatDatasetForm,
                        ImpDatasetForm, FilterDatasetForm)
 import VarVerify
-import resources_rc
 import os
 import xarray as xr
 from datetime import date, datetime, timedelta
@@ -1707,7 +1692,7 @@ class Ui_MainWindow(object):
                                             "	background-color: rgb(61, 80, 95);\n"
                                             "	border-radius: 10px\n"
                                             "}")
-        self.icon_only_widget.setHidden(True)
+        self.icon_only_widget.setHidden(False)
         self.verticalLayout_5 = QVBoxLayout(self.icon_only_widget)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_5.setContentsMargins(-1, 20, -1, -1)
@@ -1750,6 +1735,8 @@ class Ui_MainWindow(object):
         self.DB_1.setIconSize(QSize(100, 20))
         self.DB_1.setCheckable(False)
         self.DB_1.setChecked(False)
+        self.DB_1.setToolTip('Download Page')
+        self.DB_1.setToolTipDuration(20000)
 
         self.icons_up_only.addWidget(self.DB_1)
 
@@ -1766,6 +1753,8 @@ class Ui_MainWindow(object):
         self.VB_1.setIcon(icon1)
         self.VB_1.setIconSize(QSize(100, 20))
         self.VB_1.setCheckable(False)
+        self.VB_1.setToolTip('Data View Page')
+        self.VB_1.setToolTipDuration(20000)
 
         self.icons_up_only.addWidget(self.VB_1)
 
@@ -1783,6 +1772,8 @@ class Ui_MainWindow(object):
         self.CB_1.setIcon(icon2)
         self.CB_1.setIconSize(QSize(100, 20))
         self.CB_1.setCheckable(False)
+        self.CB_1.setToolTip('File Modification Page')
+        self.CB_1.setToolTipDuration(20000)
 
         self.icons_up_only.addWidget(self.CB_1)
 
@@ -1800,6 +1791,8 @@ class Ui_MainWindow(object):
         self.SB_1.setIcon(icon3)
         self.SB_1.setIconSize(QSize(100, 20))
         self.SB_1.setCheckable(False)
+        self.SB_1.setToolTip('Simulation Data Page')
+        self.SB_1.setToolTipDuration(20000)
 
         self.icons_up_only.addWidget(self.SB_1)
 
@@ -1825,6 +1818,8 @@ class Ui_MainWindow(object):
         self.ConfigB_1.setIcon(icon4)
         self.ConfigB_1.setIconSize(QSize(100, 20))
         self.ConfigB_1.setCheckable(False)
+        self.ConfigB_1.setToolTip('Settings')
+        self.ConfigB_1.setToolTipDuration(20000)
 
         self.icons_down_only.addWidget(self.ConfigB_1)
 
@@ -1841,6 +1836,8 @@ class Ui_MainWindow(object):
         self.LogoutB_1.setIcon(icon5)
         self.LogoutB_1.setIconSize(QSize(100, 20))
         self.LogoutB_1.setCheckable(False)
+        self.LogoutB_1.setToolTip('Log out')
+        self.LogoutB_1.setToolTipDuration(20000)
 
         self.icons_down_only.addWidget(self.LogoutB_1)
 
@@ -1907,205 +1904,18 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.header_widget, 0, 2, 1, 1)
 
-        self.icon_text_widget = QWidget(self.centralwidget)
-        self.icon_text_widget.setObjectName(u"icon_text_widget")
-        self.icon_text_widget.setMinimumSize(QSize(241, 0))
-        self.icon_text_widget.setMaximumSize(QSize(241, 16777215))
-        self.icon_text_widget.setStyleSheet(u"QWidget{\n"
-                                            "	color:white;\n"
-                                            "	background-color: rgb(61, 80, 95);\n"
-                                            "	border-radius: 10px;\n"
-                                            "}\n"
-                                            "\n"
-                                            "\n"
-                                            "\n"
-                                            "")
-        self.verticalLayout_6 = QVBoxLayout(self.icon_text_widget)
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(-1, 20, -1, -1)
-        self.logo_name = QHBoxLayout()
-        self.logo_name.setObjectName(u"logo_name")
-        self.horizontalSpacer_2 = QSpacerItem(18, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.logo_name.addItem(self.horizontalSpacer_2)
-
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.logo_name.addItem(self.horizontalSpacer_5)
-
-        self.logoicon_with_name = QHBoxLayout()
-        self.logoicon_with_name.setSpacing(20)
-        self.logoicon_with_name.setObjectName(u"logoicon_with_name")
-        self.label_2 = QLabel(self.icon_text_widget)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setMaximumSize(QSize(40, 40))
-        self.label_2.setPixmap(QPixmap(u":/icons/icons/home - laranja.png"))
-        self.label_2.setScaledContents(True)
-
-        self.logoicon_with_name.addWidget(self.label_2)
-
-        self.label_3 = QLabel(self.icon_text_widget)
-        self.label_3.setObjectName(u"label_3")
-        font5 = QFont()
-        font5.setPointSize(14)
-        self.label_3.setFont(font5)
-
-        self.logoicon_with_name.addWidget(self.label_3)
-
-        self.logo_name.addLayout(self.logoicon_with_name)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.logo_name.addItem(self.horizontalSpacer)
-
-        self.verticalLayout_6.addLayout(self.logo_name)
-
-        self.icons_up_name = QVBoxLayout()
-        self.icons_up_name.setSpacing(20)
-        self.icons_up_name.setObjectName(u"icons_up_name")
-        self.icons_up_name.setContentsMargins(-1, 20, -1, -1)
-        self.DB_2 = QPushButton(self.icon_text_widget)
-        self.DB_2.setObjectName(u"DB_2")
-        self.DB_2.setMinimumSize(QSize(0, 30))
-        self.DB_2.setMaximumSize(QSize(16777215, 30))
-        self.DB_2.setStyleSheet(u"QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}")
-        self.DB_2.setIcon(icon)
-        self.DB_2.setIconSize(QSize(100, 20))
-        self.DB_2.setCheckable(False)
-        self.DB_2.setChecked(False)
-
-        self.icons_up_name.addWidget(self.DB_2)
-
-        self.VB_2 = QPushButton(self.icon_text_widget)
-        self.VB_2.setObjectName(u"VB_2")
-        self.VB_2.setMinimumSize(QSize(0, 30))
-        self.VB_2.setMaximumSize(QSize(16777215, 30))
-        self.VB_2.setStyleSheet(u"QPushButton{\n"
-                                "	padding-left: -20px;\n"
-                                "}\n"
-                                "\n"
-                                "QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}\n"
-                                "")
-        self.VB_2.setIcon(icon1)
-        self.VB_2.setIconSize(QSize(100, 20))
-        self.VB_2.setCheckable(False)
-
-        self.icons_up_name.addWidget(self.VB_2)
-
-        self.CB_2 = QPushButton(self.icon_text_widget)
-        self.CB_2.setObjectName(u"CB_2")
-        self.CB_2.setMinimumSize(QSize(0, 30))
-        self.CB_2.setMaximumSize(QSize(16777215, 30))
-        self.CB_2.setStyleSheet(u"QPushButton{\n"
-                                "	padding-left: -50px;\n"
-                                "}\n"
-                                "\n"
-                                "QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}\n"
-                                "")
-        self.CB_2.setIcon(icon2)
-        self.CB_2.setIconSize(QSize(100, 20))
-        self.CB_2.setCheckable(False)
-
-        self.icons_up_name.addWidget(self.CB_2)
-
-        self.SB_2 = QPushButton(self.icon_text_widget)
-        self.SB_2.setObjectName(u"SB_2")
-        self.SB_2.setMinimumSize(QSize(0, 30))
-        self.SB_2.setMaximumSize(QSize(16777215, 30))
-        self.SB_2.setStyleSheet(u"QPushButton{\n"
-                                "	padding-left: -14px;\n"
-                                "}\n"
-                                "\n"
-                                "QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}\n"
-                                "")
-        self.SB_2.setIcon(icon3)
-        self.SB_2.setIconSize(QSize(100, 20))
-        self.SB_2.setCheckable(False)
-
-        self.icons_up_name.addWidget(self.SB_2)
-
-        self.verticalLayout_6.addLayout(self.icons_up_name)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 341, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_6.addItem(self.verticalSpacer_2)
-
-        self.icons_down_name = QVBoxLayout()
-        self.icons_down_name.setSpacing(20)
-        self.icons_down_name.setObjectName(u"icons_down_name")
-        self.ConfigB_2 = QPushButton(self.icon_text_widget)
-        self.ConfigB_2.setObjectName(u"ConfigB_2")
-        self.ConfigB_2.setMinimumSize(QSize(0, 30))
-        self.ConfigB_2.setMaximumSize(QSize(16777215, 30))
-        self.ConfigB_2.setStyleSheet(u"QPushButton{\n"
-                                     "	padding-left: -70px;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:hover{\n"
-                                     "	background-color: rgb(33, 43, 51);\n"
-                                     "	font-size: 13px;\n"
-                                     "}\n"
-                                     "")
-        self.ConfigB_2.setIcon(icon4)
-        self.ConfigB_2.setIconSize(QSize(100, 20))
-        self.ConfigB_2.setCheckable(False)
-
-        self.icons_down_name.addWidget(self.ConfigB_2)
-
-        self.LogoutB_2 = QPushButton(self.icon_text_widget)
-        self.LogoutB_2.setObjectName(u"LogoutB_2")
-        self.LogoutB_2.setMinimumSize(QSize(0, 30))
-        self.LogoutB_2.setMaximumSize(QSize(16777215, 30))
-        self.LogoutB_2.setStyleSheet(u"QPushButton{\n"
-                                     "	padding-left: -70px;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:hover{\n"
-                                     "	background-color: rgb(33, 43, 51);\n"
-                                     "	font-size: 13px;\n"
-                                     "}")
-        self.LogoutB_2.setIcon(icon5)
-        self.LogoutB_2.setIconSize(QSize(100, 20))
-        self.LogoutB_2.setCheckable(False)
-
-        self.icons_down_name.addWidget(self.LogoutB_2)
-
-        self.verticalLayout_6.addLayout(self.icons_down_name)
-
-        self.gridLayout.addWidget(self.icon_text_widget, 0, 1, 3, 1)
-
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
         self.LogoutB_1.clicked.connect(MainWindow.close)
-        self.LogoutB_2.clicked.connect(MainWindow.close)
-        self.menu_button.toggled.connect(self.icon_text_widget.setHidden)
-        self.menu_button.toggled.connect(self.icon_only_widget.setVisible)
 
         self.stackedWidget.setCurrentIndex(4)
 
         self.DB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
-        self.DB_2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
         self.VB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
-        self.VB_2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
         self.CB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
-        self.CB_2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
         self.SB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
-        self.SB_2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
         self.ConfigB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4))
-        self.ConfigB_2.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4))
 
         self.current_checked_button = None
 
@@ -3027,11 +2837,3 @@ class Ui_MainWindow(object):
         self.menu_button.setText("")
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Hello,", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Welcome to your page", None))
-        self.label_2.setText("")
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"GeoEnergia Lab", None))
-        self.DB_2.setText(QCoreApplication.translate("MainWindow", u"  Search and Download", None))
-        self.VB_2.setText(QCoreApplication.translate("MainWindow", u"  Data Visualization", None))
-        self.CB_2.setText(QCoreApplication.translate("MainWindow", u"  File Creation", None))
-        self.SB_2.setText(QCoreApplication.translate("MainWindow", u"  Simulation Results", None))
-        self.ConfigB_2.setText(QCoreApplication.translate("MainWindow", u"  Settings", None))
-        self.LogoutB_2.setText(QCoreApplication.translate("MainWindow", u"  Log out", None))
