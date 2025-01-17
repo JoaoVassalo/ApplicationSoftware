@@ -1,25 +1,9 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'Temperature_LonLat_ButtonswiAGsa.ui'
-##
-## Created by: Qt User Interface Compiler version 6.8.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-                            QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QThread)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-                           QFont, QFontDatabase, QGradient, QIcon,
-                           QImage, QKeySequence, QLinearGradient, QPainter,
-                           QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QThread, Signal)
+from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
-                               QVBoxLayout, QWidget)
+                               QVBoxLayout, QMessageBox)
 from ViewPages import ColorEscale as Cs
-import resources_rc
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -40,6 +24,31 @@ class AnimationWorker(QThread):
 
     def run(self):
         self.page.play_animation()
+
+
+class SaveWorker(QThread):
+    error_message = Signal(str)
+    def __init__(self, page):
+        super().__init__()
+        self.page = page
+
+    def run(self):
+        self.page.save_anim()
+
+        self.page.SaveAnimationButton.setText('Save Animation')
+        self.page.SaveAnimationButton.setChecked(False)
+        self.page.SaveAnimationButton.setDisabled(False)
+        self.page.SaveFigButton.setDisabled(False)
+        self.page.play_button_time.setDisabled(False)
+        self.page.frame_buttons_animation_2_depth.setDisabled(False)
+
+        if hasattr(self.page, 'ani') and self.page.running_stopped_by_user:
+            os.remove(self.page.save_name) if os.path.exists(self.page.save_name) else None
+        elif hasattr(self.page, 'exception_to_save'):
+            self.error_message.emit(self.page.exception_to_save)
+
+        del self.page.ani
+        plt.close(self.page.fig_anim)
 
 
 class Ui_WindButton_LonLatProfile(object):
@@ -380,8 +389,15 @@ class Ui_WindButton_LonLatProfile(object):
                                                "QPushButton:hover{\n"
                                                "	color: #F98600;\n"
                                                "	font-size: 14px;\n"
-                                               "}")
-        self.SaveAnimationButton.clicked.connect(self.save_anim)
+                                               "}\n"
+                                               "\n"
+                                               "QPushButton:checked{\n"
+                                               "	font-size: 14px;\n"
+                                               "}"
+                                               )
+        self.SaveAnimationButton.setCheckable(True)
+        self.SaveAnimationButton.setChecked(False)
+        self.SaveAnimationButton.clicked.connect(self.start_save_animation)
 
         self.horizontalLayout_6.addWidget(self.SaveAnimationButton)
 
@@ -430,8 +446,8 @@ class Ui_WindButton_LonLatProfile(object):
 
     def sel_time(self, value_time):
         time_to_format = str(value_time).split('.')[0]
-        t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
-        self.TimeValueLabel.setText(f'{t_formated}')
+        self.t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
+        self.TimeValueLabel.setText(f'{self.t_formated}')
 
     def sel_depth(self):
         self.DepthValueLabel.setText(f'{self.depth_selected} metros')
@@ -717,78 +733,124 @@ class Ui_WindButton_LonLatProfile(object):
 
         ax.set_aspect('equal')
 
+        plt.title(self.t_formated, fontsize=20)
+
         path_to_save = f'{self.mainpage.project.caminho}\\figs'
         os.makedirs(path_to_save, exist_ok=True)
 
-        time_to_format = str(self.time_selected).split('.')[0]
-        t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
-
-        plt.savefig(f'{path_to_save}\\TemperatureMap_{t_formated}_{self.depth_selected}m.png', transparent=True)
+        plt.savefig(f'{path_to_save}\\TemperatureMap for {self.mainpage.comboBox.currentText()[:-3]} _ '
+                    f'{self.t_formated} _ {self.depth_selected}m.png', transparent=True)
         plt.close()
 
+    def start_save_animation(self):
+        if self.SaveAnimationButton.isChecked():
+            self.SaveAnimationButton.setText('Stop Saving')
+            self.SaveFigButton.setDisabled(True)
+            self.play_button_time.setDisabled(True)
+            self.frame_buttons_animation_2_depth.setDisabled(True)
+            self.is_running = True
+            self.running_stopped_by_user = False
+            self.save_worker = SaveWorker(page=self)
+            self.save_worker.error_message.connect(self.error_animation_save)
+            self.save_worker.start()
+            return
+        else:
+            self.is_running = False
+            self.SaveAnimationButton.setText('Stopping...')
+            self.SaveAnimationButton.setChecked(False)
+            self.SaveAnimationButton.setDisabled(True)
+            self.SaveFigButton.setDisabled(False)
+            self.play_button_time.setDisabled(False)
+            self.frame_buttons_animation_2_depth.setDisabled(False)
+            return
+
+    def update(self, frame):
+        if frame == 0:
+            return
+
+        if not self.is_running:
+            self.SaveAnimationButton.setDisabled(True)
+            self.ani.event_source.stop()
+            self.running_stopped_by_user = True
+            return
+        else:
+            data = self.dataset[self.temp_name].sel(
+                {
+                    self.time_name: self.time[frame],
+                    self.depth_name: self.depth_selected
+                }
+            )
+            time_to_format = str(self.time[frame]).split('.')[0]
+            t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
+            plt.title(t_formated, fontsize=20)
+            self.img.set_data(data)
+
     def save_anim(self):
-        self.mainpage.centralwidget.setDisabled(True)
-        QApplication.processEvents()
 
-        cmap = cm.get_cmap(self.current_scale)
-        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
-
+        self.cmap_anim = cm.get_cmap(self.current_scale)
+        self.norm_anim = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
-
         time = list(self.dataset[self.time_name].values)
 
-        def update(frame):
-            if frame == 0:
-                return
-
-            dict_to_sel = {
-                self.time_name: time[frame],
-                self.depth_name: self.depth_selected
-            }
-
-            data = self.dataset[self.temp_name].sel(dict_to_sel)
-
-            axs.cla()
-
-            mp = Basemap(projection='merc',
-                         llcrnrlon=min(lon),
-                         llcrnrlat=min(lat),
-                         urcrnrlon=max(lon),
-                         urcrnrlat=max(lat),
-                         resolution='i')
-
-            mp.imshow(data, cmap=cmap, norm=norm)
-
-            mp.drawcoastlines()
-            mp.drawstates()
-            mp.drawcountries()
-            mp.fillcontinents(color='lightgreen', lake_color='lightblue')
-
-            mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=17)
-            mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=17)
-
-            axs.set_xlabel('Longitude', labelpad=40, fontsize=18)
-            axs.set_ylabel('Latitude', labelpad=55, fontsize=18)
-
-            axs.set_aspect('equal')
-
-        fig = plt.figure(figsize=(12, 12))
-        subfigs = fig.subfigures(1, 1)
+        self.fig_anim = plt.figure(figsize=(12, 12))
+        subfigs = self.fig_anim.subfigures(1, 1)
         axs = subfigs.subplots(1, 1)
 
-        cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
+        time_to_format = str(self.time[0]).split('.')[0]
+        t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
+        plt.title(t_formated, fontsize=20)
+
+        mp = Basemap(projection='merc',
+                     llcrnrlon=min(lon),
+                     llcrnrlat=min(lat),
+                     urcrnrlon=max(lon),
+                     urcrnrlat=max(lat),
+                     resolution='i')
+
+        mp.drawcoastlines()
+        mp.drawstates()
+        mp.drawcountries()
+        mp.fillcontinents(color='lightgreen', lake_color='lightblue')
+
+        mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=17)
+        mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=17)
+
+        axs.set_xlabel('Longitude', labelpad=40, fontsize=18)
+        axs.set_ylabel('Latitude', labelpad=55, fontsize=18)
+        axs.set_aspect('equal')
+
+        cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=axs, orientation='vertical', pad=0.05)
         cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
-        ani = FuncAnimation(fig, update, frames=len(time) - 1, interval=1000)
+        data_first = self.dataset[self.temp_name].sel({
+            self.time_name: time[0],
+            self.depth_name: self.depth_selected
+        })
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
-        os.makedirs(path_to_save, exist_ok=True)
+        self.img = mp.imshow(data_first, cmap=self.cmap_anim, norm=self.norm_anim)
 
-        ani.save(f'{path_to_save}\\animacao_temperaturemap_{self.var_selected}.gif', writer='pillow', fps=3)
-        plt.close()
+        try:
+            self.ani = FuncAnimation(
+                self.fig_anim, self.update, frames=len(self.time) - 1, interval=5000
+            )
 
-        self.mainpage.centralwidget.setDisabled(False)
+            path_to_save = f'{self.mainpage.project.caminho}\\Animations'
+            os.makedirs(path_to_save, exist_ok=True)
+            self.save_name = (f'{path_to_save}\\Temperature for {self.mainpage.comboBox.currentText()[:-3]} _ '
+                              f'{int(self.depth_selected)}m.gif')
+            self.ani.save(
+                self.save_name,
+                writer='pillow',
+                fps=3
+            )
+        except Exception as e:
+            self.exception_to_save = str(e)
+
+        self.is_running = False
+
+    def error_animation_save(self, message):
+        QMessageBox.warning(self.frame, "Save animation error", message)
 
     def start_animation(self):
         self.worker = AnimationWorker(page=self)
