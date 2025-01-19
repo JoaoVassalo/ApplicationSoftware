@@ -307,8 +307,10 @@ class Ui_WindButton_LonLatProfile(object):
             self.ucomponent = self.dataset[self.u_name].values
             self.vcomponent = self.dataset[self.v_name].values
             self.time = self.dataset[self.time_name].values
-            self.year, self.month = self.filter_data()
-            self.year_selected, self.month_selected = self.year[0], self.month[0]
+            self.year = list(np.unique(self.dataset[self.time_name].dt.year.values))
+            self.year_selected = self.year[0]
+            self.month = self.get_months_for_year()
+            self.month_selected = self.month[0]
             self.sel_year()
             self.sel_month()
             self.color_scale_widget = None
@@ -343,13 +345,15 @@ class Ui_WindButton_LonLatProfile(object):
             self.plot_average_wind()
 
     def forward_in_year(self):
-        # É AQUI QUE TEM QUE FAZER O TRATAMENTO DO ERRO DO ANO E MÊS
         if self.year_selected == self.year[-1]:
             return
         else:
             index = self.year.index(self.year_selected)
             self.year_selected = self.year[index + 1]
+            self.month = self.get_months_for_year()
+            self.month_selected = self.month[0]
             self.sel_year()
+            self.sel_month()
             self.plot_average_wind()
 
     def back_in_year(self):
@@ -358,8 +362,16 @@ class Ui_WindButton_LonLatProfile(object):
         else:
             index = self.year.index(self.year_selected)
             self.year_selected = self.year[index - 1]
+            self.month = self.get_months_for_year()
+            self.month_selected = self.month[0]
             self.sel_year()
+            self.sel_month()
             self.plot_average_wind()
+
+    def get_months_for_year(self):
+        time_coords = self.dataset[self.time_name]
+        months = time_coords.where(time_coords.dt.year == self.year_selected, drop=True).dt.month.values
+        return list(sorted(set(months)))
 
     def set_magvector(self):
         u_mag = self.dataset[self.u_name].values[:, :, :]
@@ -391,7 +403,7 @@ class Ui_WindButton_LonLatProfile(object):
         """
 
         """
-        date_times = [pd.to_datetime(value).to_pydatetime() for value in self.dataset.valid_time.values]
+        date_times = [pd.to_datetime(value).to_pydatetime() for value in self.dataset[self.time_name].values]
         list_months = []
         list_year = []
 
