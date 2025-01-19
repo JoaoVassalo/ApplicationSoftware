@@ -276,6 +276,7 @@ class Ui_WindButton_LonLatProfile(object):
                                          "	color: #F98600;\n"
                                          "	font-size: 14px;\n"
                                          "}")
+        self.SaveFigButton.clicked.connect(self.save_fig)
 
         self.horizontalLayout_6.addWidget(self.SaveFigButton)
 
@@ -330,8 +331,8 @@ class Ui_WindButton_LonLatProfile(object):
 
     def sel_time(self, value_time):
         time_to_format = str(value_time).split('.')[0]
-        t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
-        self.TimeValueLabel.setText(f'{t_formated}')
+        self.t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
+        self.TimeValueLabel.setText(f'{self.t_formated}')
 
     def forward_in_time(self):
         if self.time_selected == self.time[-1]:
@@ -477,7 +478,7 @@ class Ui_WindButton_LonLatProfile(object):
         )
 
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[componente].attrs['units']}]', fontsize=6, color="white")
+        cbar.set_label(f'Vector Magnitude [{self.dataset[componente].attrs['units']}]', fontsize=6, color="white")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='white')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
@@ -498,6 +499,81 @@ class Ui_WindButton_LonLatProfile(object):
             wspace=0.2
         )
         self.canvas.figure.set_facecolor("#3d505f")
+
+    def save_fig(self):
+        all_depth = self.dataset[self.depth_name].values
+        index = self.depth.index(self.depthComboBox.currentText())
+        depth = all_depth[:index + 1]
+
+        if self.LatRadioButton.isChecked():
+            var = 'Latitude'
+            componente = self.u_name
+            dict_to_sel = {
+                self.time_name: self.time_selected,
+                self.lat_name: float(self.coordComboBox.currentText()),
+                self.depth_name: depth
+            }
+            dados_filtrados = self.dataset[componente].sel(dict_to_sel)[:, :].values
+            eixo_x = self.dataset[self.lon_name].values
+        else:
+            var = 'Longitude'
+            componente = self.v_name
+            dict_to_sel = {
+                self.time_name: self.time_selected,
+                self.lon_name: float(self.coordComboBox.currentText()),
+                self.depth_name: depth
+            }
+            dados_filtrados = self.dataset[componente].sel(dict_to_sel)[:, :].values
+            eixo_x = self.dataset[self.lat_name].values
+
+        linhas_validas = ~np.isnan(dados_filtrados).all(axis=1)
+        ulcd = np.where(linhas_validas)
+        colunas_validas = ~np.isnan(dados_filtrados).all(axis=0)
+        uccd = np.where(colunas_validas)
+
+        matriz_filtrada = dados_filtrados[np.ix_(linhas_validas, colunas_validas)]
+
+        cmap = cm.get_cmap(self.current_scale)
+        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
+
+        colors_ = cmap(norm(matriz_filtrada))
+        colors_ = colors_.reshape(-1, 4)
+
+        depth_filtered = depth[ulcd]
+        x_axis_filtered = eixo_x[uccd]
+
+        x, y = np.meshgrid(x_axis_filtered, depth_filtered)
+
+        fig, axs = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
+
+        axs.quiver(
+            x, y,
+            np.sign(matriz_filtrada), 0, color=colors_, cmap=cmap,
+            # Apenas a componente selecionada, com vetor vertical = 0
+            scale=50
+        )
+
+        cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
+        cbar.set_label(f'Vector Magnitude [{self.dataset[componente].attrs['units']}]', fontsize=18, color="black")
+        cbar.ax.tick_params(labelsize=16)
+        cbar.ax.yaxis.set_tick_params(color='black')
+        plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
+
+        axs.set_ylim(max(depth_filtered), 0)
+        axs.set_xlabel('Latitude', fontsize=18, color='black') if var == 'Longitude' \
+            else axs.set_xlabel('Longitude', fontsize=18, color='black')
+        axs.set_ylabel('Depth [m]', fontsize=18, color='black')
+        axs.tick_params(axis='both', which='major', labelsize=16, color='black', labelcolor='black')
+
+        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        os.makedirs(path_to_save, exist_ok=True)
+
+        section = 'Eastward' if var == 'Latitude' else 'Northward'
+
+        plt.savefig(f'{path_to_save}\\{section} SeawaterVelocity for {var} '
+                    f'{round(float(self.coordComboBox.currentText()), ndigits=2)} '
+                    f'for {self.mainpage.comboBox.currentText()[:-3]}.png', transparent=True)
+        plt.close()
 
     def retranslateUi(self, WindButton_LonLatProfile):
         WindButton_LonLatProfile.setWindowTitle(QCoreApplication.translate("WindButton_LonLatProfile", u"Form", None))
