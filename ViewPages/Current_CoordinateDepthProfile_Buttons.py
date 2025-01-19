@@ -571,7 +571,7 @@ class Ui_WindButton_LonLatProfile(object):
         section = 'Eastward' if var == 'Latitude' else 'Northward'
 
         plt.savefig(f'{path_to_save}\\{section} SeawaterVelocity for {var} '
-                    f'{round(float(self.coordComboBox.currentText()), ndigits=2)} '
+                    f'{round(float(self.coordComboBox.currentText()), ndigits=2)} at {self.t_formated} '
                     f'for {self.mainpage.comboBox.currentText()[:-3]}.png', transparent=True)
         plt.close()
 
