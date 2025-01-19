@@ -1970,26 +1970,12 @@ class Ui_MainWindow(object):
 
                 if self.weast_coord > self.east_coord:
                     QMessageBox.warning(self.download_page_screen, "Erro", "Weast coordinate value must be "
-                                                                           "smaller than East coordinate and negative "
-                                                                           "between 0 and 180.")
+                                                                           "smaller than East coordinate.")
                     self.DownloadButton.setChecked(False)
                     return
                 elif self.south_coord > self.north_coord:
                     QMessageBox.warning(self.download_page_screen, "Erro", "South coordinate value must be "
-                                                                           "smaller than North coordinate and negative "
-                                                                           "between 0 and 90.")
-                    self.DownloadButton.setChecked(False)
-                    return
-                elif self.north_coord < 0 or self.east_coord < 0:
-                    QMessageBox.warning(self.download_page_screen, "Erro", "East and North coordinates value "
-                                                                           "must be positive between 0-180 and 0-90, "
-                                                                           "respectively.")
-                    self.DownloadButton.setChecked(False)
-                    return
-                elif self.weast_coord > 0 or self.south_coord > 0:
-                    QMessageBox.warning(self.download_page_screen, "Erro", "Weast and South coordinates "
-                                                                           "value must be negative between 0-180 and "
-                                                                           "0-90, respectively.")
+                                                                           "smaller than North coordinate.")
                     self.DownloadButton.setChecked(False)
                     return
                 elif self.FileName.text() == '':
@@ -2787,6 +2773,7 @@ class Ui_MainWindow(object):
         )
 
         self.canva.draw()
+        return
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
