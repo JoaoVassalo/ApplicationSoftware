@@ -119,6 +119,7 @@ class Ui_WindButton_LonLatProfile(object):
         icon.addFile(u":/icons/icons/arrow-right - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.forward_button_time.setIcon(icon)
         self.forward_button_time.setIconSize(QSize(20, 20))
+        self.forward_button_time.clicked.connect(self.forward_in_time)
 
         self.gridLayout_7.addWidget(self.forward_button_time, 0, 2, 1, 1)
 
@@ -128,6 +129,7 @@ class Ui_WindButton_LonLatProfile(object):
         icon1.addFile(u":/icons/icons/forward - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.finish_button_time.setIcon(icon1)
         self.finish_button_time.setIconSize(QSize(20, 20))
+        self.finish_button_time.clicked.connect(self.last_in_time)
 
         self.gridLayout_7.addWidget(self.finish_button_time, 0, 3, 1, 1)
 
@@ -137,6 +139,7 @@ class Ui_WindButton_LonLatProfile(object):
         icon2.addFile(u":/icons/icons/arrow-left - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.backward_button_time.setIcon(icon2)
         self.backward_button_time.setIconSize(QSize(20, 20))
+        self.backward_button_time.clicked.connect(self.back_in_time)
 
         self.gridLayout_7.addWidget(self.backward_button_time, 0, 1, 1, 1)
 
@@ -146,6 +149,7 @@ class Ui_WindButton_LonLatProfile(object):
         icon3.addFile(u":/icons/icons/backward - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.start_button_time.setIcon(icon3)
         self.start_button_time.setIconSize(QSize(20, 20))
+        self.start_button_time.clicked.connect(self.first_in_time)
 
         self.gridLayout_7.addWidget(self.start_button_time, 0, 0, 1, 1)
 
@@ -329,6 +333,40 @@ class Ui_WindButton_LonLatProfile(object):
         t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
         self.TimeValueLabel.setText(f'{t_formated}')
 
+    def forward_in_time(self):
+        if self.time_selected == self.time[-1]:
+            return
+        else:
+            index = np.where(self.time == self.time_selected)[0][0]
+            self.time_selected = self.time[index + 1]
+            self.sel_time(self.time_selected)
+            self.plot_graph()
+
+    def last_in_time(self):
+        if self.time_selected == self.time[-1]:
+            return
+        else:
+            self.time_selected = self.time[-1]
+            self.sel_time(self.time_selected)
+            self.plot_graph()
+
+    def back_in_time(self):
+        if self.time_selected == self.time[0]:
+            return
+        else:
+            index = np.where(self.time == self.time_selected)[0][0]
+            self.time_selected = self.time[index - 1]
+            self.sel_time(self.time_selected)
+            self.plot_graph()
+
+    def first_in_time(self):
+        if self.time_selected == self.time[0]:
+            return
+        else:
+            self.time_selected = self.time[0]
+            self.sel_time(self.time_selected)
+            self.plot_graph()
+
     def updateLon(self):
         self.coordComboBox.blockSignals(True)
         self.coordComboBox.clear()
@@ -350,6 +388,7 @@ class Ui_WindButton_LonLatProfile(object):
     def set_normvalues(self, dset) -> tuple:
         vmax = np.nanmax(dset[:, :, :, :])
         vmin = np.nanmin(dset[:, :, :, :])
+        del dset
         return vmin, vmax
 
     def open_color_scale_widget(self):
