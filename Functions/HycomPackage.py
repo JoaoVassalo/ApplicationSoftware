@@ -96,7 +96,7 @@ class HycomDownloader:
 
                 else:
                     data_filtered = dataset[vars_in_dataset].sel(lat=slice(self.coords['S'], self.coords['N']),
-                                                           lon=slice(self.coords['W'] - 360, self.coords['E'] - 360))
+                                                           lon=slice(360 + self.coords['W'], 360 + self.coords['E']))
                     return data_filtered
 
             else:
