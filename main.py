@@ -145,19 +145,117 @@ class MainWindow(QMainWindow):
 
 
 shadow_elements = {
-    'icon_only_widget', # 'icon_text_widget',
+    'icon_only_widget',
     'header_widget',
-    'main_screen_widget'
+    'main_screen_widget',
+    'download_page',
+    'view_page',
+    'simulation_page',
+    'settings_page',
+    'file_page'
 }
 
 if __name__ == "__main__":
     app = QApplication([])
     app.setStyleSheet("""
+            #header_widget {
+                border-radius: 10px;
+                background-color: #2C423F;
+            }
+            
+            #icon_only_widget {
+                border-radius: 10px;
+                background-color: #2C423F;
+            }
+            
+            #centralwidget {
+                background-color: white;
+            }
+            
+            [commonButton="true"] {
+                background-color: #2C423F;
+                border: none;
+            }
+            
+            [commonButton="true"]:hover {
+                background-color: #E0E2DB;
+                border: 1px solid #5F7470;
+                border-radius: 10px;
+            }
+            
+            [DownloadCommomFrame="true"] {
+                background-color: #C3C3C3;
+                border: none;
+            }
+            
+            [commonLine="true"] {
+                background-color: #949B96;
+            }
+            
+            #DataBase_Frame {
+                background-color: #829191;
+                border-radius: 15px;
+                border: 2px solid #2C423F;
+            }
+            
+            [TitleCommon="true"] {
+                font-size: 12px;
+                font-style: italic;
+                font-weight: bold;
+                color: #2C423F
+            }
+            
+            [LabelDownloadCommon="true"] {
+                font-size: 14px;
+                font-style: italic;
+                font-weight: bold;
+                color: #4C5B61
+            }
+            
+            #Catalog_Combox {
+                background-color: #829191;
+                border-radius: 15px;
+                border: 2px solid #2C423F;
+                color: black;
+                padding-left: 15px;
+                padding-right: 10px;
+            }
+            
+            #Catalog_Combox::down-arrow {
+                width: 15px;
+                height: 15px;
+                image: url(':/icons/icons/seta_baixo - branca.png');
+            }
+            
+            #Catalog_Combox::drop-down {
+                border: none;
+                width: 15px;  /*tamanho da seta*/
+                background-color: #2C423F;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+            
+            QComboBox QAbstractiItemView {
+                border: 1px solid #2C423F;
+                background-color: white;
+                color: black;
+                selection-background-color: orange;
+                selection-color: black;
+                padding: 5px;
+                border-radius: 5px;
+            }
+            
+            [HeaderTitleCommon="true"] {
+                font-size: 14px;
+                color: #2C423F;
+            }
+    
             QToolTip {
-                color: white;  /* Cor do texto branca */
-                border: 1px solid black;  /* Borda preta */
-                border-radius: 4px;  /* Bordas arredondadas */
-                padding: 4px;  /* Espaçamento interno */
+                background-color: #5F7470;
+                color: black;
+                border: 1px solid #5F7470;
+                border-radius: 10px;
+                padding: 4px;
             }
         """)
     window = MainWindow()

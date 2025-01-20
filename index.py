@@ -98,7 +98,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.setStyleSheet(u"background-color: rgb(58, 58, 58);")
+        # MainWindow.setStyleSheet(u"background-color: rgb(58, 58, 58);")
         MainWindow.showFullScreen()
         MainWindow.setFixedSize(MainWindow.size())
 
@@ -108,8 +108,8 @@ class Ui_MainWindow(object):
 
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setStyleSheet(u"background-color: rgb(33, 43, 51);\n"
-                                         "")
+        # self.centralwidget.setStyleSheet(u"background-color: rgb(224, 226, 219);;\n"
+        #                                  "")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.main_screen_widget = QFrame(self.centralwidget)
@@ -136,18 +136,18 @@ class Ui_MainWindow(object):
         font.setFamilies([u"NovaFlat"])
         font.setBold(True)
         self.download_page_header.setFont(font)
-        self.download_page_header.setStyleSheet(u"\n"
-                                                "	color:white;\n"
-                                                "	background-color: rgb(61, 80, 95);\n"
-                                                "	border-radius: 10px;")
+        # self.download_page_header.setStyleSheet(u"\n"
+        #                                         "	color:white;\n"
+        #                                         "	background-color: rgb(61, 80, 95);\n"
+        #                                         "	border-radius: 10px;")
         self.download_page_header.setFrameShape(QFrame.Shape.StyledPanel)
         self.download_page_header.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_10 = QHBoxLayout(self.download_page_header)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.label_11 = QLabel(self.download_page_header)
         self.label_11.setObjectName(u"label_11")
+        self.label_11.setProperty('HeaderTitleCommon', True)
         self.label_11.setFont(font)
-        self.label_11.setStyleSheet(u"color: rgb(255, 255, 255);")
         self.label_11.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_10.addWidget(self.label_11, 0, Qt.AlignmentFlag.AlignTop)
@@ -158,19 +158,19 @@ class Ui_MainWindow(object):
         self.download_page_screen.setObjectName(u"download_page_screen")
         sizePolicy.setHeightForWidth(self.download_page_screen.sizePolicy().hasHeightForWidth())
         self.download_page_screen.setSizePolicy(sizePolicy)
-        self.download_page_screen.setStyleSheet(u"QWidget{\n"
-                                                "	color:white;\n"
-                                                "	background-color: rgb(61, 80, 95);\n"
-                                                "	border-radius: 10px;\n"
-                                                "}\n"
-                                                "")
+        # self.download_page_screen.setStyleSheet(u"QWidget{\n"
+        #                                         "	color:white;\n"
+        #                                         "	background-color: rgb(61, 80, 95);\n"
+        #                                         "	border-radius: 10px;\n"
+        #                                         "}\n"
+        #                                         "")
         self.download_page_screen.setFrameShape(QFrame.Shape.StyledPanel)
         self.download_page_screen.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_2 = QGridLayout(self.download_page_screen)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.widget_layout = QWidget(self.download_page_screen)
         self.widget_layout.setObjectName(u"widget_layout")
-        self.widget_layout.setStyleSheet(u"")
+        # self.widget_layout.setStyleSheet(u"")
         self.gridLayout_3 = QGridLayout(self.widget_layout)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
 
@@ -181,38 +181,41 @@ class Ui_MainWindow(object):
 
         self.coord_date_file_widgets = QWidget(self.widget_layout)
         self.coord_date_file_widgets.setObjectName(u"coord_date_file_widgets")
+        self.coord_date_file_widgets.setProperty('DownloadCommomFrame', True)
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.coord_date_file_widgets.sizePolicy().hasHeightForWidth())
         self.coord_date_file_widgets.setSizePolicy(sizePolicy1)
         self.coord_date_file_widgets.setMinimumSize(QSize(520, 280))
-        self.coord_date_file_widgets.setStyleSheet(u"QLineEdit {\n"
-                                                   "	border-radius: 15px;\n"
-                                                   "	border: 2px solid #F98600;\n"
-                                                   "	color: white;\n"
-                                                   "}\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "")
+        # self.coord_date_file_widgets.setStyleSheet(u"QLineEdit {\n"
+        #                                            "	border-radius: 15px;\n"
+        #                                            "	border: 2px solid #F98600;\n"
+        #                                            "	color: white;\n"
+        #                                            "}\n"
+        #                                            "\n"
+        #                                            "\n"
+        #                                            "\n"
+        #                                            "")
         self.horizontalLayout_3 = QHBoxLayout(self.coord_date_file_widgets)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.frame_coordinates = QFrame(self.coord_date_file_widgets)
         self.frame_coordinates.setObjectName(u"frame_coordinates")
-        self.frame_coordinates.setStyleSheet(u"")
+        self.frame_coordinates.setProperty('DownloadCommomFrame', True)
+        # self.frame_coordinates.setStyleSheet(u"")
         self.frame_coordinates.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_coordinates.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_4 = QGridLayout(self.frame_coordinates)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.coordinateLabel = QLabel(self.frame_coordinates)
         self.coordinateLabel.setObjectName(u"coordinateLabel")
+        self.coordinateLabel.setProperty("TitleCommon", True)
         self.coordinateLabel.setMinimumSize(QSize(110, 0))
         self.coordinateLabel.setMaximumSize(QSize(110, 20))
         font1 = QFont()
         font1.setBold(True)
         self.coordinateLabel.setFont(font1)
-        self.coordinateLabel.setStyleSheet(u"border: none;")
+        # self.coordinateLabel.setStyleSheet(u"border: none;")
         self.coordinateLabel.setAlignment(
             Qt.AlignmentFlag.AlignLeading | Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
@@ -220,13 +223,14 @@ class Ui_MainWindow(object):
 
         self.coord_boxs = QFrame(self.frame_coordinates)
         self.coord_boxs.setObjectName(u"coord_boxs")
+        self.coord_boxs.setProperty('DownloadCommomFrame', True)
         self.coord_boxs.setMinimumSize(QSize(100, 0))
         self.coord_boxs.setMaximumSize(QSize(200, 16777215))
-        self.coord_boxs.setStyleSheet(u"QLabel {\n"
-                                      "	border: none;\n"
-                                      "}\n"
-                                      "\n"
-                                      "")
+        # self.coord_boxs.setStyleSheet(u"QLabel {\n"
+        #                               "	border: none;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "")
         self.coord_boxs.setFrameShape(QFrame.Shape.StyledPanel)
         self.coord_boxs.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_19 = QVBoxLayout(self.coord_boxs)
@@ -242,6 +246,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_northbox.setContentsMargins(32, -1, -1, -1)
         self.label_24 = QLabel(self.coord_boxs)
         self.label_24.setObjectName(u"label_24")
+        self.label_24.setProperty("LabelDownloadCommon", True)
         self.label_24.setMinimumSize(QSize(100, 0))
         self.label_24.setMaximumSize(QSize(100, 16777215))
         font2 = QFont()
@@ -288,6 +293,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_weastbox.setObjectName(u"verticalLayout_weastbox")
         self.label_25 = QLabel(self.coord_boxs)
         self.label_25.setObjectName(u"label_25")
+        self.label_25.setProperty("LabelDownloadCommon", True)
         self.label_25.setMinimumSize(QSize(100, 0))
         self.label_25.setMaximumSize(QSize(100, 16777215))
         self.label_25.setFont(font2)
@@ -318,6 +324,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_eastbox.setObjectName(u"verticalLayout_eastbox")
         self.label_26 = QLabel(self.coord_boxs)
         self.label_26.setObjectName(u"label_26")
+        self.label_26.setProperty("LabelDownloadCommon", True)
         self.label_26.setMinimumSize(QSize(100, 0))
         self.label_26.setMaximumSize(QSize(100, 16777215))
         self.label_26.setFont(font2)
@@ -357,10 +364,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_southbox.setContentsMargins(32, -1, -1, -1)
         self.label_27 = QLabel(self.coord_boxs)
         self.label_27.setObjectName(u"label_27")
+        self.label_27.setProperty("LabelDownloadCommon", True)
         self.label_27.setMinimumSize(QSize(100, 0))
         self.label_27.setMaximumSize(QSize(100, 16777215))
         self.label_27.setFont(font2)
-        self.label_27.setStyleSheet(u"border: none;")
+        # self.label_27.setStyleSheet(u"border: none;")
         self.label_27.setAlignment(
             Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeading | Qt.AlignmentFlag.AlignLeft)
 
@@ -390,10 +398,11 @@ class Ui_MainWindow(object):
 
         self.frame_map_coord = QFrame(self.frame_coordinates)
         self.frame_map_coord.setObjectName(u"frame_map_coord")
+        self.frame_map_coord.setProperty('DownloadCommomFrame', True)
         sizePolicy1.setHeightForWidth(self.frame_map_coord.sizePolicy().hasHeightForWidth())
         self.frame_map_coord.setSizePolicy(sizePolicy1)
         self.frame_map_coord.setMinimumSize(QSize(200, 0))
-        self.frame_map_coord.setStyleSheet(u"")
+        # self.frame_map_coord.setStyleSheet(u"")
         self.frame_map_coord.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_map_coord.setFrameShadow(QFrame.Shadow.Raised)
 
@@ -416,7 +425,7 @@ class Ui_MainWindow(object):
 
         self.line_4 = QFrame(self.coord_date_file_widgets)
         self.line_4.setObjectName(u"line_4")
-        self.line_4.setStyleSheet(u"background-color: #F98600;")
+        self.line_4.setProperty("commonLine", True)
         self.line_4.setFrameShape(QFrame.Shape.VLine)
         self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -424,8 +433,9 @@ class Ui_MainWindow(object):
 
         self.frame_date = QFrame(self.coord_date_file_widgets)
         self.frame_date.setObjectName(u"frame_date")
+        self.frame_date.setProperty('DownloadCommomFrame', True)
         self.frame_date.setMinimumSize(QSize(250, 0))
-        self.frame_date.setStyleSheet(u"background-color: rgb(61, 80, 95);")
+        # self.frame_date.setStyleSheet(u"background-color: rgb(61, 80, 95);")
         self.frame_date.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_date.setFrameShadow(QFrame.Shadow.Raised)
         self.layoutWidget = QWidget(self.frame_date)
@@ -436,6 +446,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_date.setContentsMargins(0, 0, 0, 0)
         self.dateLabel = QLabel(self.layoutWidget)
         self.dateLabel.setObjectName(u"dateLabel")
+        self.dateLabel.setProperty("TitleCommon", True)
         self.dateLabel.setMinimumSize(QSize(110, 0))
         self.dateLabel.setMaximumSize(QSize(110, 20))
         self.dateLabel.setFont(font1)
@@ -458,6 +469,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_InitialDate.setObjectName(u"verticalLayout_InitialDate")
         self.initialdateLabel = QLabel(self.layoutWidget)
         self.initialdateLabel.setObjectName(u"initialdateLabel")
+        self.initialdateLabel.setProperty("LabelDownloadCommon", True)
         self.initialdateLabel.setMinimumSize(QSize(170, 30))
         self.initialdateLabel.setMaximumSize(QSize(170, 30))
         self.initialdateLabel.setFont(font2)
@@ -543,6 +555,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_FinalDate.setObjectName(u"verticalLayout_FinalDate")
         self.finaldateLabel = QLabel(self.layoutWidget)
         self.finaldateLabel.setObjectName(u"finaldateLabel")
+        self.finaldateLabel.setProperty("LabelDownloadCommon", True)
         self.finaldateLabel.setMinimumSize(QSize(170, 30))
         self.finaldateLabel.setMaximumSize(QSize(170, 30))
         self.finaldateLabel.setFont(font2)
@@ -622,7 +635,7 @@ class Ui_MainWindow(object):
 
         self.line_3 = QFrame(self.coord_date_file_widgets)
         self.line_3.setObjectName(u"line_3")
-        self.line_3.setStyleSheet(u"background-color: #F98600;")
+        self.line_3.setProperty("commonLine", True)
         self.line_3.setFrameShape(QFrame.Shape.VLine)
         self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -630,14 +643,16 @@ class Ui_MainWindow(object):
 
         self.frame_download = QFrame(self.coord_date_file_widgets)
         self.frame_download.setObjectName(u"frame_download")
+        self.frame_download.setProperty('DownloadCommomFrame', True)
         self.frame_download.setMaximumSize(QSize(200, 16777215))
-        self.frame_download.setStyleSheet(u"background-color: rgb(61, 80, 95);")
+        # self.frame_download.setStyleSheet(u"background-color: rgb(61, 80, 95);")
         self.frame_download.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_download.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_17 = QVBoxLayout(self.frame_download)
         self.verticalLayout_17.setObjectName(u"verticalLayout_17")
         self.downloadLabel = QLabel(self.frame_download)
         self.downloadLabel.setObjectName(u"downloadLabel")
+        self.downloadLabel.setProperty("TitleCommon", True)
         self.downloadLabel.setMinimumSize(QSize(110, 0))
         self.downloadLabel.setMaximumSize(QSize(110, 20))
         self.downloadLabel.setFont(font1)
@@ -660,6 +675,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_10.setObjectName(u"verticalLayout_10")
         self.filenameLabel = QLabel(self.frame_download)
         self.filenameLabel.setObjectName(u"filenameLabel")
+        self.filenameLabel.setProperty("LabelDownloadCommon", True)
         self.filenameLabel.setFont(font2)
 
         self.verticalLayout_10.addWidget(self.filenameLabel)
@@ -695,17 +711,17 @@ class Ui_MainWindow(object):
         self.DownloadButton.setObjectName(u"DownloadButton")
         self.DownloadButton.setMinimumSize(QSize(120, 30))
         self.DownloadButton.setMaximumSize(QSize(120, 30))
-        self.DownloadButton.setStyleSheet(u"QPushButton{\n"
-                                          "	background-color: rgb(61, 80, 95);\n"
-                                          "	border-radius: 15px;\n"
-                                          "	border: 2px solid #F98600;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QPushButton:checked{\n"
-                                          "	color: #F98600;\n"
-                                          "	font-size: 14px;\n"
-                                          "}\n"
-                                          "")
+        # self.DownloadButton.setStyleSheet(u"QPushButton{\n"
+        #                                   "	background-color: rgb(61, 80, 95);\n"
+        #                                   "	border-radius: 15px;\n"
+        #                                   "	border: 2px solid #F98600;\n"
+        #                                   "}\n"
+        #                                   "\n"
+        #                                   "QPushButton:checked{\n"
+        #                                   "	color: #F98600;\n"
+        #                                   "	font-size: 14px;\n"
+        #                                   "}\n"
+        #                                   "")
         self.DownloadButton.setCheckable(True)
         self.DownloadButton.clicked.connect(self.start_download)
 
@@ -759,9 +775,9 @@ class Ui_MainWindow(object):
         self.StopButton.setObjectName(u"StopButton")
         self.StopButton.setMinimumSize(QSize(120, 30))
         self.StopButton.setMaximumSize(QSize(120, 30))
-        self.StopButton.setStyleSheet(u"background-color: rgb(61, 80, 95);\n"
-                                      "	border-radius: 15px;\n"
-                                      "	border: 2px solid #F98600;")
+        # self.StopButton.setStyleSheet(u"background-color: rgb(61, 80, 95);\n"
+        #                               "	border-radius: 15px;\n"
+        #                               "	border: 2px solid #F98600;")
         self.StopButton.setHidden(True)
         self.StopButton.clicked.connect(self.stopdownload)
 
@@ -783,6 +799,7 @@ class Ui_MainWindow(object):
 
         self.variablesLabel = QLabel(self.widget_layout)
         self.variablesLabel.setObjectName(u"variablesLabel")
+        self.variablesLabel.setProperty("TitleCommon", True)
         sizePolicy2.setHeightForWidth(self.variablesLabel.sizePolicy().hasHeightForWidth())
         self.variablesLabel.setSizePolicy(sizePolicy2)
         self.variablesLabel.setMinimumSize(QSize(90, 20))
@@ -804,11 +821,11 @@ class Ui_MainWindow(object):
         self.DataBase_Frame.setObjectName(u"DataBase_Frame")
         self.DataBase_Frame.setMinimumSize(QSize(80, 30))
         self.DataBase_Frame.setMaximumSize(QSize(80, 30))
-        self.DataBase_Frame.setStyleSheet(u"QFrame{\n"
-                                          "	background-color: rgb(61, 80, 95);\n"
-                                          "	border-radius: 15px;\n"
-                                          "	border: 2px solid #F98600;\n"
-                                          "}")
+        # self.DataBase_Frame.setStyleSheet(u"QFrame{\n"
+        #                                   "	background-color: rgb(61, 80, 95);\n"
+        #                                   "	border-radius: 15px;\n"
+        #                                   "	border: 2px solid #F98600;\n"
+        #                                   "}")
         self.DataBase_Frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.DataBase_Frame.setFrameShadow(QFrame.Shadow.Raised)
         self.DataBase_Frame.mousePressEvent = self.change_database
@@ -885,37 +902,37 @@ class Ui_MainWindow(object):
         self.Catalog_Combox.setObjectName(u"Catalog_Combox")
         self.Catalog_Combox.setMinimumSize(QSize(350, 31))
         self.Catalog_Combox.setMaximumSize(QSize(350, 31))
-        self.Catalog_Combox.setStyleSheet(u"QComboBox{\n"
-                                          "	background-color: white;\n"
-                                          "	border-radius: 15px;\n"
-                                          "	border: 2px solid #F98600;\n"
-                                          "	color: black;\n"
-                                          "	padding-left: 15px;\n"
-                                          "    padding-right: 10px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QComboBox::drop-down {\n"
-                                          "    border: none;\n"
-                                          "    width: 20px;  /*tamanho da seta*/\n"
-                                          "    background-color: #F98600;\n"
-                                          "    border-top-right-radius: 10px;\n"
-                                          "    border-bottom-right-radius: 10px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QComboBox::down-arrow {\n"
-                                          "    width: 10px;\n"
-                                          "    height: 10px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QComboBox QAbstractItemView {\n"
-                                          "    border: 1px solid #F98600;\n"
-                                          "    background-color: white;\n"
-                                          "    color: black;\n"
-                                          "    selection-background-color: orange;\n"
-                                          "    selection-color: black;\n"
-                                          "    padding: 5px;\n"
-                                          "    border-radius: 5px;\n"
-                                          "}")
+        # self.Catalog_Combox.setStyleSheet(u"QComboBox{\n"
+        #                                   "	background-color: white;\n"
+        #                                   "	border-radius: 15px;\n"
+        #                                   "	border: 2px solid #F98600;\n"
+        #                                   "	color: black;\n"
+        #                                   "	padding-left: 15px;\n"
+        #                                   "    padding-right: 10px;\n"
+        #                                   "}\n"
+        #                                   "\n"
+        #                                   "QComboBox::drop-down {\n"
+        #                                   "    border: none;\n"
+        #                                   "    width: 20px;  /*tamanho da seta*/\n"
+        #                                   "    background-color: #F98600;\n"
+        #                                   "    border-top-right-radius: 10px;\n"
+        #                                   "    border-bottom-right-radius: 10px;\n"
+        #                                   "}\n"
+        #                                   "\n"
+        #                                   "QComboBox::down-arrow {\n"
+        #                                   "    width: 10px;\n"
+        #                                   "    height: 10px;\n"
+        #                                   "}\n"
+        #                                   "\n"
+        #                                   "QComboBox QAbstractItemView {\n"
+        #                                   "    border: 1px solid #F98600;\n"
+        #                                   "    background-color: white;\n"
+        #                                   "    color: black;\n"
+        #                                   "    selection-background-color: orange;\n"
+        #                                   "    selection-color: black;\n"
+        #                                   "    padding: 5px;\n"
+        #                                   "    border-radius: 5px;\n"
+        #                                   "}")
 
         self.horizontalLayout_button_catalogList.addWidget(self.Catalog_Combox)
 
@@ -933,6 +950,7 @@ class Ui_MainWindow(object):
 
         self.HycomLabel = QLabel(self.widget_layout)
         self.HycomLabel.setObjectName(u"HycomLabel")
+        self.HycomLabel.setProperty("TitleCommon", True)
         self.HycomLabel.setFont(font1)
         self.HycomLabel.setStyleSheet(u"color: rgb(249, 134, 0);")
         self.HycomLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -945,6 +963,7 @@ class Ui_MainWindow(object):
 
         self.CopernicusLabel = QLabel(self.widget_layout)
         self.CopernicusLabel.setObjectName(u"CopernicusLabel")
+        self.CopernicusLabel.setProperty("TitleCommon", True)
         self.CopernicusLabel.setFont(font1)
         self.CopernicusLabel.setStyleSheet(u"color: rgb(176, 176, 176);")
         self.CopernicusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -965,16 +984,17 @@ class Ui_MainWindow(object):
 
         self.frame_to_info = QFrame(self.widget_layout)
         self.frame_to_info.setObjectName(u"frame_to_info")
+        self.frame_to_info.setProperty('DownloadCommomFrame', True)
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.frame_to_info.sizePolicy().hasHeightForWidth())
         self.frame_to_info.setSizePolicy(sizePolicy1)
-        self.frame_to_info.setStyleSheet(u"QLineEdit{\n"
-                                         "	border: 2px solid #F98600;\n"
-                                         "}\n"
-                                         "\n"
-                                         "")
+        # self.frame_to_info.setStyleSheet(u"QLineEdit{\n"
+        #                                  "	border: 2px solid #F98600;\n"
+        #                                  "}\n"
+        #                                  "\n"
+        #                                  "")
         self.frame_to_info.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_to_info.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_8 = QHBoxLayout(self.frame_to_info)
@@ -1082,15 +1102,16 @@ class Ui_MainWindow(object):
         self.view_page_header = QFrame(self.view_page)
         self.view_page_header.setObjectName(u"view_page_header")
         self.view_page_header.setFont(font)
-        self.view_page_header.setStyleSheet(u"color:white;\n"
-                                            "	background-color: rgb(61, 80, 95);\n"
-                                            "	border-radius: 10px;")
+        # self.view_page_header.setStyleSheet(u"color:white;\n"
+        #                                     "	background-color: rgb(61, 80, 95);\n"
+        #                                     "	border-radius: 10px;")
         self.view_page_header.setFrameShape(QFrame.Shape.StyledPanel)
         self.view_page_header.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_12 = QHBoxLayout(self.view_page_header)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.view_header = QLabel(self.view_page_header)
         self.view_header.setObjectName(u"view_header")
+        self.view_header.setProperty('HeaderTitleCommon', True)
         self.view_header.setFont(font)
         self.view_header.setStyleSheet(u"")
         self.view_header.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -1103,12 +1124,12 @@ class Ui_MainWindow(object):
         self.view_page_main_screen.setObjectName(u"view_page_main_screen")
         sizePolicy.setHeightForWidth(self.view_page_main_screen.sizePolicy().hasHeightForWidth())
         self.view_page_main_screen.setSizePolicy(sizePolicy)
-        self.view_page_main_screen.setStyleSheet(u"QWidget{\n"
-                                                 "	color:white;\n"
-                                                 "	background-color: rgb(61, 80, 95);\n"
-                                                 "	border-radius: 10px;\n"
-                                                 "}\n"
-                                                 "")
+        # self.view_page_main_screen.setStyleSheet(u"QWidget{\n"
+        #                                          "	color:white;\n"
+        #                                          "	background-color: rgb(61, 80, 95);\n"
+        #                                          "	border-radius: 10px;\n"
+        #                                          "}\n"
+        #                                          "")
         self.view_page_main_screen.setFrameShape(QFrame.Shape.StyledPanel)
         self.view_page_main_screen.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_5 = QGridLayout(self.view_page_main_screen)
@@ -1192,34 +1213,34 @@ class Ui_MainWindow(object):
         self.frame_4.setObjectName(u"frame_4")
         self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
-        self.frame_4.setStyleSheet("""
-            QPushButton {
-                background-color: rgb(61, 80, 95);
-                border-radius: 10px; /* Arredondamento das bordas */
-                border: 2px solid #F98600;
-                min-width: 100px; /* Largura mínima */
-                max-width: 200px;
-                min-height: 20px; /* Altura mínima */
-                color: white;
-            }
-
-            QPushButton:hover {
-                color: #F98600;
-                font-size: 14px;
-            }
-
-            QPushButton:checked {
-                color: white;
-                background-color: rgb(125, 63, 0);
-                font-size: 14px;
-            }
-            
-            QRadioButton {
-                min-width: 55px;
-                max-width: 95px;
-                height:20px;
-            }
-        """)
+        # self.frame_4.setStyleSheet("""
+        #     QPushButton {
+        #         background-color: rgb(61, 80, 95);
+        #         border-radius: 10px; /* Arredondamento das bordas */
+        #         border: 2px solid #F98600;
+        #         min-width: 100px; /* Largura mínima */
+        #         max-width: 200px;
+        #         min-height: 20px; /* Altura mínima */
+        #         color: white;
+        #     }
+        #
+        #     QPushButton:hover {
+        #         color: #F98600;
+        #         font-size: 14px;
+        #     }
+        #
+        #     QPushButton:checked {
+        #         color: white;
+        #         background-color: rgb(125, 63, 0);
+        #         font-size: 14px;
+        #     }
+        #
+        #     QRadioButton {
+        #         min-width: 55px;
+        #         max-width: 95px;
+        #         height:20px;
+        #     }
+        # """)
         self.gridLayout_forVar = QGridLayout(self.frame_4)
         self.gridLayout_forVar.setSpacing(0)
 
@@ -1249,17 +1270,18 @@ class Ui_MainWindow(object):
         self.file_page_header = QFrame(self.file_page)
         self.file_page_header.setObjectName(u"file_page_header")
         self.file_page_header.setFont(font)
-        self.file_page_header.setStyleSheet(u"color:white;\n"
-                                            "	background-color: rgb(61, 80, 95);\n"
-                                            "	border-radius: 10px;")
+        # self.file_page_header.setStyleSheet(u"color:white;\n"
+        #                                     "	background-color: rgb(61, 80, 95);\n"
+        #                                     "	border-radius: 10px;")
         self.file_page_header.setFrameShape(QFrame.Shape.StyledPanel)
         self.file_page_header.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_11 = QHBoxLayout(self.file_page_header)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.file_header = QLabel(self.file_page_header)
         self.file_header.setObjectName(u"file_header")
+        self.file_header.setProperty('HeaderTitleCommon', True)
         self.file_header.setFont(font)
-        self.file_header.setStyleSheet(u"color: rgb(255, 255, 255);")
+        # self.file_header.setStyleSheet(u"color: rgb(255, 255, 255);")
         self.file_header.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_11.addWidget(self.file_header, 0, Qt.AlignmentFlag.AlignTop)
@@ -1270,15 +1292,15 @@ class Ui_MainWindow(object):
         self.file_page_main_screen.setObjectName(u"file_page_main_screen")
         sizePolicy.setHeightForWidth(self.file_page_main_screen.sizePolicy().hasHeightForWidth())
         self.file_page_main_screen.setSizePolicy(sizePolicy)
-        self.file_page_main_screen.setStyleSheet(u"QWidget{\n"
-                                                 "	color:white;\n"
-                                                 "	background-color: rgb(61, 80, 95);\n"
-                                                 "	border-radius: 10px;\n"
-                                                 "}\n"
-                                                 "\n"
-                                                 "\n"
-                                                 "\n"
-                                                 "")
+        # self.file_page_main_screen.setStyleSheet(u"QWidget{\n"
+        #                                          "	color:white;\n"
+        #                                          "	background-color: rgb(61, 80, 95);\n"
+        #                                          "	border-radius: 10px;\n"
+        #                                          "}\n"
+        #                                          "\n"
+        #                                          "\n"
+        #                                          "\n"
+        #                                          "")
         self.file_page_main_screen.setFrameShape(QFrame.Shape.StyledPanel)
         self.file_page_main_screen.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_9 = QGridLayout(self.file_page_main_screen)
@@ -1399,23 +1421,23 @@ class Ui_MainWindow(object):
         self.ConcatButrton.setObjectName(u"ConcatButrton")
         self.ConcatButrton.setMinimumSize(QSize(100, 30))
         self.ConcatButrton.setMaximumSize(QSize(120, 30))
-        self.ConcatButrton.setStyleSheet(u"QPushButton{\n"
-                                         "	background-color: rgb(61, 80, 95);\n"
-                                         "	border-radius: 15px;\n"
-                                         "	border: 2px solid #F98600;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "	color: #F98600;\n"
-                                         "	font-size: 14px;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:checked{\n"
-                                         "	color: white;\n"
-                                         "	\n"
-                                         "	background-color: rgb(125, 63, 0);\n"
-                                         "	font-size: 14px;\n"
-                                         "}")
+        # self.ConcatButrton.setStyleSheet(u"QPushButton{\n"
+        #                                  "	background-color: rgb(61, 80, 95);\n"
+        #                                  "	border-radius: 15px;\n"
+        #                                  "	border: 2px solid #F98600;\n"
+        #                                  "}\n"
+        #                                  "\n"
+        #                                  "QPushButton:hover{\n"
+        #                                  "	color: #F98600;\n"
+        #                                  "	font-size: 14px;\n"
+        #                                  "}\n"
+        #                                  "\n"
+        #                                  "QPushButton:checked{\n"
+        #                                  "	color: white;\n"
+        #                                  "	\n"
+        #                                  "	background-color: rgb(125, 63, 0);\n"
+        #                                  "	font-size: 14px;\n"
+        #                                  "}")
         self.ConcatButrton.setCheckable(True)
         self.ConcatButrton.clicked.connect(self.concat_files)
 
@@ -1425,22 +1447,22 @@ class Ui_MainWindow(object):
         self.MergeButton.setObjectName(u"MergeButton")
         self.MergeButton.setMinimumSize(QSize(100, 30))
         self.MergeButton.setMaximumSize(QSize(120, 30))
-        self.MergeButton.setStyleSheet(u"QPushButton{\n"
-                                       "	background-color: rgb(61, 80, 95);\n"
-                                       "	border-radius: 15px;\n"
-                                       "	border: 2px solid #F98600;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:hover{\n"
-                                       "	color: #F98600;\n"
-                                       "	font-size: 14px;\n"
-                                       "}\n"
-                                       "\n"
-                                       "QPushButton:checked{\n"
-                                       "	color: white;\n"
-                                       "	background-color: rgb(125, 63, 0);\n"
-                                       "	font-size: 14px;\n"
-                                       "}")
+        # self.MergeButton.setStyleSheet(u"QPushButton{\n"
+        #                                "	background-color: rgb(61, 80, 95);\n"
+        #                                "	border-radius: 15px;\n"
+        #                                "	border: 2px solid #F98600;\n"
+        #                                "}\n"
+        #                                "\n"
+        #                                "QPushButton:hover{\n"
+        #                                "	color: #F98600;\n"
+        #                                "	font-size: 14px;\n"
+        #                                "}\n"
+        #                                "\n"
+        #                                "QPushButton:checked{\n"
+        #                                "	color: white;\n"
+        #                                "	background-color: rgb(125, 63, 0);\n"
+        #                                "	font-size: 14px;\n"
+        #                                "}")
         self.MergeButton.setCheckable(True)
         self.MergeButton.clicked.connect(self.merge_files)
 
@@ -1450,22 +1472,22 @@ class Ui_MainWindow(object):
         self.FilterButton.setObjectName(u"FilterButton")
         self.FilterButton.setMinimumSize(QSize(100, 30))
         self.FilterButton.setMaximumSize(QSize(120, 30))
-        self.FilterButton.setStyleSheet(u"QPushButton{\n"
-                                        "	background-color: rgb(61, 80, 95);\n"
-                                        "	border-radius: 15px;\n"
-                                        "	border: 2px solid #F98600;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QPushButton:hover{\n"
-                                        "	color: #F98600;\n"
-                                        "	font-size: 14px;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QPushButton:checked{\n"
-                                        "	color: white;\n"
-                                        "	background-color: rgb(125, 63, 0);\n"
-                                        "	font-size: 14px;\n"
-                                        "}")
+        # self.FilterButton.setStyleSheet(u"QPushButton{\n"
+        #                                 "	background-color: rgb(61, 80, 95);\n"
+        #                                 "	border-radius: 15px;\n"
+        #                                 "	border: 2px solid #F98600;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QPushButton:hover{\n"
+        #                                 "	color: #F98600;\n"
+        #                                 "	font-size: 14px;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QPushButton:checked{\n"
+        #                                 "	color: white;\n"
+        #                                 "	background-color: rgb(125, 63, 0);\n"
+        #                                 "	font-size: 14px;\n"
+        #                                 "}")
         self.FilterButton.setCheckable(True)
         self.FilterButton.clicked.connect(self.filter_file)
 
@@ -1475,22 +1497,22 @@ class Ui_MainWindow(object):
         self.ImpButton.setObjectName(u"ImpButton")
         self.ImpButton.setMinimumSize(QSize(100, 30))
         self.ImpButton.setMaximumSize(QSize(120, 30))
-        self.ImpButton.setStyleSheet(u"QPushButton{\n"
-                                     "	background-color: rgb(61, 80, 95);\n"
-                                     "	border-radius: 15px;\n"
-                                     "	border: 2px solid #F98600;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:hover{\n"
-                                     "	color: #F98600;\n"
-                                     "	font-size: 14px;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:checked{\n"
-                                     "	color: white;\n"
-                                     "	background-color: rgb(125, 63, 0);\n"
-                                     "	font-size: 14px;\n"
-                                     "}")
+        # self.ImpButton.setStyleSheet(u"QPushButton{\n"
+        #                              "	background-color: rgb(61, 80, 95);\n"
+        #                              "	border-radius: 15px;\n"
+        #                              "	border: 2px solid #F98600;\n"
+        #                              "}\n"
+        #                              "\n"
+        #                              "QPushButton:hover{\n"
+        #                              "	color: #F98600;\n"
+        #                              "	font-size: 14px;\n"
+        #                              "}\n"
+        #                              "\n"
+        #                              "QPushButton:checked{\n"
+        #                              "	color: white;\n"
+        #                              "	background-color: rgb(125, 63, 0);\n"
+        #                              "	font-size: 14px;\n"
+        #                              "}")
         self.ImpButton.setCheckable(True)
         self.ImpButton.clicked.connect(self.imp_file)
 
@@ -1500,22 +1522,22 @@ class Ui_MainWindow(object):
         self.DatButton.setObjectName(u"DatButton")
         self.DatButton.setMinimumSize(QSize(100, 30))
         self.DatButton.setMaximumSize(QSize(120, 30))
-        self.DatButton.setStyleSheet(u"QPushButton{\n"
-                                     "	background-color: rgb(61, 80, 95);\n"
-                                     "	border-radius: 15px;\n"
-                                     "	border: 2px solid #F98600;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:hover{\n"
-                                     "	color: #F98600;\n"
-                                     "	font-size: 14px;\n"
-                                     "}\n"
-                                     "\n"
-                                     "QPushButton:checked{\n"
-                                     "	color: white;\n"
-                                     "	background-color: rgb(125, 63, 0);\n"
-                                     "	font-size: 14px;\n"
-                                     "}")
+        # self.DatButton.setStyleSheet(u"QPushButton{\n"
+        #                              "	background-color: rgb(61, 80, 95);\n"
+        #                              "	border-radius: 15px;\n"
+        #                              "	border: 2px solid #F98600;\n"
+        #                              "}\n"
+        #                              "\n"
+        #                              "QPushButton:hover{\n"
+        #                              "	color: #F98600;\n"
+        #                              "	font-size: 14px;\n"
+        #                              "}\n"
+        #                              "\n"
+        #                              "QPushButton:checked{\n"
+        #                              "	color: white;\n"
+        #                              "	background-color: rgb(125, 63, 0);\n"
+        #                              "	font-size: 14px;\n"
+        #                              "}")
         self.DatButton.setCheckable(True)
         self.DatButton.clicked.connect(self.dat_file)
 
@@ -1525,22 +1547,22 @@ class Ui_MainWindow(object):
         self.DeleteButton.setObjectName(u"DeleteButton")
         self.DeleteButton.setMinimumSize(QSize(100, 30))
         self.DeleteButton.setMaximumSize(QSize(120, 30))
-        self.DeleteButton.setStyleSheet(u"QPushButton{\n"
-                                        "	background-color: rgb(61, 80, 95);\n"
-                                        "	border-radius: 15px;\n"
-                                        "	border: 2px solid #F98600;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QPushButton:hover{\n"
-                                        "	color: #F98600;\n"
-                                        "	font-size: 14px;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QPushButton:checked{\n"
-                                        "	color: white;\n"
-                                        "	background-color: rgb(125, 63, 0);\n"
-                                        "	font-size: 14px;\n"
-                                        "}")
+        # self.DeleteButton.setStyleSheet(u"QPushButton{\n"
+        #                                 "	background-color: rgb(61, 80, 95);\n"
+        #                                 "	border-radius: 15px;\n"
+        #                                 "	border: 2px solid #F98600;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QPushButton:hover{\n"
+        #                                 "	color: #F98600;\n"
+        #                                 "	font-size: 14px;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QPushButton:checked{\n"
+        #                                 "	color: white;\n"
+        #                                 "	background-color: rgb(125, 63, 0);\n"
+        #                                 "	font-size: 14px;\n"
+        #                                 "}")
         self.DeleteButton.setCheckable(True)
         self.DeleteButton.clicked.connect(self.delele_file)
 
@@ -1576,16 +1598,16 @@ class Ui_MainWindow(object):
         self.ExcuteButton.setObjectName(u"ExcuteButton")
         self.ExcuteButton.setMinimumSize(QSize(100, 30))
         self.ExcuteButton.setMaximumSize(QSize(100, 30))
-        self.ExcuteButton.setStyleSheet(u"QPushButton{\n"
-                                        "	background-color: rgb(61, 80, 95);\n"
-                                        "	border-radius: 15px;\n"
-                                        "	border: 2px solid #F98600;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QPushButton:checked{\n"
-                                        "	color: #F98600;\n"
-                                        "	font-size: 14px;\n"
-                                        "}")
+        # self.ExcuteButton.setStyleSheet(u"QPushButton{\n"
+        #                                 "	background-color: rgb(61, 80, 95);\n"
+        #                                 "	border-radius: 15px;\n"
+        #                                 "	border: 2px solid #F98600;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QPushButton:checked{\n"
+        #                                 "	color: #F98600;\n"
+        #                                 "	font-size: 14px;\n"
+        #                                 "}")
         self.ExcuteButton.setCheckable(True)
         self.ExcuteButton.setChecked(False)
         self.ExcuteButton.clicked.connect(self.execute_function)
@@ -1630,8 +1652,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
         self.label_10 = QLabel(self.frame_17)
         self.label_10.setObjectName(u"label_10")
+        self.label_10.setProperty('HeaderTitleCommon', True)
         self.label_10.setFont(font)
-        self.label_10.setStyleSheet(u"color: rgb(255, 255, 255);")
         self.label_10.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_9.addWidget(self.label_10, 0, Qt.AlignmentFlag.AlignTop)
@@ -1661,8 +1683,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.label_14 = QLabel(self.frame_25)
         self.label_14.setObjectName(u"label_14")
+        self.label_14.setProperty('HeaderTitleCommon', True)
         self.label_14.setFont(font)
-        self.label_14.setStyleSheet(u"color: rgb(255, 255, 255);")
         self.label_14.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_13.addWidget(self.label_14, 0, Qt.AlignmentFlag.AlignTop)
@@ -1688,10 +1710,10 @@ class Ui_MainWindow(object):
         self.icon_only_widget.setObjectName(u"icon_only_widget")
         self.icon_only_widget.setMinimumSize(QSize(70, 0))
         self.icon_only_widget.setMaximumSize(QSize(70, 16777215))
-        self.icon_only_widget.setStyleSheet(u"QWidget{\n"
-                                            "	background-color: rgb(61, 80, 95);\n"
-                                            "	border-radius: 10px\n"
-                                            "}")
+        # self.icon_only_widget.setStyleSheet(u"QWidget{\n"
+        #                                     "	background-color: rgb(61, 80, 95);\n"
+        #                                     "	border-radius: 10px\n"
+        #                                     "}")
         self.icon_only_widget.setHidden(False)
         self.verticalLayout_5 = QVBoxLayout(self.icon_only_widget)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -1705,7 +1727,7 @@ class Ui_MainWindow(object):
         self.label = QLabel(self.icon_only_widget)
         self.label.setObjectName(u"label")
         self.label.setMaximumSize(QSize(40, 40))
-        self.label.setPixmap(QPixmap(u":/icons/icons/home - laranja.png"))
+        self.label.setPixmap(QPixmap(u":/icons/icons/home - branco.png"))
         self.label.setScaledContents(True)
 
         self.logo_icon_only.addWidget(self.label)
@@ -1722,15 +1744,16 @@ class Ui_MainWindow(object):
         self.icons_up_only.setContentsMargins(-1, 20, -1, -1)
         self.DB_1 = QPushButton(self.icon_only_widget)
         self.DB_1.setObjectName(u"DB_1")
+        self.DB_1.setProperty("commonButton", True)
         self.DB_1.setMinimumSize(QSize(0, 30))
         self.DB_1.setMaximumSize(QSize(16777215, 30))
-        self.DB_1.setStyleSheet(u"QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}\n"
-                                "")
+        # self.DB_1.setStyleSheet(u"QPushButton:hover{\n"
+        #                         "	background-color: rgb(33, 43, 51);\n"
+        #                         "	font-size: 13px;\n"
+        #                         "}\n"
+        #                         "")
         icon = QIcon()
-        icon.addFile(u":/icons/icons/download - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/icons/icons/download - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.DB_1.setIcon(icon)
         self.DB_1.setIconSize(QSize(100, 20))
         self.DB_1.setCheckable(False)
@@ -1742,14 +1765,15 @@ class Ui_MainWindow(object):
 
         self.VB_1 = QPushButton(self.icon_only_widget)
         self.VB_1.setObjectName(u"VB_1")
+        self.VB_1.setProperty("commonButton", True)
         self.VB_1.setMinimumSize(QSize(0, 30))
         self.VB_1.setMaximumSize(QSize(16777215, 30))
-        self.VB_1.setStyleSheet(u"QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}")
+        # self.VB_1.setStyleSheet(u"QPushButton:hover{\n"
+        #                         "	background-color: rgb(33, 43, 51);\n"
+        #                         "	font-size: 13px;\n"
+        #                         "}")
         icon1 = QIcon()
-        icon1.addFile(u":/icons/icons/olho - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/icons/icons/olho - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.VB_1.setIcon(icon1)
         self.VB_1.setIconSize(QSize(100, 20))
         self.VB_1.setCheckable(False)
@@ -1760,15 +1784,16 @@ class Ui_MainWindow(object):
 
         self.CB_1 = QPushButton(self.icon_only_widget)
         self.CB_1.setObjectName(u"CB_1")
+        self.CB_1.setProperty("commonButton", True)
         self.CB_1.setMinimumSize(QSize(0, 30))
         self.CB_1.setMaximumSize(QSize(16777215, 30))
-        self.CB_1.setStyleSheet(u"QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}\n"
-                                "")
+        # self.CB_1.setStyleSheet(u"QPushButton:hover{\n"
+        #                         "	background-color: rgb(33, 43, 51);\n"
+        #                         "	font-size: 13px;\n"
+        #                         "}\n"
+        #                         "")
         icon2 = QIcon()
-        icon2.addFile(u":/icons/icons/documentoPLUS - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon2.addFile(u":/icons/icons/documentoPLUS - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.CB_1.setIcon(icon2)
         self.CB_1.setIconSize(QSize(100, 20))
         self.CB_1.setCheckable(False)
@@ -1779,15 +1804,16 @@ class Ui_MainWindow(object):
 
         self.SB_1 = QPushButton(self.icon_only_widget)
         self.SB_1.setObjectName(u"SB_1")
+        self.SB_1.setProperty("commonButton", True)
         self.SB_1.setMinimumSize(QSize(0, 30))
         self.SB_1.setMaximumSize(QSize(16777215, 30))
-        self.SB_1.setStyleSheet(u"QPushButton:hover{\n"
-                                "	background-color: rgb(33, 43, 51);\n"
-                                "	font-size: 13px;\n"
-                                "}\n"
-                                "")
+        # self.SB_1.setStyleSheet(u"QPushButton:hover{\n"
+        #                         "	background-color: rgb(33, 43, 51);\n"
+        #                         "	font-size: 13px;\n"
+        #                         "}\n"
+        #                         "")
         icon3 = QIcon()
-        icon3.addFile(u":/icons/icons/histograma - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon3.addFile(u":/icons/icons/histograma - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.SB_1.setIcon(icon3)
         self.SB_1.setIconSize(QSize(100, 20))
         self.SB_1.setCheckable(False)
@@ -1807,14 +1833,15 @@ class Ui_MainWindow(object):
         self.icons_down_only.setObjectName(u"icons_down_only")
         self.ConfigB_1 = QPushButton(self.icon_only_widget)
         self.ConfigB_1.setObjectName(u"ConfigB_1")
+        self.ConfigB_1.setProperty("commonButton", True)
         self.ConfigB_1.setMinimumSize(QSize(0, 30))
         self.ConfigB_1.setMaximumSize(QSize(16777215, 30))
-        self.ConfigB_1.setStyleSheet(u"QPushButton:hover{\n"
-                                     "	background-color: rgb(33, 43, 51);\n"
-                                     "	font-size: 13px;\n"
-                                     "}")
+        # self.ConfigB_1.setStyleSheet(u"QPushButton:hover{\n"
+        #                              "	background-color: rgb(33, 43, 51);\n"
+        #                              "	font-size: 13px;\n"
+        #                              "}")
         icon4 = QIcon()
-        icon4.addFile(u":/icons/icons/ajustes - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon4.addFile(u":/icons/icons/ajustes - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.ConfigB_1.setIcon(icon4)
         self.ConfigB_1.setIconSize(QSize(100, 20))
         self.ConfigB_1.setCheckable(False)
@@ -1825,14 +1852,15 @@ class Ui_MainWindow(object):
 
         self.LogoutB_1 = QPushButton(self.icon_only_widget)
         self.LogoutB_1.setObjectName(u"LogoutB_1")
+        self.LogoutB_1.setProperty("commonButton", True)
         self.LogoutB_1.setMinimumSize(QSize(0, 30))
         self.LogoutB_1.setMaximumSize(QSize(16777215, 30))
-        self.LogoutB_1.setStyleSheet(u"QPushButton:hover{\n"
-                                     "	background-color: rgb(33, 43, 51);\n"
-                                     "	font-size: 13px;\n"
-                                     "}")
+        # self.LogoutB_1.setStyleSheet(u"QPushButton:hover{\n"
+        #                              "	background-color: rgb(33, 43, 51);\n"
+        #                              "	font-size: 13px;\n"
+        #                              "}")
         icon5 = QIcon()
-        icon5.addFile(u":/icons/icons/sair - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon5.addFile(u":/icons/icons/sair - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.LogoutB_1.setIcon(icon5)
         self.LogoutB_1.setIconSize(QSize(100, 20))
         self.LogoutB_1.setCheckable(False)
@@ -1849,8 +1877,8 @@ class Ui_MainWindow(object):
         self.header_widget.setObjectName(u"header_widget")
         self.header_widget.setMinimumSize(QSize(861, 60))
         self.header_widget.setMaximumSize(QSize(16777215, 60))
-        self.header_widget.setStyleSheet(u"background-color: rgb(61, 80, 95);\n"
-                                         "border-radius: 10px;")
+        # self.header_widget.setStyleSheet(u"background-color: rgb(61, 80, 95);\n"
+        #                                  "border-radius: 10px;")
         self.horizontalLayout_5 = QHBoxLayout(self.header_widget)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.horizontalLayout_4 = QHBoxLayout()
@@ -1858,14 +1886,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.menu_button = QPushButton(self.header_widget)
         self.menu_button.setObjectName(u"menu_button")
+        self.menu_button.setProperty("commonButton", True)
         self.menu_button.setMinimumSize(QSize(30, 35))
         self.menu_button.setMaximumSize(QSize(30, 35))
-        self.menu_button.setStyleSheet(u"QPushButton{\n"
-                                       "	border: none;\n"
-                                       "}\n"
-                                       "")
+        # self.menu_button.setStyleSheet(u"QPushButton{\n"
+        #                                "	border: none;\n"
+        #                                "}\n"
+        #                                "")
         icon6 = QIcon()
-        icon6.addFile(u":/icons/icons/menu - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon6.addFile(u":/icons/icons/menu - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.menu_button.setIcon(icon6)
         self.menu_button.setIconSize(QSize(30, 35))
         self.menu_button.setCheckable(True)
@@ -2779,10 +2808,10 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"DOWNLOAD PAGE", None))
         self.coordinateLabel.setText(QCoreApplication.translate("MainWindow", u"COORDINATES", None))
-        self.label_24.setText(QCoreApplication.translate("MainWindow", u"NORTH", None))
-        self.label_25.setText(QCoreApplication.translate("MainWindow", u"WEST", None))
-        self.label_26.setText(QCoreApplication.translate("MainWindow", u"EAST", None))
-        self.label_27.setText(QCoreApplication.translate("MainWindow", u"SOUTH", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"North", None))
+        self.label_25.setText(QCoreApplication.translate("MainWindow", u"West", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", u"East", None))
+        self.label_27.setText(QCoreApplication.translate("MainWindow", u"South", None))
         self.dateLabel.setText(QCoreApplication.translate("MainWindow", u"DATE", None))
         self.initialdateLabel.setText(QCoreApplication.translate("MainWindow", u"Initial date", None))
         self.finaldateLabel.setText(QCoreApplication.translate("MainWindow", u"Final date", None))
