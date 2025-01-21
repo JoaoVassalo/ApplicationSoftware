@@ -213,7 +213,7 @@ if __name__ == "__main__":
             }
             
             #Catalog_Combox {
-                background-color: #829191;
+                background-color: #C3C3C3; /*829191*/
                 border-radius: 15px;
                 border: 2px solid #2C423F;
                 color: black;
@@ -248,6 +248,99 @@ if __name__ == "__main__":
             [HeaderTitleCommon="true"] {
                 font-size: 14px;
                 color: #2C423F;
+            }
+            
+            [commonLineEditDownloadPage="true"] {
+                border-radius: 15px;
+                border: 2px solid #2C423F;
+                color: black;
+                background-color: #C3C3C3; /*829191*/
+            }
+            
+            #fromDateEdit, #toDateEdit, #regionEdit {
+                border-radius: 10px;
+            }
+            
+            #FileName {
+                padding-left: 15px;
+                padding-right: 10px;
+            }
+            
+            #variables_checkbox_widget {
+                border: 2px solid #2C423F;
+                border-radius: 10px;
+                background-color: #C3C3C3; /*829191*/
+            }
+            
+            [commonDateEdit="true"] {
+                background-color: #C3C3C3; /*829191*/
+                border-radius: 15px;
+                border: 2px solid #2C423F;
+                color: black;
+                padding-left: 15px;
+                padding-right: 10px;
+            }
+            
+            [commonDateEdit="true"]::up-button {
+                width: 15px;
+                height: 15px;
+                subcontrol-origin: border;
+                subcontrol-position: top right;
+                padding-right: 3px;
+                margin: 2px;
+                border: none;
+                background-color: #2C423F;
+                border-top-right-radius: 10px;
+            }
+            
+            [commonDateEdit="true"]::up-arrow {
+                border: none;
+                width: 10px;
+                height: 10px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+                margin: 2px;
+                image: url(':/icons/icons/seta_cima - branca.png');
+            }
+            
+            [commonDateEdit="true"]::down-button {
+                width: 15px;
+                height: 15px;
+                subcontrol-origin: border;
+                subcontrol-position: bottom right;
+                padding-right: 3px;
+                margin: 2px;
+                border: none;
+                background-color: #2C423F;
+                border-bottom-right-radius: 10px;
+            }
+            
+            [commonDateEdit="true"]::down-arrow {
+                border: none;
+                width: 10px;
+                height: 10px;
+                border-left: 1px solid black;
+                border-top: 1px solid black;
+                margin: 2px;
+                image: url(':/icons/icons/seta_baixo - branca.png');
+            }
+            
+            QCheckBox::indicator:checked {
+                background-color: #2C423F;
+                border: 1px solid black;
+                border-radius: 5px;
+                image: url(':/icons/icons/confirmar - branca.png');
+            }
+            
+            QCheckBox::indicator:unchecked {
+                background-color: #C3C3C3;
+                border: 1px solid black;
+                border-radius: 5px;
+            }
+            
+            QCheckBox::indicator {
+                width: 15px;
+                height: 15px;
             }
     
             QToolTip {

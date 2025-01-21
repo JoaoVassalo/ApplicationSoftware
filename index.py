@@ -238,6 +238,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_northbox = QHBoxLayout()
         self.horizontalLayout_northbox.setObjectName(u"horizontalLayout_northbox")
         self.horizontalSpacer_7 = QSpacerItem(28, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_northbox.setContentsMargins(0, 35, 0, 0)
 
         self.horizontalLayout_northbox.addItem(self.horizontalSpacer_7)
 
@@ -260,6 +261,7 @@ class Ui_MainWindow(object):
 
         self.North_value = QLineEdit(self.coord_boxs)
         self.North_value.setObjectName(u"North_value")
+        self.North_value.setProperty('commonLineEditDownloadPage', True)
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
@@ -284,7 +286,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_weast_east_box = QHBoxLayout()
         self.horizontalLayout_weast_east_box.setSpacing(6)
         self.horizontalLayout_weast_east_box.setObjectName(u"horizontalLayout_weast_east_box")
-        self.horizontalLayout_weast_east_box.setContentsMargins(12, -1, -1, -1)
+        self.horizontalLayout_weast_east_box.setContentsMargins(12, -1, -1, 20)
         self.horizontalSpacer_11 = QSpacerItem(18, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_weast_east_box.addItem(self.horizontalSpacer_11)
@@ -304,6 +306,7 @@ class Ui_MainWindow(object):
 
         self.Weast_value = QLineEdit(self.coord_boxs)
         self.Weast_value.setObjectName(u"Weast_value")
+        self.Weast_value.setProperty('commonLineEditDownloadPage', True)
         sizePolicy2.setHeightForWidth(self.Weast_value.sizePolicy().hasHeightForWidth())
         self.Weast_value.setSizePolicy(sizePolicy2)
         self.Weast_value.setMinimumSize(QSize(60, 30))
@@ -335,6 +338,7 @@ class Ui_MainWindow(object):
 
         self.East_value = QLineEdit(self.coord_boxs)
         self.East_value.setObjectName(u"East_value")
+        self.East_value.setProperty('commonLineEditDownloadPage', True)
         sizePolicy2.setHeightForWidth(self.East_value.sizePolicy().hasHeightForWidth())
         self.East_value.setSizePolicy(sizePolicy2)
         self.East_value.setMinimumSize(QSize(60, 30))
@@ -356,6 +360,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_southbox = QHBoxLayout()
         self.horizontalLayout_southbox.setObjectName(u"horizontalLayout_southbox")
         self.horizontalSpacer_12 = QSpacerItem(28, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_southbox.setContentsMargins(0, 0, 0, 35)
 
         self.horizontalLayout_southbox.addItem(self.horizontalSpacer_12)
 
@@ -376,6 +381,7 @@ class Ui_MainWindow(object):
 
         self.South_value = QLineEdit(self.coord_boxs)
         self.South_value.setObjectName(u"South_value")
+        self.South_value.setProperty('commonLineEditDownloadPage', True)
         sizePolicy2.setHeightForWidth(self.South_value.sizePolicy().hasHeightForWidth())
         self.South_value.setSizePolicy(sizePolicy2)
         self.South_value.setMinimumSize(QSize(60, 30))
@@ -415,7 +421,7 @@ class Ui_MainWindow(object):
         sizePolicyCanvas = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicyCanvas.setHeightForWidth(self.canva.sizePolicy().hasHeightForWidth())
         self.canva.setSizePolicy(sizePolicyCanvas)
-        self.canva.figure.set_facecolor("#3d505f")
+        self.canva.figure.set_facecolor("#C3C3C3")
         self.graphlayout_map.addWidget(self.canva)
 
         self.set_global_graph()
@@ -478,58 +484,59 @@ class Ui_MainWindow(object):
 
         self.Initial_date = QDateEdit(self.layoutWidget)
         self.Initial_date.setObjectName(u"Initial_date")
+        self.Initial_date.setProperty('commonDateEdit', True)
         self.Initial_date.setMinimumSize(QSize(170, 30))
         self.Initial_date.setMaximumSize(QSize(170, 30))
-        self.Initial_date.setStyleSheet(u"QDateEdit{\n"
-                                        "	background-color: white;\n"
-                                        "	border-radius: 15px;\n"
-                                        "	border: 2px solid #F98600;\n"
-                                        "	color: black;\n"
-                                        "	padding-left: 15px;\n"
-                                        "	padding-right: 10px;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QDateEdit::up-button {\n"
-                                        "    width: 15px;\n"
-                                        "    height: 15px;\n"
-                                        "    subcontrol-origin: border;\n"
-                                        "    subcontrol-position: top right;\n"
-                                        "	padding-right: 7px;\n"
-                                        "    margin: 2px;\n"
-                                        "    border: none;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QDateEdit::up-arrow {\n"
-                                        "    border: none;\n"
-                                        "    width: 8px;\n"
-                                        "    height: 8px;\n"
-                                        "    border-left: 2px solid black;\n"
-                                        "    border-bottom: 2px solid black;\n"
-                                        "    margin: 2px;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QDateEdit::down-button {\n"
-                                        "    width: 15px;\n"
-                                        "    height: 15px;\n"
-                                        "    subcontrol-origin: border;\n"
-                                        "    subcontrol-position: bottom right;\n"
-                                        "	padding-right: 7px;\n"
-                                        "    margin: 2px;\n"
-                                        "    border: none;\n"
-                                        "}\n"
-                                        "\n"
-                                        "QDateEdit::down-arrow {\n"
-                                        "    border: none;\n"
-                                        "    width: 8px;\n"
-                                        "    height: 8px;\n"
-                                        "    border-left: 2px solid black;\n"
-                                        "    border-top: 2px solid black;\n"
-                                        "    margin: 2px;\n"
-                                        "}\n"
-                                        ""
-                                        "\n"
-                                        "\n"
-                                        "")
+        # self.Initial_date.setStyleSheet(u"QDateEdit{\n"
+        #                                 "	background-color: white;\n"
+        #                                 "	border-radius: 15px;\n"
+        #                                 "	border: 2px solid #F98600;\n"
+        #                                 "	color: black;\n"
+        #                                 "	padding-left: 15px;\n"
+        #                                 "	padding-right: 10px;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QDateEdit::up-button {\n"
+        #                                 "    width: 15px;\n"
+        #                                 "    height: 15px;\n"
+        #                                 "    subcontrol-origin: border;\n"
+        #                                 "    subcontrol-position: top right;\n"
+        #                                 "	padding-right: 7px;\n"
+        #                                 "    margin: 2px;\n"
+        #                                 "    border: none;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QDateEdit::up-arrow {\n"
+        #                                 "    border: none;\n"
+        #                                 "    width: 8px;\n"
+        #                                 "    height: 8px;\n"
+        #                                 "    border-left: 2px solid black;\n"
+        #                                 "    border-bottom: 2px solid black;\n"
+        #                                 "    margin: 2px;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QDateEdit::down-button {\n"
+        #                                 "    width: 15px;\n"
+        #                                 "    height: 15px;\n"
+        #                                 "    subcontrol-origin: border;\n"
+        #                                 "    subcontrol-position: bottom right;\n"
+        #                                 "	padding-right: 7px;\n"
+        #                                 "    margin: 2px;\n"
+        #                                 "    border: none;\n"
+        #                                 "}\n"
+        #                                 "\n"
+        #                                 "QDateEdit::down-arrow {\n"
+        #                                 "    border: none;\n"
+        #                                 "    width: 8px;\n"
+        #                                 "    height: 8px;\n"
+        #                                 "    border-left: 2px solid black;\n"
+        #                                 "    border-top: 2px solid black;\n"
+        #                                 "    margin: 2px;\n"
+        #                                 "}\n"
+        #                                 ""
+        #                                 "\n"
+        #                                 "\n"
+        #                                 "")
 
         self.verticalLayout_InitialDate.addWidget(self.Initial_date)
 
@@ -564,58 +571,59 @@ class Ui_MainWindow(object):
 
         self.Final_date = QDateEdit(self.layoutWidget)
         self.Final_date.setObjectName(u"Final_date")
+        self.Final_date.setProperty('commonDateEdit', True)
         self.Final_date.setMinimumSize(QSize(170, 30))
         self.Final_date.setMaximumSize(QSize(170, 30))
-        self.Final_date.setStyleSheet(u"QDateEdit{\n"
-                                      "	background-color: white;\n"
-                                      "	border-radius: 15px;\n"
-                                      "	border: 2px solid #F98600;\n"
-                                      "	color: black;\n"
-                                      "	padding-left: 15px;\n"
-                                      "	padding-right: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QDateEdit::up-button {\n"
-                                      "    width: 15px;\n"
-                                      "    height: 15px;\n"
-                                      "    subcontrol-origin: border;\n"
-                                      "    subcontrol-position: top right;\n"
-                                      "	padding-right: 7px;\n"
-                                      "    margin: 2px;\n"
-                                      "    border: none;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QDateEdit::up-arrow {\n"
-                                      "    border: none;\n"
-                                      "    width: 8px;\n"
-                                      "    height: 8px;\n"
-                                      "    border-left: 2px solid black;\n"
-                                      "    border-bottom: 2px solid black;\n"
-                                      "    margin: 2px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QDateEdit::down-button {\n"
-                                      "    width: 15px;\n"
-                                      "    height: 15px;\n"
-                                      "    subcontrol-origin: border;\n"
-                                      "    subcontrol-position: bottom right;\n"
-                                      "	padding-right: 7px;\n"
-                                      "    margin: 2px;\n"
-                                      "    border: none;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QDateEdit::down-arrow {\n"
-                                      "    border: none;\n"
-                                      "    width: 8px;\n"
-                                      "    height: 8px;\n"
-                                      "    border-left: 2px solid black;\n"
-                                      "    border-top: 2px solid black;\n"
-                                      "    margin: 2px;\n"
-                                      "}\n"
-                                      ""
-                                      "\n"
-                                      "\n"
-                                      "")
+        # self.Final_date.setStyleSheet(u"QDateEdit{\n"
+        #                               "	background-color: white;\n"
+        #                               "	border-radius: 15px;\n"
+        #                               "	border: 2px solid #F98600;\n"
+        #                               "	color: black;\n"
+        #                               "	padding-left: 15px;\n"
+        #                               "	padding-right: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QDateEdit::up-button {\n"
+        #                               "    width: 15px;\n"
+        #                               "    height: 15px;\n"
+        #                               "    subcontrol-origin: border;\n"
+        #                               "    subcontrol-position: top right;\n"
+        #                               "	padding-right: 7px;\n"
+        #                               "    margin: 2px;\n"
+        #                               "    border: none;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QDateEdit::up-arrow {\n"
+        #                               "    border: none;\n"
+        #                               "    width: 8px;\n"
+        #                               "    height: 8px;\n"
+        #                               "    border-left: 2px solid black;\n"
+        #                               "    border-bottom: 2px solid black;\n"
+        #                               "    margin: 2px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QDateEdit::down-button {\n"
+        #                               "    width: 15px;\n"
+        #                               "    height: 15px;\n"
+        #                               "    subcontrol-origin: border;\n"
+        #                               "    subcontrol-position: bottom right;\n"
+        #                               "	padding-right: 7px;\n"
+        #                               "    margin: 2px;\n"
+        #                               "    border: none;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QDateEdit::down-arrow {\n"
+        #                               "    border: none;\n"
+        #                               "    width: 8px;\n"
+        #                               "    height: 8px;\n"
+        #                               "    border-left: 2px solid black;\n"
+        #                               "    border-top: 2px solid black;\n"
+        #                               "    margin: 2px;\n"
+        #                               "}\n"
+        #                               ""
+        #                               "\n"
+        #                               "\n"
+        #                               "")
 
         self.verticalLayout_FinalDate.addWidget(self.Final_date)
 
@@ -682,6 +690,7 @@ class Ui_MainWindow(object):
 
         self.FileName = QLineEdit(self.frame_download)
         self.FileName.setObjectName(u"FileName")
+        self.FileName.setProperty('commonLineEditDownloadPage', True)
         sizePolicy2.setHeightForWidth(self.FileName.sizePolicy().hasHeightForWidth())
         self.FileName.setSizePolicy(sizePolicy2)
         self.FileName.setMinimumSize(QSize(170, 30))
@@ -749,7 +758,7 @@ class Ui_MainWindow(object):
         self.progressBar.setMaximumSize(QSize(120, 30))
         self.progressBar.setValue(24)
         self.progressBar.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.progressBar.setHidden(True)
+        self.progressBar.setHidden(False)
         self.progressBar.setRange(0, 1) # Range fixo para não animar
         self.is_running = False
 
@@ -1003,6 +1012,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_14.setObjectName(u"verticalLayout_14")
         self.fromDateLabel = QLabel(self.frame_to_info)
         self.fromDateLabel.setObjectName(u"fromDateLabel")
+        self.fromDateLabel.setProperty("LabelDownloadCommon", True)
         self.fromDateLabel.setMinimumSize(QSize(80, 20))
         self.fromDateLabel.setMaximumSize(QSize(100, 20))
         self.fromDateLabel.setText(QCoreApplication.translate("MainWindow", u"From date", None))
@@ -1011,6 +1021,7 @@ class Ui_MainWindow(object):
 
         self.fromDateEdit = QLineEdit(self.frame_to_info)
         self.fromDateEdit.setObjectName(u"fromDateEdit")
+        self.fromDateEdit.setProperty('commonLineEditDownloadPage', True)
         self.fromDateEdit.setMinimumSize(QSize(80, 25))
         self.fromDateEdit.setMaximumSize(QSize(100, 25))
         self.fromDateEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -1024,6 +1035,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.toDateLabel = QLabel(self.frame_to_info)
         self.toDateLabel.setObjectName(u"toDateLabel")
+        self.toDateLabel.setProperty("LabelDownloadCommon", True)
         self.toDateLabel.setMinimumSize(QSize(80, 20))
         self.toDateLabel.setMaximumSize(QSize(100, 20))
         self.toDateLabel.setText(QCoreApplication.translate("MainWindow", u"To date", None))
@@ -1032,6 +1044,7 @@ class Ui_MainWindow(object):
 
         self.toDateEdit = QLineEdit(self.frame_to_info)
         self.toDateEdit.setObjectName(u"toDateEdit")
+        self.toDateEdit.setProperty('commonLineEditDownloadPage', True)
         self.toDateEdit.setMinimumSize(QSize(80, 25))
         self.toDateEdit.setMaximumSize(QSize(100, 25))
         self.toDateEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -1045,6 +1058,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.regionLabel = QLabel(self.frame_to_info)
         self.regionLabel.setObjectName(u"regionLabel")
+        self.regionLabel.setProperty("LabelDownloadCommon", True)
         self.regionLabel.setMinimumSize(QSize(80, 20))
         self.regionLabel.setMaximumSize(QSize(100, 20))
         self.regionLabel.setText(QCoreApplication.translate("MainWindow", u"Region", None))
@@ -1053,6 +1067,7 @@ class Ui_MainWindow(object):
 
         self.regionEdit = QLineEdit(self.frame_to_info)
         self.regionEdit.setObjectName(u"regionEdit")
+        self.regionEdit.setProperty('commonLineEditDownloadPage', True)
         self.regionEdit.setMinimumSize(QSize(80, 25))
         self.regionEdit.setMaximumSize(QSize(100, 25))
         self.regionEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -1072,8 +1087,8 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.variables_checkbox_widget.sizePolicy().hasHeightForWidth())
         self.variables_checkbox_widget.setSizePolicy(sizePolicy1)
         self.variables_checkbox_widget.setMinimumSize(QSize(760, 120))
-        self.variables_checkbox_widget.setStyleSheet(u"\n"
-                                                     "border: 2px solid #F98600;")
+        # self.variables_checkbox_widget.setStyleSheet(u"\n"
+        #                                              "border: 2px solid #F98600;")
 
         self.gridLayout_3.addWidget(self.variables_checkbox_widget, 4, 0, 1, 1)
 
@@ -2124,7 +2139,12 @@ class Ui_MainWindow(object):
                                      self.copernicus_catalogs[self.current_catalog].variaveis]
         for opcao in list_var:
             checkbox = QCheckBox(opcao)
-            checkbox.setStyleSheet(u"border: none;")
+            checkbox.setStyleSheet(u"border: none;\n"
+                                   u"font-size: 12px;\n"
+                                   u"font-style: italic;\n"
+                                   u"font-weight: bold;\n"
+                                   u"color: #4C5B61\n"
+                                   )
             layout.addWidget(checkbox)
 
         self.fromDateEdit.clear()
@@ -2796,8 +2816,8 @@ class Ui_MainWindow(object):
                 east_value - weast_value,
                 north_value - south_value,
                 linewidth=2,
-                edgecolor='red',
-                facecolor='none'
+                edgecolor='#2C423F',
+                facecolor='#829191'
             )
         )
 
