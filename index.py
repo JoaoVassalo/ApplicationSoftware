@@ -44,18 +44,15 @@ class DownloadWorker(QThread):
                 self.finished_download.emit("Download is finished!")
                 self.page.DownloadButton.setChecked(False)
                 self.page.checkcomponents()
-                self.page.DownloadButton.setDisabled(False)
                 self.page.set_combobox_files()
             elif type(process_result) is str:
                 self.error_download.emit(f"Erro ao realizar o download: {str(process_result)}")
                 self.page.DownloadButton.setChecked(False)
                 self.page.checkcomponents()
-                self.page.DownloadButton.setDisabled(False)
                 self.page.set_combobox_files()
         except Exception as e:
             self.page.DownloadButton.setChecked(False)
             self.page.checkcomponents()
-            self.page.DownloadButton.setDisabled(False)
             self.error_download.emit(f"Erro ao realizar o download: {str(e)}")
 
     def stop_download(self):
@@ -98,7 +95,6 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        # MainWindow.setStyleSheet(u"background-color: rgb(58, 58, 58);")
         MainWindow.showFullScreen()
         MainWindow.setFixedSize(MainWindow.size())
 
@@ -108,8 +104,6 @@ class Ui_MainWindow(object):
 
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        # self.centralwidget.setStyleSheet(u"background-color: rgb(224, 226, 219);;\n"
-        #                                  "")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
         self.main_screen_widget = QFrame(self.centralwidget)
@@ -136,10 +130,6 @@ class Ui_MainWindow(object):
         font.setFamilies([u"NovaFlat"])
         font.setBold(True)
         self.download_page_header.setFont(font)
-        # self.download_page_header.setStyleSheet(u"\n"
-        #                                         "	color:white;\n"
-        #                                         "	background-color: rgb(61, 80, 95);\n"
-        #                                         "	border-radius: 10px;")
         self.download_page_header.setFrameShape(QFrame.Shape.StyledPanel)
         self.download_page_header.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_10 = QHBoxLayout(self.download_page_header)
@@ -158,19 +148,12 @@ class Ui_MainWindow(object):
         self.download_page_screen.setObjectName(u"download_page_screen")
         sizePolicy.setHeightForWidth(self.download_page_screen.sizePolicy().hasHeightForWidth())
         self.download_page_screen.setSizePolicy(sizePolicy)
-        # self.download_page_screen.setStyleSheet(u"QWidget{\n"
-        #                                         "	color:white;\n"
-        #                                         "	background-color: rgb(61, 80, 95);\n"
-        #                                         "	border-radius: 10px;\n"
-        #                                         "}\n"
-        #                                         "")
         self.download_page_screen.setFrameShape(QFrame.Shape.StyledPanel)
         self.download_page_screen.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_2 = QGridLayout(self.download_page_screen)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.widget_layout = QWidget(self.download_page_screen)
         self.widget_layout.setObjectName(u"widget_layout")
-        # self.widget_layout.setStyleSheet(u"")
         self.gridLayout_3 = QGridLayout(self.widget_layout)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
 
@@ -188,21 +171,11 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.coord_date_file_widgets.sizePolicy().hasHeightForWidth())
         self.coord_date_file_widgets.setSizePolicy(sizePolicy1)
         self.coord_date_file_widgets.setMinimumSize(QSize(520, 280))
-        # self.coord_date_file_widgets.setStyleSheet(u"QLineEdit {\n"
-        #                                            "	border-radius: 15px;\n"
-        #                                            "	border: 2px solid #F98600;\n"
-        #                                            "	color: white;\n"
-        #                                            "}\n"
-        #                                            "\n"
-        #                                            "\n"
-        #                                            "\n"
-        #                                            "")
         self.horizontalLayout_3 = QHBoxLayout(self.coord_date_file_widgets)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.frame_coordinates = QFrame(self.coord_date_file_widgets)
         self.frame_coordinates.setObjectName(u"frame_coordinates")
         self.frame_coordinates.setProperty('DownloadCommomFrame', True)
-        # self.frame_coordinates.setStyleSheet(u"")
         self.frame_coordinates.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_coordinates.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_4 = QGridLayout(self.frame_coordinates)
@@ -215,7 +188,6 @@ class Ui_MainWindow(object):
         font1 = QFont()
         font1.setBold(True)
         self.coordinateLabel.setFont(font1)
-        # self.coordinateLabel.setStyleSheet(u"border: none;")
         self.coordinateLabel.setAlignment(
             Qt.AlignmentFlag.AlignLeading | Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
@@ -226,11 +198,6 @@ class Ui_MainWindow(object):
         self.coord_boxs.setProperty('DownloadCommomFrame', True)
         self.coord_boxs.setMinimumSize(QSize(100, 0))
         self.coord_boxs.setMaximumSize(QSize(200, 16777215))
-        # self.coord_boxs.setStyleSheet(u"QLabel {\n"
-        #                               "	border: none;\n"
-        #                               "}\n"
-        #                               "\n"
-        #                               "")
         self.coord_boxs.setFrameShape(QFrame.Shape.StyledPanel)
         self.coord_boxs.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_19 = QVBoxLayout(self.coord_boxs)
@@ -373,7 +340,6 @@ class Ui_MainWindow(object):
         self.label_27.setMinimumSize(QSize(100, 0))
         self.label_27.setMaximumSize(QSize(100, 16777215))
         self.label_27.setFont(font2)
-        # self.label_27.setStyleSheet(u"border: none;")
         self.label_27.setAlignment(
             Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignLeading | Qt.AlignmentFlag.AlignLeft)
 
@@ -408,7 +374,6 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.frame_map_coord.sizePolicy().hasHeightForWidth())
         self.frame_map_coord.setSizePolicy(sizePolicy1)
         self.frame_map_coord.setMinimumSize(QSize(200, 0))
-        # self.frame_map_coord.setStyleSheet(u"")
         self.frame_map_coord.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_map_coord.setFrameShadow(QFrame.Shadow.Raised)
 
@@ -441,7 +406,6 @@ class Ui_MainWindow(object):
         self.frame_date.setObjectName(u"frame_date")
         self.frame_date.setProperty('DownloadCommomFrame', True)
         self.frame_date.setMinimumSize(QSize(250, 0))
-        # self.frame_date.setStyleSheet(u"background-color: rgb(61, 80, 95);")
         self.frame_date.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_date.setFrameShadow(QFrame.Shadow.Raised)
         self.layoutWidget = QWidget(self.frame_date)
@@ -487,56 +451,6 @@ class Ui_MainWindow(object):
         self.Initial_date.setProperty('commonDateEdit', True)
         self.Initial_date.setMinimumSize(QSize(170, 30))
         self.Initial_date.setMaximumSize(QSize(170, 30))
-        # self.Initial_date.setStyleSheet(u"QDateEdit{\n"
-        #                                 "	background-color: white;\n"
-        #                                 "	border-radius: 15px;\n"
-        #                                 "	border: 2px solid #F98600;\n"
-        #                                 "	color: black;\n"
-        #                                 "	padding-left: 15px;\n"
-        #                                 "	padding-right: 10px;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QDateEdit::up-button {\n"
-        #                                 "    width: 15px;\n"
-        #                                 "    height: 15px;\n"
-        #                                 "    subcontrol-origin: border;\n"
-        #                                 "    subcontrol-position: top right;\n"
-        #                                 "	padding-right: 7px;\n"
-        #                                 "    margin: 2px;\n"
-        #                                 "    border: none;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QDateEdit::up-arrow {\n"
-        #                                 "    border: none;\n"
-        #                                 "    width: 8px;\n"
-        #                                 "    height: 8px;\n"
-        #                                 "    border-left: 2px solid black;\n"
-        #                                 "    border-bottom: 2px solid black;\n"
-        #                                 "    margin: 2px;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QDateEdit::down-button {\n"
-        #                                 "    width: 15px;\n"
-        #                                 "    height: 15px;\n"
-        #                                 "    subcontrol-origin: border;\n"
-        #                                 "    subcontrol-position: bottom right;\n"
-        #                                 "	padding-right: 7px;\n"
-        #                                 "    margin: 2px;\n"
-        #                                 "    border: none;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QDateEdit::down-arrow {\n"
-        #                                 "    border: none;\n"
-        #                                 "    width: 8px;\n"
-        #                                 "    height: 8px;\n"
-        #                                 "    border-left: 2px solid black;\n"
-        #                                 "    border-top: 2px solid black;\n"
-        #                                 "    margin: 2px;\n"
-        #                                 "}\n"
-        #                                 ""
-        #                                 "\n"
-        #                                 "\n"
-        #                                 "")
 
         self.verticalLayout_InitialDate.addWidget(self.Initial_date)
 
@@ -574,56 +488,6 @@ class Ui_MainWindow(object):
         self.Final_date.setProperty('commonDateEdit', True)
         self.Final_date.setMinimumSize(QSize(170, 30))
         self.Final_date.setMaximumSize(QSize(170, 30))
-        # self.Final_date.setStyleSheet(u"QDateEdit{\n"
-        #                               "	background-color: white;\n"
-        #                               "	border-radius: 15px;\n"
-        #                               "	border: 2px solid #F98600;\n"
-        #                               "	color: black;\n"
-        #                               "	padding-left: 15px;\n"
-        #                               "	padding-right: 10px;\n"
-        #                               "}\n"
-        #                               "\n"
-        #                               "QDateEdit::up-button {\n"
-        #                               "    width: 15px;\n"
-        #                               "    height: 15px;\n"
-        #                               "    subcontrol-origin: border;\n"
-        #                               "    subcontrol-position: top right;\n"
-        #                               "	padding-right: 7px;\n"
-        #                               "    margin: 2px;\n"
-        #                               "    border: none;\n"
-        #                               "}\n"
-        #                               "\n"
-        #                               "QDateEdit::up-arrow {\n"
-        #                               "    border: none;\n"
-        #                               "    width: 8px;\n"
-        #                               "    height: 8px;\n"
-        #                               "    border-left: 2px solid black;\n"
-        #                               "    border-bottom: 2px solid black;\n"
-        #                               "    margin: 2px;\n"
-        #                               "}\n"
-        #                               "\n"
-        #                               "QDateEdit::down-button {\n"
-        #                               "    width: 15px;\n"
-        #                               "    height: 15px;\n"
-        #                               "    subcontrol-origin: border;\n"
-        #                               "    subcontrol-position: bottom right;\n"
-        #                               "	padding-right: 7px;\n"
-        #                               "    margin: 2px;\n"
-        #                               "    border: none;\n"
-        #                               "}\n"
-        #                               "\n"
-        #                               "QDateEdit::down-arrow {\n"
-        #                               "    border: none;\n"
-        #                               "    width: 8px;\n"
-        #                               "    height: 8px;\n"
-        #                               "    border-left: 2px solid black;\n"
-        #                               "    border-top: 2px solid black;\n"
-        #                               "    margin: 2px;\n"
-        #                               "}\n"
-        #                               ""
-        #                               "\n"
-        #                               "\n"
-        #                               "")
 
         self.verticalLayout_FinalDate.addWidget(self.Final_date)
 
@@ -653,7 +517,6 @@ class Ui_MainWindow(object):
         self.frame_download.setObjectName(u"frame_download")
         self.frame_download.setProperty('DownloadCommomFrame', True)
         self.frame_download.setMaximumSize(QSize(200, 16777215))
-        # self.frame_download.setStyleSheet(u"background-color: rgb(61, 80, 95);")
         self.frame_download.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_download.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_17 = QVBoxLayout(self.frame_download)
@@ -720,17 +583,6 @@ class Ui_MainWindow(object):
         self.DownloadButton.setObjectName(u"DownloadButton")
         self.DownloadButton.setMinimumSize(QSize(120, 30))
         self.DownloadButton.setMaximumSize(QSize(120, 30))
-        # self.DownloadButton.setStyleSheet(u"QPushButton{\n"
-        #                                   "	background-color: rgb(61, 80, 95);\n"
-        #                                   "	border-radius: 15px;\n"
-        #                                   "	border: 2px solid #F98600;\n"
-        #                                   "}\n"
-        #                                   "\n"
-        #                                   "QPushButton:checked{\n"
-        #                                   "	color: #F98600;\n"
-        #                                   "	font-size: 14px;\n"
-        #                                   "}\n"
-        #                                   "")
         self.DownloadButton.setCheckable(True)
         self.DownloadButton.clicked.connect(self.start_download)
 
@@ -770,34 +622,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_17.addLayout(self.horizontalLayout_progressbar)
 
-        self.verticalSpacer_5 = QSpacerItem(17, 9, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout_17.addItem(self.verticalSpacer_5)
-
-        self.horizontalLayout_stopbutton = QHBoxLayout()
-        self.horizontalLayout_stopbutton.setObjectName(u"horizontalLayout_stopbutton")
-        self.horizontalSpacer_25 = QSpacerItem(18, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_stopbutton.addItem(self.horizontalSpacer_25)
-
-        self.StopButton = QPushButton(self.frame_download)
-        self.StopButton.setObjectName(u"StopButton")
-        self.StopButton.setMinimumSize(QSize(120, 30))
-        self.StopButton.setMaximumSize(QSize(120, 30))
-        # self.StopButton.setStyleSheet(u"background-color: rgb(61, 80, 95);\n"
-        #                               "	border-radius: 15px;\n"
-        #                               "	border: 2px solid #F98600;")
-        self.StopButton.setHidden(True)
-        self.StopButton.clicked.connect(self.stopdownload)
-
-        self.horizontalLayout_stopbutton.addWidget(self.StopButton)
-
-        self.horizontalSpacer_24 = QSpacerItem(18, 13, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_stopbutton.addItem(self.horizontalSpacer_24)
-
-        self.verticalLayout_17.addLayout(self.horizontalLayout_stopbutton)
-
         self.verticalSpacer_3 = QSpacerItem(17, 9, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_17.addItem(self.verticalSpacer_3)
@@ -830,11 +654,6 @@ class Ui_MainWindow(object):
         self.DataBase_Frame.setObjectName(u"DataBase_Frame")
         self.DataBase_Frame.setMinimumSize(QSize(80, 30))
         self.DataBase_Frame.setMaximumSize(QSize(80, 30))
-        # self.DataBase_Frame.setStyleSheet(u"QFrame{\n"
-        #                                   "	background-color: rgb(61, 80, 95);\n"
-        #                                   "	border-radius: 15px;\n"
-        #                                   "	border: 2px solid #F98600;\n"
-        #                                   "}")
         self.DataBase_Frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.DataBase_Frame.setFrameShadow(QFrame.Shadow.Raised)
         self.DataBase_Frame.mousePressEvent = self.change_database
@@ -911,45 +730,12 @@ class Ui_MainWindow(object):
         self.Catalog_Combox.setObjectName(u"Catalog_Combox")
         self.Catalog_Combox.setMinimumSize(QSize(350, 31))
         self.Catalog_Combox.setMaximumSize(QSize(350, 31))
-        # self.Catalog_Combox.setStyleSheet(u"QComboBox{\n"
-        #                                   "	background-color: white;\n"
-        #                                   "	border-radius: 15px;\n"
-        #                                   "	border: 2px solid #F98600;\n"
-        #                                   "	color: black;\n"
-        #                                   "	padding-left: 15px;\n"
-        #                                   "    padding-right: 10px;\n"
-        #                                   "}\n"
-        #                                   "\n"
-        #                                   "QComboBox::drop-down {\n"
-        #                                   "    border: none;\n"
-        #                                   "    width: 20px;  /*tamanho da seta*/\n"
-        #                                   "    background-color: #F98600;\n"
-        #                                   "    border-top-right-radius: 10px;\n"
-        #                                   "    border-bottom-right-radius: 10px;\n"
-        #                                   "}\n"
-        #                                   "\n"
-        #                                   "QComboBox::down-arrow {\n"
-        #                                   "    width: 10px;\n"
-        #                                   "    height: 10px;\n"
-        #                                   "}\n"
-        #                                   "\n"
-        #                                   "QComboBox QAbstractItemView {\n"
-        #                                   "    border: 1px solid #F98600;\n"
-        #                                   "    background-color: white;\n"
-        #                                   "    color: black;\n"
-        #                                   "    selection-background-color: orange;\n"
-        #                                   "    selection-color: black;\n"
-        #                                   "    padding: 5px;\n"
-        #                                   "    border-radius: 5px;\n"
-        #                                   "}")
 
         self.horizontalLayout_button_catalogList.addWidget(self.Catalog_Combox)
 
         self.horizontalSpacer_15 = QSpacerItem(18, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_button_catalogList.addItem(self.horizontalSpacer_15)
-
-        # self.gridLayout_3.addLayout(self.horizontalLayout_button_catalogList, 1, 0, 1, 1)
 
         self.horizontalLayout_databaseName = QHBoxLayout()
         self.horizontalLayout_databaseName.setObjectName(u"horizontalLayout_databaseName")
@@ -986,7 +772,6 @@ class Ui_MainWindow(object):
         self.verticallayout_13.addItem(self.horizontalLayout_databaseName)
         self.verticallayout_13.addItem(self.horizontalLayout_button_catalogList)
 
-        # self.gridLayout_3.addLayout(self.horizontalLayout_databaseName, 0, 0, 1, 1)
         self.gridLayout_3.addLayout(self.verticallayout_13, 0, 0, 1, 1)
 
         self.horizontalLayout_6.addItem(self.verticallayout_13)
@@ -999,11 +784,6 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.frame_to_info.sizePolicy().hasHeightForWidth())
         self.frame_to_info.setSizePolicy(sizePolicy1)
-        # self.frame_to_info.setStyleSheet(u"QLineEdit{\n"
-        #                                  "	border: 2px solid #F98600;\n"
-        #                                  "}\n"
-        #                                  "\n"
-        #                                  "")
         self.frame_to_info.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_to_info.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_8 = QHBoxLayout(self.frame_to_info)
@@ -1087,8 +867,6 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.variables_checkbox_widget.sizePolicy().hasHeightForWidth())
         self.variables_checkbox_widget.setSizePolicy(sizePolicy1)
         self.variables_checkbox_widget.setMinimumSize(QSize(760, 120))
-        # self.variables_checkbox_widget.setStyleSheet(u"\n"
-        #                                              "border: 2px solid #F98600;")
 
         self.gridLayout_3.addWidget(self.variables_checkbox_widget, 4, 0, 1, 1)
 
@@ -1117,9 +895,6 @@ class Ui_MainWindow(object):
         self.view_page_header = QFrame(self.view_page)
         self.view_page_header.setObjectName(u"view_page_header")
         self.view_page_header.setFont(font)
-        # self.view_page_header.setStyleSheet(u"color:white;\n"
-        #                                     "	background-color: rgb(61, 80, 95);\n"
-        #                                     "	border-radius: 10px;")
         self.view_page_header.setFrameShape(QFrame.Shape.StyledPanel)
         self.view_page_header.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_12 = QHBoxLayout(self.view_page_header)
@@ -1139,12 +914,6 @@ class Ui_MainWindow(object):
         self.view_page_main_screen.setObjectName(u"view_page_main_screen")
         sizePolicy.setHeightForWidth(self.view_page_main_screen.sizePolicy().hasHeightForWidth())
         self.view_page_main_screen.setSizePolicy(sizePolicy)
-        # self.view_page_main_screen.setStyleSheet(u"QWidget{\n"
-        #                                          "	color:white;\n"
-        #                                          "	background-color: rgb(61, 80, 95);\n"
-        #                                          "	border-radius: 10px;\n"
-        #                                          "}\n"
-        #                                          "")
         self.view_page_main_screen.setFrameShape(QFrame.Shape.StyledPanel)
         self.view_page_main_screen.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_5 = QGridLayout(self.view_page_main_screen)
@@ -1285,9 +1054,6 @@ class Ui_MainWindow(object):
         self.file_page_header = QFrame(self.file_page)
         self.file_page_header.setObjectName(u"file_page_header")
         self.file_page_header.setFont(font)
-        # self.file_page_header.setStyleSheet(u"color:white;\n"
-        #                                     "	background-color: rgb(61, 80, 95);\n"
-        #                                     "	border-radius: 10px;")
         self.file_page_header.setFrameShape(QFrame.Shape.StyledPanel)
         self.file_page_header.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_11 = QHBoxLayout(self.file_page_header)
@@ -1296,7 +1062,6 @@ class Ui_MainWindow(object):
         self.file_header.setObjectName(u"file_header")
         self.file_header.setProperty('HeaderTitleCommon', True)
         self.file_header.setFont(font)
-        # self.file_header.setStyleSheet(u"color: rgb(255, 255, 255);")
         self.file_header.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_11.addWidget(self.file_header, 0, Qt.AlignmentFlag.AlignTop)
@@ -1762,11 +1527,6 @@ class Ui_MainWindow(object):
         self.DB_1.setProperty("commonButton", True)
         self.DB_1.setMinimumSize(QSize(0, 30))
         self.DB_1.setMaximumSize(QSize(16777215, 30))
-        # self.DB_1.setStyleSheet(u"QPushButton:hover{\n"
-        #                         "	background-color: rgb(33, 43, 51);\n"
-        #                         "	font-size: 13px;\n"
-        #                         "}\n"
-        #                         "")
         icon = QIcon()
         icon.addFile(u":/icons/icons/download - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.DB_1.setIcon(icon)
@@ -1783,10 +1543,6 @@ class Ui_MainWindow(object):
         self.VB_1.setProperty("commonButton", True)
         self.VB_1.setMinimumSize(QSize(0, 30))
         self.VB_1.setMaximumSize(QSize(16777215, 30))
-        # self.VB_1.setStyleSheet(u"QPushButton:hover{\n"
-        #                         "	background-color: rgb(33, 43, 51);\n"
-        #                         "	font-size: 13px;\n"
-        #                         "}")
         icon1 = QIcon()
         icon1.addFile(u":/icons/icons/olho - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.VB_1.setIcon(icon1)
@@ -1802,11 +1558,6 @@ class Ui_MainWindow(object):
         self.CB_1.setProperty("commonButton", True)
         self.CB_1.setMinimumSize(QSize(0, 30))
         self.CB_1.setMaximumSize(QSize(16777215, 30))
-        # self.CB_1.setStyleSheet(u"QPushButton:hover{\n"
-        #                         "	background-color: rgb(33, 43, 51);\n"
-        #                         "	font-size: 13px;\n"
-        #                         "}\n"
-        #                         "")
         icon2 = QIcon()
         icon2.addFile(u":/icons/icons/documentoPLUS - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.CB_1.setIcon(icon2)
@@ -1822,11 +1573,6 @@ class Ui_MainWindow(object):
         self.SB_1.setProperty("commonButton", True)
         self.SB_1.setMinimumSize(QSize(0, 30))
         self.SB_1.setMaximumSize(QSize(16777215, 30))
-        # self.SB_1.setStyleSheet(u"QPushButton:hover{\n"
-        #                         "	background-color: rgb(33, 43, 51);\n"
-        #                         "	font-size: 13px;\n"
-        #                         "}\n"
-        #                         "")
         icon3 = QIcon()
         icon3.addFile(u":/icons/icons/histograma - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.SB_1.setIcon(icon3)
@@ -1851,10 +1597,6 @@ class Ui_MainWindow(object):
         self.ConfigB_1.setProperty("commonButton", True)
         self.ConfigB_1.setMinimumSize(QSize(0, 30))
         self.ConfigB_1.setMaximumSize(QSize(16777215, 30))
-        # self.ConfigB_1.setStyleSheet(u"QPushButton:hover{\n"
-        #                              "	background-color: rgb(33, 43, 51);\n"
-        #                              "	font-size: 13px;\n"
-        #                              "}")
         icon4 = QIcon()
         icon4.addFile(u":/icons/icons/ajustes - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.ConfigB_1.setIcon(icon4)
@@ -1870,10 +1612,6 @@ class Ui_MainWindow(object):
         self.LogoutB_1.setProperty("commonButton", True)
         self.LogoutB_1.setMinimumSize(QSize(0, 30))
         self.LogoutB_1.setMaximumSize(QSize(16777215, 30))
-        # self.LogoutB_1.setStyleSheet(u"QPushButton:hover{\n"
-        #                              "	background-color: rgb(33, 43, 51);\n"
-        #                              "	font-size: 13px;\n"
-        #                              "}")
         icon5 = QIcon()
         icon5.addFile(u":/icons/icons/sair - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.LogoutB_1.setIcon(icon5)
@@ -1892,8 +1630,6 @@ class Ui_MainWindow(object):
         self.header_widget.setObjectName(u"header_widget")
         self.header_widget.setMinimumSize(QSize(861, 60))
         self.header_widget.setMaximumSize(QSize(16777215, 60))
-        # self.header_widget.setStyleSheet(u"background-color: rgb(61, 80, 95);\n"
-        #                                  "border-radius: 10px;")
         self.horizontalLayout_5 = QHBoxLayout(self.header_widget)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.horizontalLayout_4 = QHBoxLayout()
@@ -1904,10 +1640,6 @@ class Ui_MainWindow(object):
         self.menu_button.setProperty("commonButton", True)
         self.menu_button.setMinimumSize(QSize(30, 35))
         self.menu_button.setMaximumSize(QSize(30, 35))
-        # self.menu_button.setStyleSheet(u"QPushButton{\n"
-        #                                "	border: none;\n"
-        #                                "}\n"
-        #                                "")
         icon6 = QIcon()
         icon6.addFile(u":/icons/icons/menu - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.menu_button.setIcon(icon6)
@@ -2050,9 +1782,7 @@ class Ui_MainWindow(object):
             self.DataBase_Frame.setDisabled(True)
             self.FileName.setDisabled(True)
             self.toggle_progress()
-            self.progressBar.setVisible(True)
-            self.StopButton.setVisible(True)
-            self.DownloadButton.setDisabled(True)
+            self.DownloadButton.setText('Stop')
             self.set_package()
         else:
             self.frame_date.setDisabled(False)
@@ -2062,8 +1792,7 @@ class Ui_MainWindow(object):
             self.DataBase_Frame.setDisabled(False)
             self.FileName.setDisabled(False)
             self.toggle_progress()
-            self.progressBar.setVisible(False)
-            self.StopButton.setVisible(False)
+            self.DownloadButton.setText('Download')
 
     def set_package(self):
         if self.Hycom_Button.isVisible():
@@ -2111,15 +1840,16 @@ class Ui_MainWindow(object):
         QMessageBox.warning(self.download_page_screen, "Error!", f"{error_message}.")
 
     def stopdownload(self):
-        self.DownloadButton.setDisabled(False)
-        self.DownloadButton.setChecked(False)
         self.checkcomponents()
         self.worker.stop_download()
         self.worker.wait()
         del self.worker, self.package
 
     def start_download(self):
-        self.get_variables_to_download()
+        if self.DownloadButton.isChecked():
+            self.get_variables_to_download()
+        else:
+            self.stopdownload()
 
     def clear_variable_widget(self):
         layout = self.variables_checkbox_widget.layout()
@@ -2838,8 +2568,7 @@ class Ui_MainWindow(object):
         self.downloadLabel.setText(QCoreApplication.translate("MainWindow", u"DOWNLOAD", None))
         self.filenameLabel.setText(QCoreApplication.translate("MainWindow", u"File name", None))
         self.FileName.setPlaceholderText("")
-        self.DownloadButton.setText(QCoreApplication.translate("MainWindow", u"DOWNLOAD", None))
-        self.StopButton.setText(QCoreApplication.translate("MainWindow", u"STOP", None))
+        self.DownloadButton.setText(QCoreApplication.translate("MainWindow", u"Download", None))
         self.variablesLabel.setText(QCoreApplication.translate("MainWindow", u"VARIABLES", None))
         self.Hycom_Button.setText("")
         self.CopernicusButton.setText("")

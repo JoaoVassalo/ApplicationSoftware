@@ -342,6 +342,25 @@ if __name__ == "__main__":
                 width: 15px;
                 height: 15px;
             }
+            
+            #DownloadButton {
+                background-color: #C3C3C3;
+                border-radius: 10px;
+                border: 1px solid #F98600;
+                font-size: 14px;
+                font-style: italic;
+                font-weight: bold;
+                color: #4C5B61
+            }
+            
+            #DownloadButton:hover {
+                background-color: #6F1A07;
+            }
+            
+            #DownloadButton:checked {
+                color: #F98600;
+                font-size: 14px;
+            }
     
             QToolTip {
                 background-color: #5F7470;
