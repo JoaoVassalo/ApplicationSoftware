@@ -68,7 +68,9 @@ class CurrentVar(CheckVariables):
             'latitude': 'latitude coordinate',
             'longitude': 'longitude coordinate',
             'depth': 'depth variable',
-            'Valid Time': 'time variable'
+            'Valid Time': 'time variable',
+            'time': 'time variable',
+            'Time': 'time variable'
         }
         self.varname_map = {
             'u': ['eastward_sea_water_velocity'],
