@@ -1637,40 +1637,26 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.menu_button = QPushButton(self.header_widget)
         self.menu_button.setObjectName(u"menu_button")
-        self.menu_button.setProperty("commonButton", True)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.menu_button.sizePolicy().hasHeightForWidth())
+        self.menu_button.setSizePolicy(sizePolicy4)
+
         self.menu_button.setMinimumSize(QSize(30, 35))
-        self.menu_button.setMaximumSize(QSize(30, 35))
+        self.menu_button.setMaximumSize(QSize(50, 55))
         icon6 = QIcon()
-        icon6.addFile(u":/icons/icons/menu - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon6.addFile(u":/icons/icons/Logo branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.menu_button.setIcon(icon6)
-        self.menu_button.setIconSize(QSize(30, 35))
+        self.menu_button.setIconSize(QSize(40, 45))
         self.menu_button.setCheckable(True)
 
         self.horizontalLayout_4.addWidget(self.menu_button)
 
-        self.verticalLayout_7 = QVBoxLayout()
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.verticalLayout_7.setContentsMargins(-1, 3, -1, 5)
         self.label_4 = QLabel(self.header_widget)
         self.label_4.setObjectName(u"label_4")
-        font3 = QFont()
-        font3.setPointSize(13)
-        font3.setBold(True)
-        self.label_4.setFont(font3)
-        self.label_4.setStyleSheet(u"color: rgb(255, 255, 255);")
 
-        self.verticalLayout_7.addWidget(self.label_4)
-
-        self.label_5 = QLabel(self.header_widget)
-        self.label_5.setObjectName(u"label_5")
-        font4 = QFont()
-        font4.setPointSize(8)
-        self.label_5.setFont(font4)
-        self.label_5.setStyleSheet(u"color: rgb(255, 255, 255);")
-
-        self.verticalLayout_7.addWidget(self.label_5)
-
-        self.horizontalLayout_4.addLayout(self.verticalLayout_7)
+        self.horizontalLayout_4.addWidget(self.label_4)
 
         self.horizontalLayout_5.addLayout(self.horizontalLayout_4)
 
@@ -2545,7 +2531,7 @@ class Ui_MainWindow(object):
                 (weast_value, south_value),
                 east_value - weast_value,
                 north_value - south_value,
-                linewidth=2,
+                linewidth=.2,
                 edgecolor='#2C423F',
                 facecolor='#829191'
             )
@@ -2600,5 +2586,5 @@ class Ui_MainWindow(object):
         self.ConfigB_1.setText("")
         self.LogoutB_1.setText("")
         self.menu_button.setText("")
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Hello,", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Welcome to your page", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"GeoEnergia Lab", None))
+        # self.label_5.setText(QCoreApplication.translate("MainWindow", u"Welcome to your page", None))

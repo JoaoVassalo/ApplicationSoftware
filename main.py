@@ -152,7 +152,9 @@ shadow_elements = {
     'view_page',
     'simulation_page',
     'settings_page',
-    'file_page'
+    'file_page',
+    'frame_to_info',
+    'coord_date_file_widgets'
 }
 
 if __name__ == "__main__":
@@ -161,6 +163,13 @@ if __name__ == "__main__":
             #header_widget {
                 border-radius: 10px;
                 background-color: #2C423F;
+            }
+            
+            #header_widget > #label_4 {
+                color: white;
+                font-size: 18px;
+                font-style: italic;
+                font-weight: bold;
             }
             
             #icon_only_widget {
@@ -183,9 +192,15 @@ if __name__ == "__main__":
                 border-radius: 10px;
             }
             
+            #menu_button {
+                background-color: #2C423F;
+                border: none;
+            }
+            
             [DownloadCommomFrame="true"] {
                 background-color: #C3C3C3;
                 border: none;
+                border-radius: 7px;
             }
             
             [commonLine="true"] {
