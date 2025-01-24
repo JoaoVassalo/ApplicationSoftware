@@ -84,5 +84,7 @@
     <file>icons/sair - laranja.png</file>
     <file>icons/sair - preto.png</file>
     <file>icons/sair - verde.png</file>
+    <file>icons/Logo vermelho.png</file>
+    <file>icons/Logo branco.png</file>
   </qresource>
 </RCC>
