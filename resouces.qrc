@@ -16,14 +16,17 @@
     <file>icons/arrow-left - laranja.png</file>
     <file>icons/arrow-left - preto.png</file>
     <file>icons/arrow-left - verde.png</file>
+    <file>icons/arrow-left - verde escuro.png</file>
     <file>icons/arrow-right - branco.png</file>
     <file>icons/arrow-right - laranja.png</file>
     <file>icons/arrow-right - preto.png</file>
     <file>icons/arrow-right - verde.png</file>
+    <file>icons/arrow-right - verde escuro.png</file>
     <file>icons/backward - branco.png</file>
     <file>icons/backward - laranja.png</file>
     <file>icons/backward - preto.png</file>
     <file>icons/backward - verde.png</file>
+    <file>icons/backward - verde escuro.png</file>
     <file>icons/documentoPLUS - branco.png</file>
     <file>icons/documentoPLUS - laranja.png</file>
     <file>icons/documentoPLUS - preto.png</file>
@@ -40,6 +43,7 @@
     <file>icons/forward - laranja.png</file>
     <file>icons/forward - preto.png</file>
     <file>icons/forward - verde.png</file>
+    <file>icons/forward - verde escuro.png</file>
     <file>icons/histograma - branco.png</file>
     <file>icons/histograma - laranja.png</file>
     <file>icons/histograma - preto.png</file>
@@ -72,10 +76,12 @@
     <file>icons/pause - laranja.png</file>
     <file>icons/pause - preto.png</file>
     <file>icons/pause - verde.png</file>
+    <file>icons/pause - verde escuro.png</file>
     <file>icons/play - branco.png</file>
     <file>icons/play - laranja.png</file>
     <file>icons/play - preto.png</file>
     <file>icons/play - verde.png</file>
+    <file>icons/play - verde escuro.png</file>
     <file>icons/remover - branco.png</file>
     <file>icons/remover - laranja.png</file>
     <file>icons/remover - preto.png</file>
