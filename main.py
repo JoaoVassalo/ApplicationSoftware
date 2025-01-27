@@ -154,7 +154,8 @@ shadow_elements = {
     'settings_page',
     'file_page',
     'frame_to_info',
-    'coord_date_file_widgets'
+    'coord_date_file_widgets',
+    'frame'
 }
 
 if __name__ == "__main__":
@@ -203,6 +204,38 @@ if __name__ == "__main__":
                 border-radius: 7px;
             }
             
+            [ViewCommomFrame='true'] {
+                background-color: #C3C3C3;
+                border: none;
+                border-radius: 4px;
+            }
+            
+            [ViewCommomFrame_Animations='true'] {
+                background-color: #C3C3C3;
+                border: none;
+                border-radius: 4px;
+            }
+            
+            [ValueLabel_ViewPages='true'] {
+                border: 1px solid #2C423F;
+                border-radius: 3px;
+            }
+            
+            [CommomButton_Animations='true'] {
+                background-color: transparent;
+                border: none;
+                padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */
+            }
+            
+            [CommomButton_Animations='true']:hover {
+                background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */
+                border-radius: 5px; /* Bordas arredondadas */
+            }
+            
+            [CommomButton_Animations='true']:pressed {
+                background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */
+            }
+            
             [commonLine="true"] {
                 background-color: #949B96;
             }
@@ -227,7 +260,7 @@ if __name__ == "__main__":
                 color: #4C5B61
             }
             
-            #Catalog_Combox {
+            [CommomComboBox='true'] {
                 background-color: #C3C3C3; /*829191*/
                 border-radius: 15px;
                 border: 2px solid #2C423F;
@@ -236,13 +269,13 @@ if __name__ == "__main__":
                 padding-right: 10px;
             }
             
-            #Catalog_Combox::down-arrow {
+            [CommomComboBox='true']::down-arrow {
                 width: 15px;
                 height: 15px;
                 image: url(':/icons/icons/seta_baixo - branca.png');
             }
             
-            #Catalog_Combox::drop-down {
+            [CommomComboBox='true']::drop-down {
                 border: none;
                 width: 15px;  /*tamanho da seta*/
                 background-color: #2C423F;
@@ -258,6 +291,10 @@ if __name__ == "__main__":
                 selection-color: black;
                 padding: 5px;
                 border-radius: 5px;
+            }
+            
+            #comboBox {
+                border-radius: 12px;
             }
             
             [HeaderTitleCommon="true"] {
@@ -373,6 +410,28 @@ if __name__ == "__main__":
             }
             
             #DownloadButton:checked {
+                color: #F98600;
+                font-size: 14px;
+            }
+            
+            [CommomButtonsViews='true'] {
+                background-color: #C3C3C3;
+                border-radius: 6px;
+                border: 1px solid #F98600;
+                font-size: 14px;
+                font-style: italic;
+                font-weight: bold;
+                color: #4C5B61;
+                min-width: 100px; /* Largura mínima */
+                max-width: 200px;
+                min-height: 20px; /* Altura mínima */
+            }
+            
+            [CommomButtonsViews='true']:hover {
+                background-color: #6F1A07;
+            }
+            
+            [CommomButtonsViews='true']:checked {
                 color: #F98600;
                 font-size: 14px;
             }

@@ -728,6 +728,7 @@ class Ui_MainWindow(object):
 
         self.Catalog_Combox = QComboBox(self.widget_layout)
         self.Catalog_Combox.setObjectName(u"Catalog_Combox")
+        self.Catalog_Combox.setProperty('CommomComboBox', True)
         self.Catalog_Combox.setMinimumSize(QSize(350, 31))
         self.Catalog_Combox.setMaximumSize(QSize(350, 31))
 
@@ -921,6 +922,7 @@ class Ui_MainWindow(object):
 
         self.frame = QFrame(self.view_page_main_screen)
         self.frame.setObjectName(u"frame")
+        self.frame.setProperty('ViewCommomFrame', True)
         self.frame.setMinimumSize(QSize(0, 110))
         self.frame.setMaximumSize(QSize(16777215, 110))
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
@@ -929,6 +931,7 @@ class Ui_MainWindow(object):
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.frame_3 = QFrame(self.frame)
         self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setProperty('ViewCommomFrame', True)
         self.frame_3.setMinimumSize(QSize(220, 78))
         self.frame_3.setMaximumSize(QSize(220, 78))
         self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
@@ -950,39 +953,10 @@ class Ui_MainWindow(object):
 
         self.comboBox = QComboBox(self.frame_3)
         self.comboBox.setObjectName(u"comboBox")
+        self.comboBox.setProperty('CommomComboBox', True)
         self.comboBox.setMinimumSize(QSize(180, 25))
         self.comboBox.setMaximumSize(QSize(180, 25))
-        self.comboBox.setStyleSheet(u"QComboBox{\n"
-                                    "	background-color: white;\n"
-                                    "	border-radius: 12px;\n"
-                                    "	border: 2px solid #F98600;\n"
-                                    "	color: black;\n"
-                                    "	padding-left: 15px;\n"
-                                    "    padding-right: 10px;\n"
-                                    "}\n"
-                                    "\n"
-                                    "QComboBox::drop-down {\n"
-                                    "    border: none;\n"
-                                    "    width: 20px;  /*tamanho da seta*/\n"
-                                    "    background-color: #F98600;\n"
-                                    "    border-top-right-radius: 10px;\n"
-                                    "    border-bottom-right-radius: 10px;\n"
-                                    "}\n"
-                                    "\n"
-                                    "QComboBox::down-arrow {\n"
-                                    "    width: 10px;\n"
-                                    "    height: 10px;\n"
-                                    "}\n"
-                                    "\n"
-                                    "QComboBox QAbstractItemView {\n"
-                                    "    border: 1px solid #F98600;\n"
-                                    "    background-color: white;\n"
-                                    "    color: black;\n"
-                                    "    selection-background-color: orange;\n"
-                                    "    selection-color: black;\n"
-                                    "    padding: 5px;\n"
-                                    "    border-radius: 5px;\n"
-                                    "}")
+
         self.comboBox.addItem('Choose a file...')
         self.comboBox.setCurrentIndex(0)
         self.comboBox.currentIndexChanged.connect(self.on_item_selected)
@@ -995,6 +969,7 @@ class Ui_MainWindow(object):
 
         self.frame_4 = QFrame(self.frame)
         self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setProperty('ViewCommomFrame', True)
         self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
         # self.frame_4.setStyleSheet("""
@@ -1039,6 +1014,7 @@ class Ui_MainWindow(object):
         self.frame_4_buttons_layout = QHBoxLayout(self.frame_to_buttons_variables)
         self.gridLayout_forVar.addWidget(self.frame_to_buttons_variables)
         self.frame_4_buttons_layout.setSpacing(5)
+        self.frame_4_buttons_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_6.addWidget(self.frame_4, 0, 1, 1, 1)
 
@@ -1103,39 +1079,10 @@ class Ui_MainWindow(object):
 
         self.FileListCombox = QComboBox(self.frame_5)
         self.FileListCombox.setObjectName(u"FileListCombox")
+        self.FileListCombox.setProperty('CommomComboBox', True)
         self.FileListCombox.setMinimumSize(QSize(270, 30))
         self.FileListCombox.setMaximumSize(QSize(270, 30))
-        self.FileListCombox.setStyleSheet(u"QComboBox{\n"
-                                          "	background-color: white;\n"
-                                          "	border-radius: 15px;\n"
-                                          "	border: 2px solid #F98600;\n"
-                                          "	color: black;\n"
-                                          "	padding-left: 15px;\n"
-                                          "    padding-right: 10px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QComboBox::drop-down {\n"
-                                          "    border: none;\n"
-                                          "    width: 20px;  /*tamanho da seta*/\n"
-                                          "    background-color: #F98600;\n"
-                                          "    border-top-right-radius: 10px;\n"
-                                          "    border-bottom-right-radius: 10px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QComboBox::down-arrow {\n"
-                                          "    width: 10px;\n"
-                                          "    height: 10px;\n"
-                                          "}\n"
-                                          "\n"
-                                          "QComboBox QAbstractItemView {\n"
-                                          "    border: 1px solid #F98600;\n"
-                                          "    background-color: white;\n"
-                                          "    color: black;\n"
-                                          "    selection-background-color: orange;\n"
-                                          "    selection-color: black;\n"
-                                          "    padding: 5px;\n"
-                                          "    border-radius: 5px;\n"
-                                          "}")
+
         self.FileListCombox.addItem('Choose a file...')
         self.FileListCombox.setCurrentIndex(0)
         self.FileListCombox.currentIndexChanged.connect(self.on_item_selected_fileview)
@@ -2110,8 +2057,9 @@ class Ui_MainWindow(object):
         if var_set in button_configs:
             for button_config in button_configs[var_set]:
                 button = QPushButton(button_config["text"], self.frame_to_buttons_variables)
+                button.setProperty('CommomButtonsViews', True)
                 button.setCheckable(True)
-                button.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+                button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
                 button.clicked.connect(lambda checked, b=button, f=button_config["func"]:
                                        self.on_button_clicked(b, f))
