@@ -435,6 +435,31 @@ if __name__ == "__main__":
                 color: #F98600;
                 font-size: 14px;
             }
+            
+            [CommomButtonViewPageFunc='true'] {
+                background-color: #C3C3C3;
+                border-radius: 6px;
+                font-size: 14px;
+                font-style: italic;
+                font-weight: bold;
+                color: #4C5B61;
+            }
+            
+            [CommomButtonViewPageFunc='true']:hover {
+                color: #222823;
+                font-size: 14px;
+            }
+            
+            [CommomButtonViewPageFunc='true']:checked {
+                font-size: 14px;\n"
+            }
+            
+            [NameLabel_ViewPages='true'] {
+                font-size: 16px;
+                font-style: italic;
+                font-weight: bold;
+                color: #4C5B61;
+            }
     
             QToolTip {
                 background-color: #5F7470;

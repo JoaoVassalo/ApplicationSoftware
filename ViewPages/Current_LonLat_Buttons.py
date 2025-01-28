@@ -86,18 +86,19 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.ColorScaleButton = QPushButton()
         self.ColorScaleButton.setObjectName(u"ColorScale")
+        self.ColorScaleButton.setProperty('CommomButtonViewPageFunc', True)
         self.ColorScaleButton.setMinimumSize(QSize(100, 30))
         self.ColorScaleButton.setMaximumSize(QSize(100, 30))
-        self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
-                                            "	background-color: rgb(61, 80, 95);\n"
-                                            "	border-radius: 15px;\n"
-                                            "	border: 2px solid #F98600;\n"
-                                            "}\n"
-                                            "\n"
-                                            "QPushButton:hover{\n"
-                                            "	color: #F98600;\n"
-                                            "	font-size: 14px;\n"
-                                            "}")
+        # self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
+        #                                     "	background-color: rgb(61, 80, 95);\n"
+        #                                     "	border-radius: 15px;\n"
+        #                                     "	border: 2px solid #F98600;\n"
+        #                                     "}\n"
+        #                                     "\n"
+        #                                     "QPushButton:hover{\n"
+        #                                     "	color: #F98600;\n"
+        #                                     "   margin-right: 5px;\n"
+        #                                     "}")
         self.ColorScaleButton.clicked.connect(self.open_color_scale_widget)
 
         self.verticalLayout_ScaleButton.addWidget(self.ColorScaleButton)
@@ -125,6 +126,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
         self.TimeFilterLabel = QLabel(self.frame_2)
         self.TimeFilterLabel.setObjectName(u"TimeFilterLabel")
+        self.TimeFilterLabel.setProperty('NameLabel_ViewPages', True)
         self.TimeFilterLabel.setMinimumSize(QSize(180, 22))
         self.TimeFilterLabel.setMaximumSize(QSize(180, 22))
         font = QFont()
@@ -244,6 +246,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.verticalLayout_14.setObjectName(u"verticalLayout_14")
         self.DepthFilterLabel = QLabel(self.frame_2)
         self.DepthFilterLabel.setObjectName(u"DepthFilterLabel")
+        self.DepthFilterLabel.setProperty('NameLabel_ViewPages', True)
         self.DepthFilterLabel.setMinimumSize(QSize(180, 22))
         self.DepthFilterLabel.setMaximumSize(QSize(180, 22))
         font1 = QFont()
@@ -349,6 +352,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.StepFilterLabel = QLabel(self.frame_2)
         self.StepFilterLabel.setObjectName(u"StepFilterLabel")
+        self.StepFilterLabel.setProperty('NameLabel_ViewPages', True)
         self.StepFilterLabel.setMinimumSize(QSize(180, 22))
         self.StepFilterLabel.setMaximumSize(QSize(180, 22))
         self.StepFilterLabel.setFont(font1)
@@ -423,18 +427,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.SaveFigButton = QPushButton(self.frame_2)
         self.SaveFigButton.setObjectName(u"SaveFigButton")
+        self.SaveFigButton.setProperty('CommomButtonViewPageFunc', True)
         self.SaveFigButton.setMinimumSize(QSize(120, 30))
         self.SaveFigButton.setMaximumSize(QSize(120, 30))
-        self.SaveFigButton.setStyleSheet(u"QPushButton{\n"
-                                         "	background-color: rgb(61, 80, 95);\n"
-                                         "	border-radius: 15px;\n"
-                                         "	border: 2px solid #F98600;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "	color: #F98600;\n"
-                                         "	font-size: 14px;\n"
-                                         "}")
 
         self.SaveFigButton.clicked.connect(self.save_figure)
 
@@ -442,23 +437,9 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.SaveAnimationButton = QPushButton(self.frame_2)
         self.SaveAnimationButton.setObjectName(u"SaveAnimationButton")
+        self.SaveAnimationButton.setProperty('CommomButtonViewPageFunc', True)
         self.SaveAnimationButton.setMinimumSize(QSize(120, 30))
         self.SaveAnimationButton.setMaximumSize(QSize(120, 30))
-        self.SaveAnimationButton.setStyleSheet(u"QPushButton{\n"
-                                               "	background-color: rgb(61, 80, 95);\n"
-                                               "	border-radius: 15px;\n"
-                                               "	border: 2px solid #F98600;\n"
-                                               "}\n"
-                                               "\n"
-                                               "QPushButton:hover{\n"
-                                               "	color: #F98600;\n"
-                                               "	font-size: 14px;\n"
-                                               "}\n"
-                                               "\n"
-                                               "QPushButton:checked{\n"
-                                               "	font-size: 14px;\n"
-                                               "}"
-                                               )
         self.SaveAnimationButton.setCheckable(True)
         self.SaveAnimationButton.setChecked(False)
         self.SaveAnimationButton.clicked.connect(self.start_save_animation)
@@ -496,9 +477,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.meanvectorlabel = QLabel(self.frame)
         self.meanvectorlabel.setObjectName(u"AverageWindDirection")
+        self.meanvectorlabel.setProperty('ValueLabel_ViewPages', True)
         self.meanvectorlabel.setMinimumSize(QSize(180, 22))
         self.meanvectorlabel.setMaximumSize(QSize(180, 22))
-        self.meanvectorlabel.setStyleSheet(u"border: 2px solid #212b33")
+        # self.meanvectorlabel.setStyleSheet(u"border: 1px solid #212b33")
         self.meanvectorlabel.setText(u"Average Current Direction")
         self.meanvectorlabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.graph_num.addWidget(self.meanvectorlabel, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -515,7 +497,9 @@ class Ui_WindButton_LonLatProfile(object):
             'frame_buttons_animation_time',
             'frame_buttons_animation_2_depth',
             'frame_buttons_animation_step',
-            'SaveFigButton'
+            'SaveFigButton',
+            'SaveAnimationButton',
+            'ColorScaleButton'
         }
 
         try:
@@ -700,7 +684,7 @@ class Ui_WindButton_LonLatProfile(object):
             v_mean *= scale
 
         self.arrow.remove()
-        self.arrow = self.ax_mean.arrow(0, 0, u_mean, v_mean, head_width=0.5, head_length=0.5, fc='white', ec='white')
+        self.arrow = self.ax_mean.arrow(0, 0, u_mean, v_mean, head_width=0.5, head_length=0.5, fc='#08090A', ec='#08090A')
 
         self.canvasmean.draw()
 
@@ -728,17 +712,17 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.ax_mean = self.vecmean.add_subplot(111)
 
-        self.arrow = self.ax_mean.arrow(0, 0, u_mean, v_mean, head_width=0.5, head_length=0.5, fc='white', ec='white')
+        self.arrow = self.ax_mean.arrow(0, 0, u_mean, v_mean, head_width=0.5, head_length=0.5, fc='white', ec='#08090A')
 
-        self.ax_mean.text(0, 5.2, "N", fontsize=12, ha='center', color='white')
-        self.ax_mean.text(5.2, 0, "E", fontsize=12, va='center', color='white')
-        self.ax_mean.text(0, -6, "S", fontsize=12, ha='center', color='white')
-        self.ax_mean.text(-6.2, 0, "W", fontsize=12, va='center', color='white')
+        self.ax_mean.text(0, 5.2, "N", fontsize=12, ha='center', color='#08090A')
+        self.ax_mean.text(5.2, 0, "E", fontsize=12, va='center', color='#08090A')
+        self.ax_mean.text(0, -6, "S", fontsize=12, ha='center', color='#08090A')
+        self.ax_mean.text(-6.2, 0, "W", fontsize=12, va='center', color='#08090A')
 
         self.ax_mean.set_xlim(-5, 5)
         self.ax_mean.set_ylim(-5, 5)
-        self.ax_mean.axhline(0, color='white', lw=0.5)
-        self.ax_mean.axvline(0, color='white', lw=0.5)
+        self.ax_mean.axhline(0, color='#08090A', lw=0.5)
+        self.ax_mean.axvline(0, color='#08090A', lw=0.5)
         self.ax_mean.set_aspect('equal', adjustable='box')
 
         self.ax_mean.axis('off')
@@ -1105,10 +1089,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.quiver = self.mp.quiver(x, y, u_norm, v_norm, color=colors_, scale=30)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].units}]', fontsize=6, color="white")
+        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].units}]', fontsize=6, color="#08090A")
         cbar.ax.tick_params(labelsize=8)
-        cbar.ax.yaxis.set_tick_params(color='white')
-        plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='white')
+        cbar.ax.yaxis.set_tick_params(color='#08090A')
+        plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='#08090A')
 
         self.mp.drawcoastlines()
         self.mp.drawstates()
@@ -1122,17 +1106,17 @@ class Ui_WindButton_LonLatProfile(object):
 
         for lat, text_objects in parallels.items():
             for text in text_objects[1]:
-                text.set_color("white")
+                text.set_color("#08090A")
 
         for lon, text_objects in meridians.items():
             for text in text_objects[1]:
-                text.set_color("white")
+                text.set_color("#08090A")
 
         self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8)
         self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8)
         self.ax.set_aspect('equal', adjustable='box')
-        self.ax.xaxis.label.set_color('white')
-        self.ax.yaxis.label.set_color('white')
+        self.ax.xaxis.label.set_color('#08090A')
+        self.ax.yaxis.label.set_color('#08090A')
 
         self.canvas.draw()
         self.canvas.figure.subplots_adjust(
