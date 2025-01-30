@@ -2,6 +2,8 @@ import pandas as pd
 import re
 from abc import abstractmethod, ABC
 from pandas import DataFrame as Df
+import matplotlib.pyplot as plt
+import random as rm
 
 
 class PosProcessOSCAR(ABC):
@@ -92,6 +94,14 @@ class TotalConc(PosProcessOSCAR):
         self.unit = 'km3'
         self.extract_data(self)
 
+    @staticmethod
+    def set_color(list_color: list):
+        while True:
+            a = rm.randint(0, 9)
+            if f'C{a}' not in list_color:
+                break
+        return f'C{a}'
+
     def set_dataframe(self):
         df = pd.DataFrame({
             "Time days": self.time,
@@ -104,10 +114,33 @@ class TotalConc(PosProcessOSCAR):
             "Impacted Volume": [self.total_value]
         })
 
-        print("Tabela de Impacto de Poluição:")
-        print(df.head())
-        print("\nTabela de Impacto de Volume / Área:")
-        print(df_oil_thck)
+        # for header in df.head():
+        #     plt.bar(df["Time days"], df[header], color="g")
+        #     plt.xlabel("Time days")
+        #     plt.ylabel(header)
+        #     # plt.title("Óleo Degradado ao Longo do Tempo")
+        #     plt.show()
+
+        # color_list = []
+        # color_label = []
+        # for header in df.head():
+        #     if header == 'Time days':
+        #         continue
+        #     if len(color_list) == 10:
+        #         color_list = []
+        #     color_list.append(self.set_color(list_color=color_list))
+        #
+        #     plt.plot(df["Time days"], df[header], label=f"{header}", color=color_list[-1])
+        #     color_label.append(color_list[-1])
+        #
+        # # plt.plot(file["time(days)"], file["dissolved(mt)"], label="Dissolved", color="r")
+        # # plt.plot(file["time(days)"], file["gasbubbles(mt)"], label="Gas Bubbles", color="g")
+        # plt.xlabel("Time (days)")
+        # plt.ylabel("Mass (mt)")
+        # plt.title("Comparação de Diferentes Estados do Óleo")
+        # plt.legend()
+        # plt.grid()
+        plt.show()
 
 
 class MassBalance:
@@ -115,9 +148,43 @@ class MassBalance:
         self.pathfile = path
         self.extract_data()
 
+    @staticmethod
+    def set_color(list_color: list):
+        while True:
+            a = rm.randint(0, 9)
+            if f'C{a}' not in list_color:
+                break
+        return f'C{a}'
+
     def extract_data(self):
         file = pd.read_csv(self.pathfile, sep=',')
-        print(file)
+        # for header in file.head():
+        #     plt.bar(file["time(days)"], file[header], color="g")
+        #     plt.xlabel("Time (days)")
+        #     plt.ylabel(header)
+        #     # plt.title("Óleo Degradado ao Longo do Tempo")
+        #     plt.show()
+
+        # color_list = []
+        # color_label = []
+        # for header in file.head():
+        #     if header == 'time(days)':
+        #         continue
+        #     if len(color_list) == 10:
+        #         color_list = []
+        #     color_list.append(self.set_color(list_color=color_list))
+        #
+        #     plt.plot(file["time(days)"], file[header], label=f"{header}", color=color_list[-1])
+        #     color_label.append(color_list[-1])
+        #
+        # # plt.plot(file["time(days)"], file["dissolved(mt)"], label="Dissolved", color="r")
+        # # plt.plot(file["time(days)"], file["gasbubbles(mt)"], label="Gas Bubbles", color="g")
+        # plt.xlabel("Time (days)")
+        # plt.ylabel("Mass (mt)")
+        # plt.title("Comparação de Diferentes Estados do Óleo")
+        # plt.legend()
+        # plt.grid()
+        # plt.show()
 
 
 class ChemicComposi:
