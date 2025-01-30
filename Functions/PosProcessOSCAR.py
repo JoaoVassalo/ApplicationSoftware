@@ -169,9 +169,6 @@ class ChemicComposi:
                     dict_table[line.split(',')[0].replace('\x00', '').strip()] = data
                     step += 1
 
-            # dd = dict_time_tables[58.0]
-            # print(dd)
-
 
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.oilthck.log"
 # OilThick(file_path)
