@@ -155,7 +155,8 @@ shadow_elements = {
     'file_page',
     'frame_to_info',
     'coord_date_file_widgets',
-    'frame'
+    'frame',
+    'frame_buttons_analysis'
 }
 
 if __name__ == "__main__":
@@ -460,7 +461,36 @@ if __name__ == "__main__":
                 font-weight: bold;
                 color: #4C5B61;
             }
-    
+            
+            /*
+            #frame_buttons_analysis {
+                background-color: black;
+            }
+            
+            #indivudualButton {
+                width: 250px;
+                height: 35px;
+                border: 1px solid black;
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+                border-right: none; /* Remove a borda do meio */
+                padding: 10px;
+                background-color: #C3C3C3;
+                color: black;
+            }
+            
+            #collectiveButton {
+                width: 250px;
+                height: 35px;
+                border: 1px solid black;
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+                border-left: none; /* Remove a borda do meio */
+                padding: 10px;
+                background-color: #C3C3C3;
+            }
+            */
+            
             QToolTip {
                 background-color: #5F7470;
                 color: black;

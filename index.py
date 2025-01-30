@@ -1394,6 +1394,80 @@ class Ui_MainWindow(object):
         self.frame_18.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_18.setFrameShadow(QFrame.Shadow.Raised)
 
+        self.layout_simulation_page = QGridLayout()
+        self.frame_18.setLayout(self.layout_simulation_page)
+        self.layout_simulation_page.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+
+        self.frame_buttons_analysis = QFrame()
+        self.frame_buttons_analysis.setObjectName(u"frame_buttons_analysis")
+        # self.frame_buttons_analysis.setGeometry(QRect(10, 90, 500, 46))
+        self.frame_buttons_analysis.setMaximumSize(QSize(500, 35))
+        self.frame_buttons_analysis.setMinimumSize(QSize(500, 35))
+        self.frame_buttons_analysis.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_buttons_analysis.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_for_frame_buttons = QHBoxLayout(self.frame_buttons_analysis)
+        self.horizontalLayout_for_frame_buttons.setSpacing(0)
+        self.horizontalLayout_for_frame_buttons.setObjectName(u"horizontalLayout_for_frame_buttons")
+        self.horizontalLayout_for_frame_buttons.setContentsMargins(0, 0, 0, 0)
+
+        font_to_buttons = QFont()
+        font_to_buttons.setPointSize(10)
+        font_to_buttons.setItalic(True)
+
+        self.indivudualButton = QPushButton(self.frame_buttons_analysis)
+        self.indivudualButton.setObjectName(u"indivudualButton")
+        self.indivudualButton.setProperty('CommomButtonSimulationAnalysis', True)
+        self.indivudualButton.setCheckable(True)
+        self.indivudualButton.setMinimumSize(QSize(250, 35))
+        self.indivudualButton.setMaximumSize(QSize(250, 35))
+        self.indivudualButton.setStyleSheet(u"QPushButton {\n"
+                                            "border-top-left-radius: 6px;\n"
+                                            "border-bottom-left-radius: 6px;\n"
+                                            "padding: 10px;\n"
+                                            "background-color: #C3C3C3;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:hover {\n"
+                                            "background-color: #829191;\n"
+                                            "}\n"
+                                            "\n"
+                                            "QPushButton:checked {\n"
+                                            "background-color: #2C423F;\n"
+                                            "color: #C3C3C3;\n"
+                                            "}\n")
+
+        self.horizontalLayout_for_frame_buttons.addWidget(self.indivudualButton)
+
+        self.collectiveButton = QPushButton(self.frame_buttons_analysis)
+        self.collectiveButton.setObjectName(u"collectiveButton")
+        self.collectiveButton.setProperty('CommomButtonSimulationAnalysis', True)
+        self.collectiveButton.setCheckable(True)
+        self.collectiveButton.setMinimumSize(QSize(250, 35))
+        self.collectiveButton.setMaximumSize(QSize(250, 35))
+        self.collectiveButton.setStyleSheet(u"QPushButton {\n"
+                                            "border-top-right-radius: 6px;\n"
+                                            "border-bottom-right-radius: 6px;\n"
+                                            "padding: 10px;\n"
+                                            "background-color: #C3C3C3;\n"
+                                            "}\n"
+                                            "QPushButton:hover {\n"
+                                            "background-color: #829191;\n"
+                                            "}\n"
+                                            "QPushButton:checked {\n"
+                                            "background-color: #2C423F;\n"
+                                            "color: #C3C3C3;\n"
+                                            "}\n")
+
+        self.indivudualButton.setFont(font_to_buttons)
+        self.collectiveButton.setFont(font_to_buttons)
+        self.indivudualButton.setText(u"Individual File Analysis")
+        self.collectiveButton.setText(u"Collective File Analysis")
+
+        self.horizontalLayout_for_frame_buttons.addWidget(self.collectiveButton)
+
+        self.layout_simulation_page.addWidget(self.frame_buttons_analysis)
+
+
         self.verticalLayout_2.addWidget(self.frame_18)
 
         self.stackedWidget.addWidget(self.simulation_page)
