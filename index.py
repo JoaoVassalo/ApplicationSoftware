@@ -12,7 +12,7 @@ from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Bu
                        Temperature_LonDepthProfile_Buttons, Temperature_Dataframe_Buttons, Salinity_LonLat_Buttons,
                        Salinity_Average_Buttons, Salinity_LatDepthProfile_Buttons, Salinity_LonDepthProfile_Buttons,
                        Salinity_Dataframe_Buttons, VarInfo_Widgets, ConcatDatasetForm, MergeDatasetForm, DatDatasetForm,
-                       ImpDatasetForm, FilterDatasetForm)
+                       ImpDatasetForm, FilterDatasetForm, Individual_Pages_POSprocess)
 import VarVerify
 import os
 import xarray as xr
@@ -1396,11 +1396,10 @@ class Ui_MainWindow(object):
 
         self.layout_simulation_page = QGridLayout()
         self.frame_18.setLayout(self.layout_simulation_page)
-        self.layout_simulation_page.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
+        # self.layout_simulation_page.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignTop)
 
         self.frame_buttons_analysis = QFrame()
         self.frame_buttons_analysis.setObjectName(u"frame_buttons_analysis")
-        # self.frame_buttons_analysis.setGeometry(QRect(10, 90, 500, 46))
         self.frame_buttons_analysis.setMaximumSize(QSize(500, 35))
         self.frame_buttons_analysis.setMinimumSize(QSize(500, 35))
         self.frame_buttons_analysis.setFrameShape(QFrame.Shape.StyledPanel)
@@ -1435,7 +1434,7 @@ class Ui_MainWindow(object):
                                             "background-color: #2C423F;\n"
                                             "color: #C3C3C3;\n"
                                             "}\n")
-
+        self.indivudualButton.clicked.connect(self.ib_clicked)
         self.horizontalLayout_for_frame_buttons.addWidget(self.indivudualButton)
 
         self.collectiveButton = QPushButton(self.frame_buttons_analysis)
@@ -1457,6 +1456,7 @@ class Ui_MainWindow(object):
                                             "background-color: #2C423F;\n"
                                             "color: #C3C3C3;\n"
                                             "}\n")
+        self.collectiveButton.clicked.connect(self.cb_clicked)
 
         self.indivudualButton.setFont(font_to_buttons)
         self.collectiveButton.setFont(font_to_buttons)
@@ -1466,6 +1466,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_for_frame_buttons.addWidget(self.collectiveButton)
 
         self.layout_simulation_page.addWidget(self.frame_buttons_analysis)
+        self.layout_simulation_page.setAlignment(self.frame_buttons_analysis,
+                                                 Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
 
 
         self.verticalLayout_2.addWidget(self.frame_18)
@@ -2562,6 +2564,32 @@ class Ui_MainWindow(object):
         self.canva.draw()
         return
 
+    def clear_frame_for_simulalitonpage(self):
+        if self.layout_simulation_page.count() > 1:
+            child = self.layout_simulation_page.takeAt(1)
+            if child.widget():
+                child.widget().deleteLater()
+
+    def cb_clicked(self):
+        self.indivudualButton.setChecked(False)
+        self.indivudualButton.setDisabled(False)
+        self.collectiveButton.setDisabled(True)
+        self.set_posprocess_page("c")
+
+    def ib_clicked(self):
+        self.collectiveButton.setChecked(False)
+        self.collectiveButton.setDisabled(False)
+        self.indivudualButton.setDisabled(True)
+        self.set_posprocess_page("i")
+
+    def set_posprocess_page(self, p: str):
+        self.clear_frame_for_simulalitonpage()
+        self.frame_analysis = QFrame()
+        self.ui_analysis_page = Individual_Pages_POSprocess.Ui_Form() if p == "i" else None
+        if self.ui_analysis_page:
+            self.layout_simulation_page.addWidget(self.frame_analysis)
+            self.ui_analysis_page.setupUi(self.frame_analysis)
+
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"DOWNLOAD PAGE", None))
@@ -2609,4 +2637,3 @@ class Ui_MainWindow(object):
         self.LogoutB_1.setText("")
         self.menu_button.setText("")
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"GeoEnergia Lab", None))
-        # self.label_5.setText(QCoreApplication.translate("MainWindow", u"Welcome to your page", None))
