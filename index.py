@@ -2588,7 +2588,7 @@ class Ui_MainWindow(object):
         self.ui_analysis_page = Individual_Pages_POSprocess.Ui_Form() if p == "i" else None
         if self.ui_analysis_page:
             self.layout_simulation_page.addWidget(self.frame_analysis)
-            self.ui_analysis_page.setupUi(self.frame_analysis)
+            self.ui_analysis_page.setupUi(self.frame_analysis, self.frame_18)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
