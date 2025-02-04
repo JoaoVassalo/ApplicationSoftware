@@ -18,14 +18,19 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
     QGroupBox, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QTabWidget, QVBoxLayout, QWidget)
+    QTabWidget, QVBoxLayout, QWidget, QFileDialog, QCheckBox)
 import resources_rc
+from Functions import PosProcessOSCAR as Ppo
+from ViewPages import AreaImpact_Page as Ai_
 
 class Ui_Form(object):
-    def setupUi(self, Form):
+    def setupUi(self, Form, framepage):
         if not Form.objectName():
             Form.setObjectName(u"Form")
         Form.resize(789, 556)
+
+        self.framewindow = framepage
+
         self.gridLayout_2 = QGridLayout(Form)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.gridLayout_2.setVerticalSpacing(6)
@@ -35,8 +40,8 @@ class Ui_Form(object):
         self.IndividualAnalysis_Tab.setStyleSheet(u"")
         self.AreaImpact_Page = QWidget()
         self.AreaImpact_Page.setObjectName(u"AreaImpact_Page")
-        self.gridLayout = QGridLayout(self.AreaImpact_Page)
-        self.gridLayout.setObjectName(u"gridLayout")
+        self.gL_AiPage = QGridLayout(self.AreaImpact_Page)
+        self.gL_AiPage.setObjectName(u"gridLayout")
         self.frame_to_button_AI = QFrame(self.AreaImpact_Page)
         self.frame_to_button_AI.setObjectName(u"frame_to_button_AI")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -55,11 +60,12 @@ class Ui_Form(object):
         self.selectfile_button_AI.setObjectName(u"selectfile_button_AI")
         self.selectfile_button_AI.setMinimumSize(QSize(150, 30))
         self.selectfile_button_AI.setMaximumSize(QSize(150, 30))
+        self.selectfile_button_AI.clicked.connect(self.search_file_ai)
 
         self.verticalLayout_2.addWidget(self.selectfile_button_AI)
 
 
-        self.gridLayout.addWidget(self.frame_to_button_AI, 0, 0, 1, 1)
+        self.gL_AiPage.addWidget(self.frame_to_button_AI, 0, 0, 1, 1)
 
         self.main_frame_AI = QFrame(self.AreaImpact_Page)
         self.main_frame_AI.setObjectName(u"main_frame_AI")
@@ -100,8 +106,8 @@ class Ui_Form(object):
         self.BarPlot_AI.setSizePolicy(sizePolicy)
         self.BarPlot_AI.setMinimumSize(QSize(0, 130))
         self.BarPlot_AI.setMaximumSize(QSize(16777215, 130))
-        self.verticalLayout = QVBoxLayout(self.BarPlot_AI)
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.vL_BarPlot_AI = QVBoxLayout(self.BarPlot_AI)
+        self.vL_BarPlot_AI.setObjectName(u"vL_BarPlot_AI")
 
         self.HLayout_barplot_AI.addWidget(self.BarPlot_AI)
 
@@ -124,6 +130,8 @@ class Ui_Form(object):
         self.LinePlot_AI.setSizePolicy(sizePolicy)
         self.LinePlot_AI.setMinimumSize(QSize(0, 130))
         self.LinePlot_AI.setMaximumSize(QSize(16777215, 130))
+        self.vL_LinePlot_AI = QVBoxLayout(self.LinePlot_AI)
+        self.vL_LinePlot_AI.setObjectName("vL_LinePlot_AI")
 
         self.HLayout_lineplot_AI.addWidget(self.LinePlot_AI)
 
@@ -222,13 +230,13 @@ class Ui_Form(object):
         self.gridLayout_3.addWidget(self.Fig_Frame_AI, 0, 1, 1, 1)
 
 
-        self.gridLayout.addWidget(self.main_frame_AI, 1, 0, 1, 1)
+        self.gL_AiPage.addWidget(self.main_frame_AI, 1, 0, 1, 1)
 
         self.IndividualAnalysis_Tab.addTab(self.AreaImpact_Page, "Area Impact")
         self.VolumeImpact_Page = QWidget()
         self.VolumeImpact_Page.setObjectName(u"VolumeImpact_Page")
-        self.gridLayout_5 = QGridLayout(self.VolumeImpact_Page)
-        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gL_ViPage = QGridLayout(self.VolumeImpact_Page)
+        self.gL_ViPage.setObjectName(u"gridLayout_5")
         self.frame_to_button_VI = QFrame(self.VolumeImpact_Page)
         self.frame_to_button_VI.setObjectName(u"frame_to_button_VI")
         sizePolicy.setHeightForWidth(self.frame_to_button_VI.sizePolicy().hasHeightForWidth())
@@ -244,11 +252,12 @@ class Ui_Form(object):
         self.selectfile_button_VI.setObjectName(u"selectfile_button_VI")
         self.selectfile_button_VI.setMinimumSize(QSize(150, 30))
         self.selectfile_button_VI.setMaximumSize(QSize(150, 30))
+        self.selectfile_button_VI.clicked.connect(self.search_file_vi)
 
         self.verticalLayout_3.addWidget(self.selectfile_button_VI)
 
 
-        self.gridLayout_5.addWidget(self.frame_to_button_VI, 0, 0, 1, 1)
+        self.gL_ViPage.addWidget(self.frame_to_button_VI, 0, 0, 1, 1)
 
         self.main_frame_VI = QFrame(self.VolumeImpact_Page)
         self.main_frame_VI.setObjectName(u"main_frame_VI")
@@ -405,13 +414,13 @@ class Ui_Form(object):
         self.gridLayout_4.addWidget(self.Fig_Frame_VI, 0, 1, 1, 1)
 
 
-        self.gridLayout_5.addWidget(self.main_frame_VI, 1, 0, 1, 1)
+        self.gL_ViPage.addWidget(self.main_frame_VI, 1, 0, 1, 1)
 
         self.IndividualAnalysis_Tab.addTab(self.VolumeImpact_Page, "Volume Impact")
         self.Massbalance_Page = QWidget()
         self.Massbalance_Page.setObjectName(u"Massbalance_Page")
-        self.gridLayout_10 = QGridLayout(self.Massbalance_Page)
-        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gL_Mbpage = QGridLayout(self.Massbalance_Page)
+        self.gL_Mbpage.setObjectName(u"gridLayout_10")
         self.frame_to_button_MB = QFrame(self.Massbalance_Page)
         self.frame_to_button_MB.setObjectName(u"frame_to_button_MB")
         sizePolicy.setHeightForWidth(self.frame_to_button_MB.sizePolicy().hasHeightForWidth())
@@ -427,11 +436,12 @@ class Ui_Form(object):
         self.selectfile_button_MB.setObjectName(u"selectfile_button_MB")
         self.selectfile_button_MB.setMinimumSize(QSize(150, 30))
         self.selectfile_button_MB.setMaximumSize(QSize(150, 30))
+        self.selectfile_button_MB.clicked.connect(self.search_file_mb)
 
         self.verticalLayout_5.addWidget(self.selectfile_button_MB)
 
 
-        self.gridLayout_10.addWidget(self.frame_to_button_MB, 0, 0, 1, 1)
+        self.gL_Mbpage.addWidget(self.frame_to_button_MB, 0, 0, 1, 1)
 
         self.main_frame_MB = QFrame(self.Massbalance_Page)
         self.main_frame_MB.setObjectName(u"main_frame_MB")
@@ -610,13 +620,13 @@ class Ui_Form(object):
         self.gridLayout_8.addWidget(self.Fig_Frame_MB, 0, 1, 1, 1)
 
 
-        self.gridLayout_10.addWidget(self.main_frame_MB, 1, 0, 1, 1)
+        self.gL_Mbpage.addWidget(self.main_frame_MB, 1, 0, 1, 1)
 
         self.IndividualAnalysis_Tab.addTab(self.Massbalance_Page, "Mass Balance")
         self.Chemical_Page = QWidget()
         self.Chemical_Page.setObjectName(u"Chemical_Page")
-        self.gridLayout_13 = QGridLayout(self.Chemical_Page)
-        self.gridLayout_13.setObjectName(u"gridLayout_13")
+        self.gL_CcPage = QGridLayout(self.Chemical_Page)
+        self.gL_CcPage.setObjectName(u"gridLayout_13")
         self.frame_to_button_CC = QFrame(self.Chemical_Page)
         self.frame_to_button_CC.setObjectName(u"frame_to_button_CC")
         sizePolicy.setHeightForWidth(self.frame_to_button_CC.sizePolicy().hasHeightForWidth())
@@ -632,11 +642,12 @@ class Ui_Form(object):
         self.selectfile_button_CC.setObjectName(u"selectfile_button_CC")
         self.selectfile_button_CC.setMinimumSize(QSize(150, 30))
         self.selectfile_button_CC.setMaximumSize(QSize(150, 30))
+        self.selectfile_button_CC.clicked.connect(self.search_file_cc)
 
         self.verticalLayout_6.addWidget(self.selectfile_button_CC)
 
 
-        self.gridLayout_13.addWidget(self.frame_to_button_CC, 0, 0, 1, 1)
+        self.gL_CcPage.addWidget(self.frame_to_button_CC, 0, 0, 1, 1)
 
         self.main_frame_CC = QFrame(self.Chemical_Page)
         self.main_frame_CC.setObjectName(u"main_frame_CC")
@@ -811,7 +822,7 @@ class Ui_Form(object):
         self.gridLayout_14.addLayout(self.verticalLayout_9, 2, 1, 1, 1)
 
 
-        self.gridLayout_13.addWidget(self.main_frame_CC, 1, 0, 1, 1)
+        self.gL_CcPage.addWidget(self.main_frame_CC, 1, 0, 1, 1)
 
         self.IndividualAnalysis_Tab.addTab(self.Chemical_Page, "Chemical Composition")
 
@@ -820,8 +831,56 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         self.IndividualAnalysis_Tab.setCurrentIndex(0)
+        self.main_frame_AI.setHidden(True)
+        self.main_frame_VI.setHidden(True)
+        self.main_frame_MB.setHidden(True)
+        self.main_frame_CC.setHidden(True)
+
+        self.gL_AiPage.setAlignment(self.frame_to_button_AI, Qt.AlignmentFlag.AlignTop)
+        self.gL_ViPage.setAlignment(self.frame_to_button_VI, Qt.AlignmentFlag.AlignTop)
+        self.gL_Mbpage.setAlignment(self.frame_to_button_MB, Qt.AlignmentFlag.AlignTop)
+        self.gL_CcPage.setAlignment(self.frame_to_button_CC, Qt.AlignmentFlag.AlignTop)
 
         QMetaObject.connectSlotsByName(Form)
+
+    @staticmethod
+    def clear_frame_data(grid):
+        if grid.count() > 1:
+            child = grid.takeAt(1)
+            if child.widget():
+                child.widget().deleteLater()
+
+    def set_ai_page(self):
+        self.ai_df = Ppo.OilThick(self.ai_pathfile)
+        if self.ai_df.dataframe is not None:
+            self.main_frame = QFrame()
+            self.main_frame_page = Ai_.Ui_Form()
+            self.gL_AiPage.addWidget(self.main_frame)
+            self.main_frame_page.setupUi(self.main_frame, self.ai_df)
+        else:
+            print('não foi')
+
+    def search_file_ai(self):
+        self.ai_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
+                                                   "Arquivos de Texto (*.txt *.log)")
+        if self.ai_pathfile:
+            self.clear_frame_data(self.gL_AiPage)
+            self.set_ai_page()
+
+    def search_file_vi(self):
+        self.vi_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
+                                                      "Arquivos de Texto (*.txt *.log)")
+        self.set_vi_page()
+
+    def search_file_mb(self):
+        self.mb_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
+                                                      "Arquivos de Texto (*.txt *.log)")
+        self.set_mb_page()
+
+    def search_file_cc(self):
+        self.cc_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
+                                                      "Arquivos de Texto (*.txt *.log)")
+        self.set_cc_page()
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
