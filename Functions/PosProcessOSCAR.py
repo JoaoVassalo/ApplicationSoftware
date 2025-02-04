@@ -13,6 +13,7 @@ class PosProcessOSCAR(ABC):
         self.polluted = None
         self.impacted = None
         self.total_value = None
+        self.correct_file = True
 
     def set_dataframe(self):
         return
@@ -27,6 +28,18 @@ class PosProcessOSCAR(ABC):
             lines = file.readlines()
             extracting = False
             total_value = None
+
+            if any(data.total_value_name in l for l in lines):
+                pass
+            else:
+                self.correct_file = False
+                return
+
+            # FAZER MELHORIAS PARA LEITURA DINÂMICA ------------------------
+            # lines_read = 0
+            # while True:
+            #     line = file.readline()
+            #     if line.startswith(f"{data.total_value_name}:"):
 
             for line in lines:
                 line = line.strip()
@@ -66,24 +79,24 @@ class OilThick(PosProcessOSCAR):
         self.pathfile = path
         self.total_value_name = 'OilThck'
         self.unit = 'km2'
+        self.dataframe = None
         self.extract_data(self)
 
     def set_dataframe(self):
-        df = pd.DataFrame({
-            "Time days": self.time,
-            "Polluting Mass [ton]": self.polluting,
-            "Polluted Area [km²]": self.polluted,
-            "Impacted Area [km²]": self.impacted
-        })
+        if self.correct_file:
+            df = pd.DataFrame({
+                "Time days": self.time,
+                "Polluting Mass [ton]": self.polluting,
+                "Polluted Area [km²]": self.polluted,
+                "Impacted Area [km²]": self.impacted
+            })
 
-        df_oil_thck = pd.DataFrame({
-            "Impacted Area": [self.total_value]
-        })
-
-        print("Tabela de Impacto de Poluição:")
-        print(df.head())
-        print("\nTabela de Impacto de Volume / Área:")
-        print(df_oil_thck)
+            # df_oil_thck = pd.DataFrame({
+            #     "Impacted Area": [self.total_value]
+            # })
+            self.dataframe = df
+        else:
+            self.dataframe = False
 
 
 class TotalConc(PosProcessOSCAR):
@@ -120,7 +133,7 @@ class TotalConc(PosProcessOSCAR):
         #     plt.ylabel(header)
         #     # plt.title("Óleo Degradado ao Longo do Tempo")
         #     plt.show()
-
+        #
         # color_list = []
         # color_label = []
         # for header in df.head():
@@ -140,7 +153,7 @@ class TotalConc(PosProcessOSCAR):
         # plt.title("Comparação de Diferentes Estados do Óleo")
         # plt.legend()
         # plt.grid()
-        plt.show()
+        # plt.show()
 
 
 class MassBalance:
@@ -239,9 +252,9 @@ class ChemicComposi:
 
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.oilthck.log"
 # OilThick(file_path)
-# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.totconc.log"
-# TotalConc(file_path)
+file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.totconc.log"
+TotalConc(file_path)
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.masbal.log"
 # MassBalance(file_path)
-file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC_chemcomp.txt"
-ChemicComposi(file_path)
+# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC_chemcomp.txt"
+# ChemicComposi(file_path)
