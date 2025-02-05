@@ -15,7 +15,10 @@ from PySide6.QtWidgets import (QFrame, QGridLayout, QGroupBox,
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 import numpy as np
+from Functions import ColorReference as Cr
+import random
 
 class Ui_Form:
     def setupUi(self, frame, df):
@@ -189,7 +192,8 @@ class Ui_Form:
         self.bar_variables = []
         self.line_variables = []
         self.graph_layout = QVBoxLayout()
-        self.figure = Figure(figsize=(6, 6))
+        self.figure, self.ax_mass = plt.subplots()  # Figure(figsize=(6, 6))
+        self.ax_area = self.ax_mass.twinx()
         self.canvas = FigureCanvas(self.figure)
         self.toolbar = NavigationToolbar(self.canvas, self.Fig_Frame_AI)
         # self.toolbar = CustomNavigationToolbar(self.canvas, self.frame)  # Use the custom toolbar
@@ -230,12 +234,31 @@ class Ui_Form:
                         self.bar_variables.remove(widget.text()) if widget.text() in self.bar_variables else None
 
             self.line_variables.append(line.text())
+            self.plot_line()
         else:
             self.line_variables.remove(line.text())
+            self.plot_line()
 
     def set_page(self):
         self.variables_list_for_ai = list(self.data.dataframe.columns)
+        self.x_value_col = self.variables_list_for_ai[0]
         self.variables_list_for_ai.pop(0)
+
+        colors = random.sample(Cr.colors, len(self.variables_list_for_ai))
+        self.c_ref = dict(zip(self.variables_list_for_ai, colors))
+
+        units = [self.ax_mass if nm.endswith("[ton]") else self.ax_area for nm in self.variables_list_for_ai]
+        self.ax_ref = dict(zip(self.variables_list_for_ai, units))
+
+        min_max_mass = []
+        min_max_area = []
+        for nmvar in self.variables_list_for_ai:
+            if "[ton]" in nmvar:
+                min_max_mass.append(self.data.dataframe[nmvar].max())
+            else:
+                min_max_area.append(self.data.dataframe[nmvar].max())
+        self.min_max_mass = min(min_max_mass)
+        self.min_max_area = min(min_max_area)
 
         for var_ in self.variables_list_for_ai:
             checkbutton_bar = QCheckBox(text=var_, parent=self.BarPlot_AI)
@@ -246,39 +269,113 @@ class Ui_Form:
             checkbutton_line.clicked.connect(lambda checked, cb=checkbutton_line: self.on_cb_line_selected(cb))
             self.vL_LinePlot_AI.addWidget(checkbutton_line)
 
-    def set_graph(self):
-        self.ax_mass = self.figure.add_subplot(111)
-        self.ax_area = self.ax_mass.twinx()
+    def plot_line(self):
+        min_mass, max_mass = 0, self.min_max_mass
+        min_area, max_area = 0, self.min_max_area
+        for col in self.line_variables:
+            if "[ton]" in col:
+                min_mass = self.data.dataframe[col].min() if self.data.dataframe[col].min() < min_mass else min_mass
+                max_mass = self.data.dataframe[col].max() if self.data.dataframe[col].max() > max_mass else max_mass
+            else:
+                min_area = self.data.dataframe[col].min() if self.data.dataframe[col].min() < min_area else min_area
+                max_area = self.data.dataframe[col].max() if self.data.dataframe[col].max() > max_area else max_area
+
+        self.set_graph(min_mass=min_mass, max_mass=max_mass, min_area=min_area, max_area=max_area)
+
+        for col in self.line_variables:
+            self.ax_ref[col].plot(
+                self.data.dataframe[self.x_value_col],
+                self.data.dataframe[col],
+                label=f"{col}",
+                color=self.c_ref[col]
+            )
+            self.ax_mass.legend(loc="upper left")
+            self.ax_area.legend(loc="upper right")
+        self.update_grid()
+        self.canvas.draw()
+
+    def plot_bar(self):
+        min_mass, max_mass = 0, self.min_max_mass
+        min_area, max_area = 0, self.min_max_area
+        for col in self.bar_variables:
+            if "[ton]" in col:
+                min_mass = self.data.dataframe[col].min() if self.data.dataframe[col].min() < min_mass else min_mass
+                max_mass = self.data.dataframe[col].max() if self.data.dataframe[col].max() > max_mass else max_mass
+            else:
+                min_area = self.data.dataframe[col].min() if self.data.dataframe[col].min() < min_area else min_area
+                max_area = self.data.dataframe[col].max() if self.data.dataframe[col].max() > max_area else max_area
+
+        self.set_graph(min_mass=min_mass, max_mass=max_mass, min_area=min_area, max_area=max_area)
+
+        for col in self.bar_variables:
+            self.ax_ref[col].bar(
+                self.data.dataframe[self.x_value_col],
+                self.data.dataframe[col],
+                label=f"{col}",
+                color=self.c_ref[col]
+            )
+            self.ax_mass.legend(loc="upper left")
+            self.ax_area.legend(loc="upper right")
+        self.update_grid()
+        self.canvas.draw()
+
+    def update_grid(self):
+        """Ativa a grade do eixo correspondente aos dados plotados."""
+        has_data_on_mass = len(self.ax_mass.lines) > 0  # Verifica se há curvas no eixo primário
+        has_data_on_area = len(self.ax_area.lines) > 0  # Verifica se há curvas no eixo secundário
+
+        if has_data_on_mass and has_data_on_area:
+            # Ambos os eixos têm dados: Sincronizar grades
+            self.ax_mass.grid(True, linestyle="--", color='gray', axis="both")
+            self.ax_area.grid(False, axis="both")
+        elif has_data_on_mass:
+            # Apenas o eixo primário tem dados
+            self.ax_mass.grid(True, linestyle="--", color='gray', axis="both")
+            self.ax_area.grid(False, axis="both")
+        elif has_data_on_area:
+            # Apenas o eixo secundário tem dados
+            self.ax_area.grid(True, linestyle="--", color='black', axis="y")
+            self.ax_mass.grid(True, linestyle="--", color="black", axis="x")
+        else:
+            # Nenhum dado (pode desativar as grades)
+            self.ax_mass.grid(False, axis="both")
+            self.ax_area.grid(False, axis="both")
+        self.canvas.draw()
+
+    def set_graph(self, **kwargs):
+        self.ax_mass.clear()
+        self.ax_area.clear()
 
         self.ax_mass.set_xlabel("Time (days)", fontsize=10)
         self.ax_mass.set_ylabel("Mass [ton]", fontsize=10)
         self.ax_mass.yaxis.set_label_position("left")
         self.ax_mass.yaxis.tick_left()
 
+        self.ax_area.set_xlabel("Time (days)", fontsize=10)
         self.ax_area.set_ylabel("Area [km²]", fontsize=10)
         self.ax_area.yaxis.set_label_position("right")
         self.ax_area.yaxis.tick_right()
 
-        mass_ticks = np.linspace(min(self.data.dataframe['Polluting Mass [ton]']),
-                                 max(self.data.dataframe['Polluting Mass [ton]']), 8)  # Divide em 7 partes iguais
-        area_ticks = np.linspace(self.data.dataframe.min().min(),
-                                 self.data.dataframe.max().max(), 8)  # Mesmo número de divisões
+        if kwargs:
+            mass_ticks = np.linspace(kwargs["min_mass"],
+                                     kwargs["max_mass"],
+                                     8)
+            area_ticks = np.linspace(kwargs["min_area"],
+                                     kwargs["max_area"],
+                                     8)
+        else:
+            mass_ticks = np.linspace(min(self.data.dataframe['Polluting Mass [ton]']),
+                                     max(self.data.dataframe['Polluting Mass [ton]']), 8)  # Divide em 7 partes iguais
+            area_ticks = np.linspace(self.data.dataframe.min().min(),
+                                     self.data.dataframe.max().max(), 8)  # Mesmo número de divisões
 
         self.ax_mass.set_yticks(mass_ticks)
         self.ax_area.set_yticks(area_ticks)
 
-        # self.ax_mass.set_ylim(min(self.data.dataframe['Polluting Mass [ton]']),
-        #                       max(self.data.dataframe['Polluting Mass [ton]']))
-        # self.ax_area.set_ylim(self.data.dataframe.min().min(), self.data.dataframe.max().max())
-
         self.ax_mass.tick_params(axis="both", labelsize=8)
-        self.ax_area.tick_params(axis="y", labelsize=8)
+        self.ax_area.tick_params(axis="both", labelsize=8)
 
-        self.ax_mass.grid(True, linestyle="--", color='gray')
-        self.ax_area.grid(True, linestyle=":", color='black')
-        # self.ax_area.yaxis.set_major_locator(self.ax_mass.yaxis.get_major_locator())
         self.canvas.draw()
-
 
     def retranslateUi(self):
         self.BarPlot_AI.setTitle(QCoreApplication.translate("Form", u"Bar Plot", None))
