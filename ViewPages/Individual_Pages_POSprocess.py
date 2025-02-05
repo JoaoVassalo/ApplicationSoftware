@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
 import resources_rc
 from Functions import PosProcessOSCAR as Ppo
 from ViewPages import AreaImpact_Page as Ai_
+from ViewPages import VolumeImpact as Vi_
 
 class Ui_Form(object):
     def setupUi(self, Form, framepage):
@@ -742,7 +743,6 @@ class Ui_Form(object):
 
         self.horizontalLayout.addWidget(self.last_button_CC)
 
-
         self.verticalLayout_7.addWidget(self.frame_buttons_CC)
 
         self.TimeValue_exit_CC = QLabel(self.main_frame_CC)
@@ -853,10 +853,20 @@ class Ui_Form(object):
     def set_ai_page(self):
         self.ai_df = Ppo.OilThick(self.ai_pathfile)
         if self.ai_df.dataframe is not None:
-            self.main_frame = QFrame()
-            self.main_frame_page = Ai_.Ui_Form()
-            self.gL_AiPage.addWidget(self.main_frame)
-            self.main_frame_page.setupUi(self.main_frame, self.ai_df)
+            self.main_frame_ai_ = QFrame()
+            self.main_frame_page_ai = Ai_.Ui_Form()
+            self.gL_AiPage.addWidget(self.main_frame_ai_)
+            self.main_frame_page_ai.setupUi(self.main_frame_ai_, self.ai_df)
+        else:
+            print('não foi')
+
+    def set_vi_page(self):
+        self.vi_df = Ppo.TotalConc(self.vi_pathfile)
+        if self.vi_df.dataframe is not None:
+            self.main_frame_vi_ = QFrame()
+            self.main_frame_page_vi = Vi_.Ui_Form()
+            self.gL_ViPage.addWidget(self.main_frame_vi_)
+            self.main_frame_page_vi.setupUi(self.main_frame_vi_, self.vi_df)
         else:
             print('não foi')
 
