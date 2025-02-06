@@ -1,1 +1,1 @@
-# ApplicationSoftware
+# Computer-Aided Network for Natural Environmental Surveillance - CANNES
