@@ -69,6 +69,7 @@ class CurrentVar(CheckVariables):
             'longitude': 'longitude coordinate',
             'depth': 'depth variable',
             'Valid Time': 'time variable',
+            'Valid time': 'time variable',
             'time': 'time variable',
             'Time': 'time variable'
         }
@@ -76,7 +77,7 @@ class CurrentVar(CheckVariables):
             'u': ['eastward_sea_water_velocity'],
             'v': ['northward_sea_water_velocity'],
             'depth': ['depth'],
-            'time': ['Valid time', 'time', 'Valid Time'],
+            'time': ['Valid time', 'time', 'Valid Time', 'Valid time'],
             'longitude': ['longitude', 'Longitude'],
             'latitude': ['latitude', 'Latitude']
         }
@@ -104,12 +105,13 @@ class WindVar(CheckVariables):
             'latitude': 'latitude coordinate',
             'longitude': 'longitude coordinate',
             'Valid Time': 'time variable',
+            'Valid time': 'time variable',
             'time': 'time variable'
         }
         self.varname_map = {
             'u': ['10 metre U wind component', 'U component of wind', 'eastward_wind'],
             'v': ['10 metre V wind component', 'V component of wind', 'northward_wind'],
-            'time': ['Valid time', 'time', 'Valid Time'],
+            'time': ['Valid time', 'time', 'Valid Time', 'Valid time'],
             'longitude': ['longitude', 'Longitude'],
             'latitude': ['latitude', 'Latitude']
         }
@@ -136,12 +138,13 @@ class TemperatureVar(CheckVariables):
             'latitude': 'latitude coordinate',
             'longitude': 'longitude coordinate',
             'depth': 'depth variable',
-            'Valid Time': 'time variable'
+            'Valid Time': 'time variable',
+            'Valid time': 'time variable'
         }
         self.varname_map = {
             'temperature': ['sea_water_temperature'],
             'depth': ['depth'],
-            'time': ['Valid time', 'time', 'Valid Time'],
+            'time': ['Valid time', 'time', 'Valid Time', 'Valid time'],
             'longitude': ['longitude', 'Longitude'],
             'latitude': ['latitude', 'Latitude']
         }
@@ -168,12 +171,13 @@ class SalinityVar(CheckVariables):
             'latitude': 'latitude coordinate',
             'longitude': 'longitude coordinate',
             'depth': 'depth variable',
-            'Valid Time': 'time variable'
+            'Valid Time': 'time variable',
+            'Valid time': 'time variable'
         }
         self.varname_map = {
             'salinity': ['sea_water_salinity'],
             'depth': ['depth'],
-            'time': ['Valid time', 'time', 'Valid Time'],
+            'time': ['Valid time', 'time', 'Valid Time', 'Valid time'],
             'longitude': ['longitude', 'Longitude'],
             'latitude': ['latitude', 'Latitude']
         }
