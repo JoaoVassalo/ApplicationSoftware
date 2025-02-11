@@ -462,6 +462,12 @@ if __name__ == "__main__":
                 color: #4C5B61;
             }
             
+            [CommomComboboxView='true'] {
+                padding-left: 15px;
+                color: #7AE7C7;
+                background-color: black;
+            }
+            
             /*
             #frame_buttons_analysis {
                 background-color: black;
