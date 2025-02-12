@@ -1,6 +1,8 @@
 from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QAbstractTableModel)
 from PySide6.QtWidgets import (QFrame, QHBoxLayout, QPushButton,
                                QSizePolicy, QSpacerItem, QVBoxLayout, QTableView)
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 from datetime import datetime
 from pandas import DataFrame as Df
 import numpy as np
@@ -50,6 +52,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.frame = QFrame(WindButton_LonLatProfile)
         self.frame.setObjectName(u"frame")
+        self.frame.setProperty('ViewCommomFrame', True)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -62,6 +65,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.frame_2 = QFrame(WindButton_LonLatProfile)
         self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setProperty('ViewCommomFrame', True)
         sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
         self.frame_2.setSizePolicy(sizePolicy)
         self.frame_2.setMinimumSize(QSize(0, 60))
@@ -81,18 +85,9 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.SaveDataframe = QPushButton(self.frame_2)
         self.SaveDataframe.setObjectName(u"SaveDataframe")
+        self.SaveDataframe.setProperty('CommomButtonViewPageFunc', True)
         self.SaveDataframe.setMinimumSize(QSize(120, 30))
         self.SaveDataframe.setMaximumSize(QSize(120, 30))
-        self.SaveDataframe.setStyleSheet(u"QPushButton{\n"
-                                         "	background-color: rgb(61, 80, 95);\n"
-                                         "	border-radius: 15px;\n"
-                                         "	border: 2px solid #F98600;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "	color: #F98600;\n"
-                                         "	font-size: 14px;\n"
-                                         "}")
         self.SaveDataframe.clicked.connect(self.save_df)
 
         self.horizontalLayout_6.addWidget(self.SaveDataframe)
@@ -111,7 +106,20 @@ class Ui_WindButton_LonLatProfile(object):
 
         QMetaObject.connectSlotsByName(WindButton_LonLatProfile)
 
+        shadow_elements = {
+            'frame',
+            'SaveDataframe'
+        }
+
         try:
+            for x in shadow_elements:
+                effect = QtWidgets.QGraphicsDropShadowEffect(WindButton_LonLatProfile)
+                effect.setBlurRadius(18)
+                effect.setXOffset(0)
+                effect.setYOffset(0)
+                effect.setColor(QColor(0, 0, 0, 255))
+                getattr(self, x).setGraphicsEffect(effect)
+
             self.dataframe = self.average_temp_df()
             self.tablemodel = DataFrameModel(self.dataframe)
             self.tableview = QTableView()
