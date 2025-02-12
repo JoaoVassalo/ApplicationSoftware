@@ -3,6 +3,8 @@ from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
                                QVBoxLayout)
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 from ViewPages import ColorEscale as Cs
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -32,6 +34,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.frame = QFrame(WindButton_LonLatProfile)
         self.frame.setObjectName(u"frame")
+        self.frame.setProperty('ViewCommomFrame', True)
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
 
@@ -42,18 +45,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.ColorScaleButton = QPushButton()
         self.ColorScaleButton.setObjectName(u"ColorScale")
+        self.ColorScaleButton.setProperty('CommomButtonViewPageFunc', True)
         self.ColorScaleButton.setMinimumSize(QSize(100, 30))
         self.ColorScaleButton.setMaximumSize(QSize(100, 30))
-        self.ColorScaleButton.setStyleSheet(u"QPushButton{\n"
-                                            "	background-color: rgb(61, 80, 95);\n"
-                                            "	border-radius: 15px;\n"
-                                            "	border: 2px solid #F98600;\n"
-                                            "}\n"
-                                            "\n"
-                                            "QPushButton:hover{\n"
-                                            "	color: #F98600;\n"
-                                            "	font-size: 14px;\n"
-                                            "}")
+
         self.ColorScaleButton.clicked.connect(self.open_color_scale_widget)
 
         self.verticalLayout_ScaleButton.addWidget(self.ColorScaleButton)
@@ -63,6 +58,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.frame_2 = QFrame(WindButton_LonLatProfile)
         self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setProperty('ViewCommomFrame', True)
         self.frame_2.setMinimumSize(QSize(320, 0))
         self.frame_2.setMaximumSize(QSize(320, 16777215))
         self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
@@ -76,7 +72,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_14.addItem(self.horizontalSpacer_38)
 
         self.verticalLayout_15 = QVBoxLayout()
-        self.verticalLayout_15.setSpacing(0)
+        self.verticalLayout_15.setSpacing(3)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.StepFilterLabel = QLabel(self.frame_2)
         self.StepFilterLabel.setObjectName(u"StepFilterLabel")
@@ -95,49 +91,38 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_32)
 
-        self.frame_buttons_animation_step = QFrame(self.frame_2)
-        self.frame_buttons_animation_step.setObjectName(u"frame_buttons_animation_step")
-        self.frame_buttons_animation_step.setMinimumSize(QSize(80, 50))
-        self.frame_buttons_animation_step.setMaximumSize(QSize(80, 50))
-        self.frame_buttons_animation_step.setStyleSheet(u"QPushButton {\n"
-                                                        "    background-color: transparent;\n"
-                                                        "    border: none;\n"
-                                                        "    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:hover {\n"
-                                                        "    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
-                                                        "    border-radius: 5px; /* Bordas arredondadas */\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:pressed {\n"
-                                                        "    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
-                                                        "}")
-        self.frame_buttons_animation_step.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_buttons_animation_step.setFrameShadow(QFrame.Shadow.Raised)
-        self.gridLayout_9 = QGridLayout(self.frame_buttons_animation_step)
+        self.frame_buttons_animation_year = QFrame(self.frame_2)
+        self.frame_buttons_animation_year.setObjectName(u"frame_buttons_animation_step")
+        self.frame_buttons_animation_year.setProperty('ViewCommomFrame_Animations', True)
+        self.frame_buttons_animation_year.setMaximumSize(QSize(80, 50))
+
+        self.frame_buttons_animation_year.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_buttons_animation_year.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_9 = QGridLayout(self.frame_buttons_animation_year)
         self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.backward_button_step = QPushButton(self.frame_buttons_animation_step)
-        self.backward_button_step.setObjectName(u"backward_button_step")
+        self.backward_button_year = QPushButton(self.frame_buttons_animation_year)
+        self.backward_button_year.setObjectName(u"backward_button_step")
+        self.backward_button_year.setProperty('CommomButton_Animations', True)
         icon = QIcon()
-        icon.addFile(u":/icons/icons/arrow-left - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.backward_button_step.setIcon(icon)
-        self.backward_button_step.setIconSize(QSize(20, 20))
-        self.backward_button_step.clicked.connect(self.back_in_year)
+        icon.addFile(u":/icons/icons/arrow-left - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.backward_button_year.setIcon(icon)
+        self.backward_button_year.setIconSize(QSize(20, 20))
+        self.backward_button_year.clicked.connect(self.back_in_year)
 
-        self.gridLayout_9.addWidget(self.backward_button_step, 0, 0, 1, 1)
+        self.gridLayout_9.addWidget(self.backward_button_year, 0, 0, 1, 1)
 
-        self.forward_button_step = QPushButton(self.frame_buttons_animation_step)
-        self.forward_button_step.setObjectName(u"forward_button_step")
+        self.forward_button_year = QPushButton(self.frame_buttons_animation_year)
+        self.forward_button_year.setObjectName(u"forward_button_step")
+        self.forward_button_year.setProperty('CommomButton_Animations', True)
         icon1 = QIcon()
-        icon1.addFile(u":/icons/icons/arrow-right - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.forward_button_step.setIcon(icon1)
-        self.forward_button_step.setIconSize(QSize(20, 20))
-        self.forward_button_step.clicked.connect(self.forward_in_year)
+        icon1.addFile(u":/icons/icons/arrow-right - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.forward_button_year.setIcon(icon1)
+        self.forward_button_year.setIconSize(QSize(20, 20))
+        self.forward_button_year.clicked.connect(self.forward_in_year)
 
-        self.gridLayout_9.addWidget(self.forward_button_step, 0, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.forward_button_year, 0, 1, 1, 1)
 
-        self.horizontalLayout_2.addWidget(self.frame_buttons_animation_step)
+        self.horizontalLayout_2.addWidget(self.frame_buttons_animation_year)
 
         self.horizontalSpacer_33 = QSpacerItem(18, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -145,14 +130,14 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.verticalLayout_15.addLayout(self.horizontalLayout_2)
 
-        self.StepValueLabel = QLabel(self.frame_2)
-        self.StepValueLabel.setObjectName(u"StepValueLabel")
-        self.StepValueLabel.setMinimumSize(QSize(180, 22))
-        self.StepValueLabel.setMaximumSize(QSize(180, 22))
-        self.StepValueLabel.setStyleSheet(u"border: 2px solid #212b33")
-        self.StepValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.YearValueLabel = QLabel(self.frame_2)
+        self.YearValueLabel.setObjectName(u"StepValueLabel")
+        self.YearValueLabel.setProperty('ValueLabel_ViewPages', True)
+        self.YearValueLabel.setMinimumSize(QSize(180, 22))
+        self.YearValueLabel.setMaximumSize(QSize(180, 22))
+        self.YearValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_15.addWidget(self.StepValueLabel)
+        self.verticalLayout_15.addWidget(self.YearValueLabel)
 
         self.horizontalLayout_14.addLayout(self.verticalLayout_15)
 
@@ -169,7 +154,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_16.addItem(self.horizontalSpacer_42)
 
         self.verticalLayout_16 = QVBoxLayout()
-        self.verticalLayout_16.setSpacing(0)
+        self.verticalLayout_16.setSpacing(3)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.StepFilterLabel_2 = QLabel(self.frame_2)
         self.StepFilterLabel_2.setObjectName(u"StepFilterLabel_2")
@@ -185,45 +170,35 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_34)
 
-        self.frame_buttons_animation_step_2 = QFrame(self.frame_2)
-        self.frame_buttons_animation_step_2.setObjectName(u"frame_buttons_animation_step_2")
-        self.frame_buttons_animation_step_2.setMinimumSize(QSize(80, 50))
-        self.frame_buttons_animation_step_2.setMaximumSize(QSize(80, 50))
-        self.frame_buttons_animation_step_2.setStyleSheet(u"QPushButton {\n"
-                                                          "    background-color: transparent;\n"
-                                                          "    border: none;\n"
-                                                          "    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
-                                                          "}\n"
-                                                          "\n"
-                                                          "QPushButton:hover {\n"
-                                                          "    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
-                                                          "    border-radius: 5px; /* Bordas arredondadas */\n"
-                                                          "}\n"
-                                                          "\n"
-                                                          "QPushButton:pressed {\n"
-                                                          "    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
-                                                          "}")
-        self.frame_buttons_animation_step_2.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_buttons_animation_step_2.setFrameShadow(QFrame.Shadow.Raised)
-        self.gridLayout_10 = QGridLayout(self.frame_buttons_animation_step_2)
+        self.frame_buttons_animation_month = QFrame(self.frame_2)
+        self.frame_buttons_animation_month.setObjectName(u"frame_buttons_animation_step_2")
+        self.frame_buttons_animation_month.setProperty('ViewCommomFrame_Animations', True)
+        self.frame_buttons_animation_month.setMinimumSize(QSize(80, 50))
+        self.frame_buttons_animation_month.setMaximumSize(QSize(80, 50))
+
+        self.frame_buttons_animation_month.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_buttons_animation_month.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_10 = QGridLayout(self.frame_buttons_animation_month)
         self.gridLayout_10.setObjectName(u"gridLayout_10")
-        self.backward_button_step_2 = QPushButton(self.frame_buttons_animation_step_2)
-        self.backward_button_step_2.setObjectName(u"backward_button_step_2")
-        self.backward_button_step_2.setIcon(icon)
-        self.backward_button_step_2.setIconSize(QSize(20, 20))
-        self.backward_button_step_2.clicked.connect(self.back_in_month)
+        self.backward_button_month = QPushButton(self.frame_buttons_animation_month)
+        self.backward_button_month.setObjectName(u"backward_button_step_2")
+        self.backward_button_month.setProperty('CommomButton_Animations', True)
+        self.backward_button_month.setIcon(icon)
+        self.backward_button_month.setIconSize(QSize(20, 20))
+        self.backward_button_month.clicked.connect(self.back_in_month)
 
-        self.gridLayout_10.addWidget(self.backward_button_step_2, 0, 0, 1, 1)
+        self.gridLayout_10.addWidget(self.backward_button_month, 0, 0, 1, 1)
 
-        self.forward_button_step_2 = QPushButton(self.frame_buttons_animation_step_2)
-        self.forward_button_step_2.setObjectName(u"forward_button_step_2")
-        self.forward_button_step_2.setIcon(icon1)
-        self.forward_button_step_2.setIconSize(QSize(20, 20))
-        self.forward_button_step_2.clicked.connect(self.forward_in_month)
+        self.forward_button_month = QPushButton(self.frame_buttons_animation_month)
+        self.forward_button_month.setObjectName(u"forward_button_step_2")
+        self.forward_button_month.setProperty('CommomButton_Animations', True)
+        self.forward_button_month.setIcon(icon1)
+        self.forward_button_month.setIconSize(QSize(20, 20))
+        self.forward_button_month.clicked.connect(self.forward_in_month)
 
-        self.gridLayout_10.addWidget(self.forward_button_step_2, 0, 1, 1, 1)
+        self.gridLayout_10.addWidget(self.forward_button_month, 0, 1, 1, 1)
 
-        self.horizontalLayout_3.addWidget(self.frame_buttons_animation_step_2)
+        self.horizontalLayout_3.addWidget(self.frame_buttons_animation_month)
 
         self.horizontalSpacer_35 = QSpacerItem(18, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -231,14 +206,14 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.verticalLayout_16.addLayout(self.horizontalLayout_3)
 
-        self.StepValueLabel_2 = QLabel(self.frame_2)
-        self.StepValueLabel_2.setObjectName(u"StepValueLabel_2")
-        self.StepValueLabel_2.setMinimumSize(QSize(180, 22))
-        self.StepValueLabel_2.setMaximumSize(QSize(180, 22))
-        self.StepValueLabel_2.setStyleSheet(u"border: 2px solid #212b33")
-        self.StepValueLabel_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.MonthValueLabel = QLabel(self.frame_2)
+        self.MonthValueLabel.setObjectName(u"StepValueLabel_2")
+        self.MonthValueLabel.setProperty('ValueLabel_ViewPages', True)
+        self.MonthValueLabel.setMinimumSize(QSize(180, 22))
+        self.MonthValueLabel.setMaximumSize(QSize(180, 22))
+        self.MonthValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_16.addWidget(self.StepValueLabel_2)
+        self.verticalLayout_16.addWidget(self.MonthValueLabel)
 
         self.horizontalLayout_16.addLayout(self.verticalLayout_16)
 
@@ -258,18 +233,10 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.SaveFigButton = QPushButton(self.frame_2)
         self.SaveFigButton.setObjectName(u"SaveFigButton")
+        self.SaveFigButton.setProperty('CommomButtonViewPageFunc', True)
         self.SaveFigButton.setMinimumSize(QSize(120, 30))
         self.SaveFigButton.setMaximumSize(QSize(120, 30))
-        self.SaveFigButton.setStyleSheet(u"QPushButton{\n"
-                                         "	background-color: rgb(61, 80, 95);\n"
-                                         "	border-radius: 15px;\n"
-                                         "	border: 2px solid #F98600;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "	color: #F98600;\n"
-                                         "	font-size: 14px;\n"
-                                         "}")
+
         self.SaveFigButton.clicked.connect(self.save_gif)
 
         self.horizontalLayout_6.addWidget(self.SaveFigButton)
@@ -300,7 +267,24 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.frame.setLayout(self.hori_frame)
 
+        shadow_elements = {
+            'frame',
+            'frame_2',
+            'frame_buttons_animation_year',
+            'frame_buttons_animation_month',
+            'SaveFigButton',
+            'ColorScaleButton'
+        }
+
         try:
+            for x in shadow_elements:
+                effect = QtWidgets.QGraphicsDropShadowEffect(WindButton_LonLatProfile)
+                effect.setBlurRadius(18)
+                effect.setXOffset(0)
+                effect.setYOffset(0)
+                effect.setColor(QColor(0, 0, 0, 255))
+                getattr(self, x).setGraphicsEffect(effect)
+
             self.f_magnitude = lambda x_, y_: np.sqrt(x_ ** 2 + y_ ** 2)
             self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
             self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
@@ -321,10 +305,10 @@ class Ui_WindButton_LonLatProfile(object):
             raise e
 
     def sel_month(self):
-        self.StepValueLabel_2.setText(f'{self.month_selected}')
+        self.MonthValueLabel.setText(f'{self.month_selected}')
 
     def sel_year(self):
-        self.StepValueLabel.setText(f'{self.year_selected}')
+        self.YearValueLabel.setText(f'{self.year_selected}')
 
     def forward_in_month(self):
         if self.month_selected == self.month[-1]:
@@ -557,21 +541,21 @@ class Ui_WindButton_LonLatProfile(object):
                        extent=[0, horas_unicas[-1], 1, dias_unicos[-1]])
         ax.set_xticks(np.arange(horas_unicas[0], horas_unicas[-1] + 1, 1))
         ax.set_yticks(np.arange(dias_unicos[0], dias_unicos[-1] + 1, 1))
-        ax.set_xlabel('Hour', fontsize=8, color='white')
-        ax.set_ylabel('Days', fontsize=8, color='white')
+        ax.set_xlabel('Hour', fontsize=8, color='black')
+        ax.set_ylabel('Days', fontsize=8, color='black')
 
         cb = self.figure.colorbar(im, ax=ax, orientation='vertical')
-        cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=6, color="white")
+        cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=6, color="black")
         cb.set_ticks(np.arange(self.current_min, self.current_max, 2))
         cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(self.current_min, self.current_max, 2)])
         cb.ax.tick_params(labelsize=8)
-        cb.ax.yaxis.set_tick_params(color='white')
-        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color='white')
+        cb.ax.yaxis.set_tick_params(color='black')
+        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color='black')
 
         ax.margins(x=0.01, y=0.01)
         ax.set_xlim(horas_unicas[0] - 0.5, horas_unicas[-1] + .5)
         ax.set_ylim(dias_unicos[0] - 0.5, dias_unicos[-1] + .5)
-        ax.tick_params(axis='both', which='major', labelsize=7, color='white', labelcolor='white')
+        ax.tick_params(axis='both', which='major', labelsize=7, color='black', labelcolor='black')
 
         ax.quiver(X, Y, vec_u, vec_v, scale=250, color='black', headwidth=3, headlength=5, width=0.001,
                   headaxislength=4.5)
@@ -585,15 +569,15 @@ class Ui_WindButton_LonLatProfile(object):
             hspace=0.2,
             wspace=0.2
         )
-        self.canvas.figure.set_facecolor("#3d505f")
+        self.canvas.figure.set_facecolor("#C3C3C3")
 
     def retranslateUi(self, WindButton_LonLatProfile):
         WindButton_LonLatProfile.setWindowTitle(QCoreApplication.translate("WindButton_LonLatProfile", u"Form", None))
         self.StepFilterLabel.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Year", None))
-        self.backward_button_step.setText("")
-        self.forward_button_step.setText("")
+        self.backward_button_year.setText("")
+        self.forward_button_year.setText("")
         self.StepFilterLabel_2.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Month", None))
-        self.backward_button_step_2.setText("")
-        self.forward_button_step_2.setText("")
+        self.backward_button_month.setText("")
+        self.forward_button_month.setText("")
         self.SaveFigButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"SAVE FIGURE", None))
         self.ColorScaleButton.setText(QCoreApplication.translate("WindButton_LonLatProfile", u"Set Color Scale", None))
