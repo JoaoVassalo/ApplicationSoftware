@@ -2636,4 +2636,4 @@ class Ui_MainWindow(object):
         self.ConfigB_1.setText("")
         self.LogoutB_1.setText("")
         self.menu_button.setText("")
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"GeoEnergia Lab", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"CANNES", None))
