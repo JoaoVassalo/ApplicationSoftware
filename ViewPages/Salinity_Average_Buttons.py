@@ -3,6 +3,8 @@ from PySide6.QtGui import (QFont, QIcon)
 from PySide6.QtWidgets import (QFrame, QGridLayout, QHBoxLayout,
                                QLabel, QPushButton, QSizePolicy, QSpacerItem,
                                QVBoxLayout)
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -29,6 +31,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.frame = QFrame(WindButton_LonLatProfile)
         self.frame.setObjectName(u"frame")
+        self.frame.setProperty('ViewCommomFrame', True)
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
 
@@ -36,6 +39,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.frame_2 = QFrame(WindButton_LonLatProfile)
         self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setProperty('ViewCommomFrame', True)
         self.frame_2.setMinimumSize(QSize(320, 0))
         self.frame_2.setMaximumSize(QSize(320, 16777215))
         self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
@@ -49,7 +53,7 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_7.addItem(self.horizontalSpacer_34)
 
         self.verticalLayout_13 = QVBoxLayout()
-        self.verticalLayout_13.setSpacing(0)
+        self.verticalLayout_13.setSpacing(3)
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
         self.TimeFilterLabel = QLabel(self.frame_2)
         self.TimeFilterLabel.setObjectName(u"TimeFilterLabel")
@@ -67,30 +71,19 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.frame_buttons_animation_time = QFrame(self.frame_2)
         self.frame_buttons_animation_time.setObjectName(u"frame_buttons_animation_time")
+        self.frame_buttons_animation_time.setProperty('ViewCommomFrame_Animations', True)
         self.frame_buttons_animation_time.setMinimumSize(QSize(180, 50))
         self.frame_buttons_animation_time.setMaximumSize(QSize(180, 50))
-        self.frame_buttons_animation_time.setStyleSheet(u"QPushButton {\n"
-                                                        "    background-color: transparent;\n"
-                                                        "    border: none;\n"
-                                                        "    padding: 10px; /* Adicione um padding maior para ajustar o tamanho do fundo */\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:hover {\n"
-                                                        "    background-color: rgba(255, 165, 0, 0.2); /* Cor de fundo no hover */\n"
-                                                        "    border-radius: 5px; /* Bordas arredondadas */\n"
-                                                        "}\n"
-                                                        "\n"
-                                                        "QPushButton:pressed {\n"
-                                                        "    background-color: rgba(255, 165, 0, 0.5); /* Cor de fundo ao pressionar */\n"
-                                                        "}")
+
         self.frame_buttons_animation_time.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_buttons_animation_time.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_7 = QGridLayout(self.frame_buttons_animation_time)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.start_button_time = QPushButton(self.frame_buttons_animation_time)
         self.start_button_time.setObjectName(u"start_button_time")
+        self.start_button_time.setProperty('CommomButton_Animations', True)
         icon = QIcon()
-        icon.addFile(u":/icons/icons/backward - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/icons/icons/backward - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.start_button_time.setIcon(icon)
         self.start_button_time.setIconSize(QSize(20, 20))
         self.start_button_time.clicked.connect(self.start_in_time)
@@ -99,8 +92,9 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.backward_button_time = QPushButton(self.frame_buttons_animation_time)
         self.backward_button_time.setObjectName(u"backward_button_time")
+        self.backward_button_time.setProperty('CommomButton_Animations', True)
         icon1 = QIcon()
-        icon1.addFile(u":/icons/icons/arrow-left - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":/icons/icons/arrow-left - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.backward_button_time.setIcon(icon1)
         self.backward_button_time.setIconSize(QSize(20, 20))
         self.backward_button_time.clicked.connect(self.back_in_time)
@@ -109,8 +103,9 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.forward_button_time = QPushButton(self.frame_buttons_animation_time)
         self.forward_button_time.setObjectName(u"forward_button_time")
+        self.forward_button_time.setProperty('CommomButton_Animations', True)
         icon4 = QIcon()
-        icon4.addFile(u":/icons/icons/arrow-right - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon4.addFile(u":/icons/icons/arrow-right - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.forward_button_time.setIcon(icon4)
         self.forward_button_time.setIconSize(QSize(20, 20))
         self.forward_button_time.clicked.connect(self.forward_in_time)
@@ -119,8 +114,9 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.finish_button_time = QPushButton(self.frame_buttons_animation_time)
         self.finish_button_time.setObjectName(u"finish_button_time")
+        self.finish_button_time.setProperty('CommomButton_Animations', True)
         icon5 = QIcon()
-        icon5.addFile(u":/icons/icons/forward - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon5.addFile(u":/icons/icons/forward - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.finish_button_time.setIcon(icon5)
         self.finish_button_time.setIconSize(QSize(20, 20))
         self.finish_button_time.clicked.connect(self.last_in_time)
@@ -131,9 +127,9 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.TimeValueLabel = QLabel(self.frame_2)
         self.TimeValueLabel.setObjectName(u"TimeValueLabel")
+        self.TimeValueLabel.setProperty('ValueLabel_ViewPages', True)
         self.TimeValueLabel.setMinimumSize(QSize(180, 22))
         self.TimeValueLabel.setMaximumSize(QSize(180, 22))
-        self.TimeValueLabel.setStyleSheet(u"border: 2px solid #212b33")
         self.TimeValueLabel.setText(u"Aqui vai o valor de tempo")
         self.TimeValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -157,18 +153,10 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.SaveFigButton = QPushButton(self.frame_2)
         self.SaveFigButton.setObjectName(u"SaveFigButton")
+        self.SaveFigButton.setProperty('CommomButtonViewPageFunc', True)
         self.SaveFigButton.setMinimumSize(QSize(120, 30))
         self.SaveFigButton.setMaximumSize(QSize(120, 30))
-        self.SaveFigButton.setStyleSheet(u"QPushButton{\n"
-                                         "	background-color: rgb(61, 80, 95);\n"
-                                         "	border-radius: 15px;\n"
-                                         "	border: 2px solid #F98600;\n"
-                                         "}\n"
-                                         "\n"
-                                         "QPushButton:hover{\n"
-                                         "	color: #F98600;\n"
-                                         "	font-size: 14px;\n"
-                                         "}")
+
         self.SaveFigButton.clicked.connect(self.save_fig)
 
         self.horizontalLayout_6.addWidget(self.SaveFigButton)
@@ -197,7 +185,22 @@ class Ui_WindButton_LonLatProfile(object):
 
         self.frame.setLayout(self.graph_layout)
 
+        shadow_elements = {
+            'frame',
+            'frame_2',
+            'frame_buttons_animation_time',
+            'SaveFigButton'
+        }
+
         try:
+            for x in shadow_elements:
+                effect = QtWidgets.QGraphicsDropShadowEffect(WindButton_LonLatProfile)
+                effect.setBlurRadius(18)
+                effect.setXOffset(0)
+                effect.setYOffset(0)
+                effect.setColor(QColor(0, 0, 0, 255))
+                getattr(self, x).setGraphicsEffect(effect)
+
             self.lat = [lat_value for lat_value in self.dataset[self.lat_name].values]
             self.lon = [lon_value for lon_value in self.dataset[self.lon_name].values]
             self.time = self.dataset[self.time_name].values
@@ -262,11 +265,11 @@ class Ui_WindButton_LonLatProfile(object):
 
         ax.plot(variable_x, depth)
         ax.set_xticks(x_values)
-        ax.set_xlabel(f'Salinity [{dataset.units}]', labelpad=5, fontsize=8, color='white')
+        ax.set_xlabel(f'Salinity [{dataset.units}]', labelpad=5, fontsize=8, color='black')
 
-        ax.set_ylabel(f'Depth [{dataset[self.depth_name].units}]', labelpad=5, fontsize=8, color='white')
+        ax.set_ylabel(f'Depth [{dataset[self.depth_name].units}]', labelpad=5, fontsize=8, color='black')
         ax.grid()
-        ax.tick_params(axis='both', which='major', labelsize=7, color='white', labelcolor='white')
+        ax.tick_params(axis='both', which='major', labelsize=7, color='black', labelcolor='black')
         self.figure.figure.gca().invert_yaxis()
 
         self.canvas.draw()
@@ -278,7 +281,7 @@ class Ui_WindButton_LonLatProfile(object):
             hspace=0.2,
             wspace=0.2
         )
-        self.canvas.figure.set_facecolor("#3d505f")
+        self.canvas.figure.set_facecolor("#C3C3C3")
 
     def save_fig(self):
         dataset = self.dataset[self.sali_name].sel({self.time_name: self.time_selected})
