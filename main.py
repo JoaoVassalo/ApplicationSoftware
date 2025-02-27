@@ -447,7 +447,7 @@ if __name__ == "__main__":
             }
             
             [CommomButtonViewPageFunc='true']:hover {
-                color: #222823;
+                color: #6F1A07;
                 font-size: 14px;
             }
             
@@ -466,6 +466,14 @@ if __name__ == "__main__":
                 padding-left: 15px;
                 color: #7AE7C7;
                 background-color: black;
+            }
+            
+            QToolTip {
+                background-color: #5F7470;
+                color: black;
+                border: 1px solid #5F7470;
+                border-radius: 10px;
+                padding: 4px;
             }
             
             /*
@@ -495,15 +503,34 @@ if __name__ == "__main__":
                 padding: 10px;
                 background-color: #C3C3C3;
             }
-            */
             
-            QToolTip {
-                background-color: #5F7470;
-                color: black;
-                border: 1px solid #5F7470;
-                border-radius: 10px;
-                padding: 4px;
+            [CommomTableDataframe='true'] {
+                background-color: #F0F0F0;
+                gridline-color: #C0C0C0;
+                font-size: 14px;
+                border: 1px solid #C0C0C0;
             }
+            
+            [CommomTableDataframe='true'] QHeaderView::section {
+                background-color: #4A90E2;
+                color: white;
+                font-weight: bold;
+                padding: 5px;
+                border: 1px solid #C0C0C0;
+            }
+            
+            [CommomTableDataframe='true'] QTableView::item {
+                padding: 5px;
+            }
+            
+            [CommomTableDataframe='true'] QTableView::item:selected {
+                background-color: #4CAF50;
+                color: white;
+            }
+            
+            222823
+            
+            */
         """)
     window = MainWindow()
     window.show()

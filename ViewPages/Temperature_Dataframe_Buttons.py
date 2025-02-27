@@ -1,5 +1,5 @@
 from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt, QAbstractTableModel)
-from PySide6.QtWidgets import (QFrame, QHBoxLayout, QPushButton,
+from PySide6.QtWidgets import (QLabel, QFrame, QHBoxLayout, QPushButton,
                                QSizePolicy, QSpacerItem, QVBoxLayout, QTableView)
 from PySide6.QtGui import QColor
 from PySide6 import QtWidgets
@@ -77,17 +77,37 @@ class Ui_WindButton_LonLatProfile(object):
         self.horizontalLayout_15 = QHBoxLayout()
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.horizontalLayout_15.setContentsMargins(-1, -1, 0, -1)
+
+        self.horizontalSpacer_39 = QSpacerItem(2, 17, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_39)
+
+        self.tablename = QLabel(self.frame_2)
+        self.tablename.setObjectName(u"TableName")
+        self.tablename.setProperty('TableLabel_ViewPages', True)
+        self.tablename.setText("Average temperature table for the entire domain")
+        self.tablename.setStyleSheet(
+            u"font-size: 16px;\n"
+            u"font-style: italic;\n"
+            u"font-weight: bold;\n"
+            u"color: #4C5B61;\n"
+        )
+        self.layoutTable = QHBoxLayout()
+        self.layoutTable.addWidget(self.tablename)
+        self.horizontalLayout_15.addLayout(self.layoutTable)
+
         self.horizontalSpacer_40 = QSpacerItem(18, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_15.addItem(self.horizontalSpacer_40)
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+
         self.SaveDataframe = QPushButton(self.frame_2)
         self.SaveDataframe.setObjectName(u"SaveDataframe")
         self.SaveDataframe.setProperty('CommomButtonViewPageFunc', True)
         self.SaveDataframe.setMinimumSize(QSize(120, 30))
         self.SaveDataframe.setMaximumSize(QSize(120, 30))
+
         self.SaveDataframe.clicked.connect(self.save_df)
 
         self.horizontalLayout_6.addWidget(self.SaveDataframe)
@@ -108,7 +128,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         shadow_elements = {
             'frame',
-            'SaveDataframe'
+            'frame_2'
         }
 
         try:
@@ -127,6 +147,34 @@ class Ui_WindButton_LonLatProfile(object):
             self.layouttable = QVBoxLayout()
             self.layouttable.addWidget(self.tableview)
             self.frame.setLayout(self.layouttable)
+
+            self.tableview.setStyleSheet("""
+                            QTableView {
+                                background-color: #C3C3C3;
+                                gridline-color: #C0C0C0;
+                                font-size: 14px;
+                                border: 1px solid #C0C0C0;
+                            }
+                            QHeaderView::section {
+                                background-color: #2C423F;
+                                color: white;
+                                font-weight: bold;
+                                padding: 5px;
+                                border: 1px solid #C0C0C0;
+                                border-radius: 3px;
+                            }
+                            QTableView::item {
+                                padding: 5px;
+                            }
+                            QTableView::item:selected {
+                                background-color: #515751;
+                                color: white;
+                            }
+                            QTableCornerButton::section {
+                                background-color: #C3C3C3;
+                                border: 1px solid #C0C0C0;
+                            }
+                        """)
         except KeyError as e:
             raise e
 
