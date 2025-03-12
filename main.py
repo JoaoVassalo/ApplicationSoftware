@@ -156,7 +156,17 @@ shadow_elements = {
     'frame_to_info',
     'coord_date_file_widgets',
     'frame',
-    'frame_buttons_analysis'
+    'frame_buttons_analysis',
+    'frame_5',
+    'FunctionsFrame',
+    'InformationAreaFiles',
+    'DeleteButton',
+    'DatButton',
+    'ImpButton',
+    'FilterButton',
+    'MergeButton',
+    'ConcatButrton',
+    'ExcuteButton'
 }
 
 if __name__ == "__main__":
@@ -452,7 +462,7 @@ if __name__ == "__main__":
             }
             
             [CommomButtonViewPageFunc='true']:checked {
-                font-size: 14px;\n"
+                font-size: 14px;"
             }
             
             [NameLabel_ViewPages='true'] {
@@ -468,6 +478,10 @@ if __name__ == "__main__":
                 background-color: black;
             }
             
+            #scrollAreaWidgetContents {
+                background-color: #C3C3C3;
+            }
+            
             QToolTip {
                 background-color: #5F7470;
                 color: black;
@@ -477,6 +491,7 @@ if __name__ == "__main__":
             }
             
             /*
+            ------------------------------------------------------------------------------------------------------------
             #frame_buttons_analysis {
                 background-color: black;
             }
@@ -529,7 +544,7 @@ if __name__ == "__main__":
             }
             
             222823
-            
+            ------------------------------------------------------------------------------------------------------------
             */
         """)
     window = MainWindow()
