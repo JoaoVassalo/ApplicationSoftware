@@ -972,34 +972,7 @@ class Ui_MainWindow(object):
         self.frame_4.setProperty('ViewCommomFrame', True)
         self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
-        # self.frame_4.setStyleSheet("""
-        #     QPushButton {
-        #         background-color: rgb(61, 80, 95);
-        #         border-radius: 10px; /* Arredondamento das bordas */
-        #         border: 2px solid #F98600;
-        #         min-width: 100px; /* Largura mínima */
-        #         max-width: 200px;
-        #         min-height: 20px; /* Altura mínima */
-        #         color: white;
-        #     }
-        #
-        #     QPushButton:hover {
-        #         color: #F98600;
-        #         font-size: 14px;
-        #     }
-        #
-        #     QPushButton:checked {
-        #         color: white;
-        #         background-color: rgb(125, 63, 0);
-        #         font-size: 14px;
-        #     }
-        #
-        #     QRadioButton {
-        #         min-width: 55px;
-        #         max-width: 95px;
-        #         height:20px;
-        #     }
-        # """)
+
         self.gridLayout_forVar = QGridLayout(self.frame_4)
         self.gridLayout_forVar.setSpacing(0)
 
@@ -1048,21 +1021,14 @@ class Ui_MainWindow(object):
         self.file_page_main_screen.setObjectName(u"file_page_main_screen")
         sizePolicy.setHeightForWidth(self.file_page_main_screen.sizePolicy().hasHeightForWidth())
         self.file_page_main_screen.setSizePolicy(sizePolicy)
-        # self.file_page_main_screen.setStyleSheet(u"QWidget{\n"
-        #                                          "	color:white;\n"
-        #                                          "	background-color: rgb(61, 80, 95);\n"
-        #                                          "	border-radius: 10px;\n"
-        #                                          "}\n"
-        #                                          "\n"
-        #                                          "\n"
-        #                                          "\n"
-        #                                          "")
+
         self.file_page_main_screen.setFrameShape(QFrame.Shape.StyledPanel)
         self.file_page_main_screen.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_9 = QGridLayout(self.file_page_main_screen)
         self.gridLayout_9.setObjectName(u"gridLayout_9")
         self.frame_5 = QFrame(self.file_page_main_screen)
         self.frame_5.setObjectName(u"frame_5")
+        self.frame_5.setProperty('ViewCommomFrame', True)
         self.frame_5.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.frame_5)
@@ -1101,8 +1067,81 @@ class Ui_MainWindow(object):
 
         self.InformationAreaFiles = QScrollArea(self.file_page_main_screen)
         self.InformationAreaFiles.setObjectName(u"InformationAreaFiles")
+        self.InformationAreaFiles.setProperty('ScrollCommomArea', True)
         self.InformationAreaFiles.setMinimumSize(QSize(600, 0))
         self.InformationAreaFiles.setWidgetResizable(True)
+        self.InformationAreaFiles.setStyleSheet("\n"
+                                                "    /* Estilizando o QScrollArea */\n"
+                                                "    QScrollArea {\n"
+                                                "        /* border: 2px solid #2C423F;\n */" 
+                                                "        border-radius: 8px;\n"
+                                                "        background: #C3C3C3; /* Fundo da área de rolagem */\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    /* Estilizando o conteúdo dentro do QScrollArea */\n"
+                                                "    QWidget#conteudo {\n"
+                                                "        background: #FFFFFF; /* Fundo do conteúdo */\n"
+                                                "        border-radius: 8px;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    /* Barra de rolagem vertical */\n"
+                                                "    QScrollBar:vertical {\n"
+                                                "        border: none;\n"
+                                                "        background: #DDD;\n"
+                                                "        width: 12px;\n"
+                                                "        margin: 2px;\n"
+                                                "        border-radius: 6px;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::handle:vertical {\n"
+                                                "        background: #888;\n"
+                                                "        min-height: 20px;\n"
+                                                "        border-radius: 6px;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::handle:vertical:hover {\n"
+                                                "        background: #666;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::handle:vertical:pressed {\n"
+                                                "        background: #444;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {\n"
+                                                "        background: none;\n"
+                                                "        border: none;\n"
+                                                "        height: 0px;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    /* Barra de rolagem horizontal */\n"
+                                                "    QScrollBar:horizontal {\n"
+                                                "        border: none;\n"
+                                                "        background: #DDD;\n"
+                                                "        height: 12px;\n"
+                                                "        margin: 2px;\n"
+                                                "        border-radius: 6px;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::handle:horizontal {\n"
+                                                "        background: #888;\n"
+                                                "        min-width: 20px;\n"
+                                                "        border-radius: 6px;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::handle:horizontal:hover {\n"
+                                                "        background: #666;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::handle:horizontal:pressed {\n"
+                                                "        background: #444;\n"
+                                                "    }\n"
+                                                "\n"
+                                                "    QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {\n"
+                                                "        background: none;\n"
+                                                "        border: none;\n"
+                                                "        width: 0px;\n"
+                                                "    }\n")
+
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 600, 502))
@@ -1110,29 +1149,23 @@ class Ui_MainWindow(object):
         self.layout_for_file_forms = QVBoxLayout(self.scrollAreaWidgetContents)
         self.layout_for_file_forms.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.scrollAreaWidgetContents.setLayout(self.layout_for_file_forms)
+        self.scrollAreaWidgetContents.setStyleSheet(
+            u"border: none;"
+        )
 
         self.gridLayout_9.addWidget(self.InformationAreaFiles, 1, 0, 1, 1)
 
-        self.line = QFrame(self.file_page_main_screen)
-        self.line.setObjectName(u"line")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.line.sizePolicy().hasHeightForWidth())
-        self.line.setSizePolicy(sizePolicy3)
-        self.line.setMinimumSize(QSize(5, 0))
-        self.line.setMaximumSize(QSize(5, 16777215))
-        self.line.setStyleSheet(u"background-color: rgb(38, 58, 68);")
-        self.line.setFrameShape(QFrame.Shape.VLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout_9.addWidget(self.line, 1, 1, 1, 1)
-
         self.FunctionsFrame = QFrame(self.file_page_main_screen)
         self.FunctionsFrame.setObjectName(u"FunctionsFrame")
+        self.FunctionsFrame.setProperty('ViewCommomFrame', True)
         self.FunctionsFrame.setMaximumSize(QSize(350, 16777215))
         self.FunctionsFrame.setFrameShape(QFrame.Shape.StyledPanel)
         self.FunctionsFrame.setFrameShadow(QFrame.Shadow.Raised)
+        self.FunctionsFrame.setStyleSheet(
+            "border-radius: 8px;"
+            "/* border: 2px solid #2C423F; */"
+        )
+
         self.gridLayout_10 = QGridLayout(self.FunctionsFrame)
         self.gridLayout_10.setObjectName(u"gridLayout_10")
         self.ButtonsFilesFrame = QFrame(self.FunctionsFrame)
@@ -1146,25 +1179,10 @@ class Ui_MainWindow(object):
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.ConcatButrton = QPushButton(self.ButtonsFilesFrame)
         self.ConcatButrton.setObjectName(u"ConcatButrton")
+        self.ConcatButrton.setProperty('CommomButtonViewPageFunc', True)
         self.ConcatButrton.setMinimumSize(QSize(100, 30))
         self.ConcatButrton.setMaximumSize(QSize(120, 30))
-        # self.ConcatButrton.setStyleSheet(u"QPushButton{\n"
-        #                                  "	background-color: rgb(61, 80, 95);\n"
-        #                                  "	border-radius: 15px;\n"
-        #                                  "	border: 2px solid #F98600;\n"
-        #                                  "}\n"
-        #                                  "\n"
-        #                                  "QPushButton:hover{\n"
-        #                                  "	color: #F98600;\n"
-        #                                  "	font-size: 14px;\n"
-        #                                  "}\n"
-        #                                  "\n"
-        #                                  "QPushButton:checked{\n"
-        #                                  "	color: white;\n"
-        #                                  "	\n"
-        #                                  "	background-color: rgb(125, 63, 0);\n"
-        #                                  "	font-size: 14px;\n"
-        #                                  "}")
+
         self.ConcatButrton.setCheckable(True)
         self.ConcatButrton.clicked.connect(self.concat_files)
 
@@ -1172,24 +1190,10 @@ class Ui_MainWindow(object):
 
         self.MergeButton = QPushButton(self.ButtonsFilesFrame)
         self.MergeButton.setObjectName(u"MergeButton")
+        self.MergeButton.setProperty('CommomButtonViewPageFunc', True)
         self.MergeButton.setMinimumSize(QSize(100, 30))
         self.MergeButton.setMaximumSize(QSize(120, 30))
-        # self.MergeButton.setStyleSheet(u"QPushButton{\n"
-        #                                "	background-color: rgb(61, 80, 95);\n"
-        #                                "	border-radius: 15px;\n"
-        #                                "	border: 2px solid #F98600;\n"
-        #                                "}\n"
-        #                                "\n"
-        #                                "QPushButton:hover{\n"
-        #                                "	color: #F98600;\n"
-        #                                "	font-size: 14px;\n"
-        #                                "}\n"
-        #                                "\n"
-        #                                "QPushButton:checked{\n"
-        #                                "	color: white;\n"
-        #                                "	background-color: rgb(125, 63, 0);\n"
-        #                                "	font-size: 14px;\n"
-        #                                "}")
+
         self.MergeButton.setCheckable(True)
         self.MergeButton.clicked.connect(self.merge_files)
 
@@ -1197,24 +1201,10 @@ class Ui_MainWindow(object):
 
         self.FilterButton = QPushButton(self.ButtonsFilesFrame)
         self.FilterButton.setObjectName(u"FilterButton")
+        self.FilterButton.setProperty('CommomButtonViewPageFunc', True)
         self.FilterButton.setMinimumSize(QSize(100, 30))
         self.FilterButton.setMaximumSize(QSize(120, 30))
-        # self.FilterButton.setStyleSheet(u"QPushButton{\n"
-        #                                 "	background-color: rgb(61, 80, 95);\n"
-        #                                 "	border-radius: 15px;\n"
-        #                                 "	border: 2px solid #F98600;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QPushButton:hover{\n"
-        #                                 "	color: #F98600;\n"
-        #                                 "	font-size: 14px;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QPushButton:checked{\n"
-        #                                 "	color: white;\n"
-        #                                 "	background-color: rgb(125, 63, 0);\n"
-        #                                 "	font-size: 14px;\n"
-        #                                 "}")
+
         self.FilterButton.setCheckable(True)
         self.FilterButton.clicked.connect(self.filter_file)
 
@@ -1222,24 +1212,10 @@ class Ui_MainWindow(object):
 
         self.ImpButton = QPushButton(self.ButtonsFilesFrame)
         self.ImpButton.setObjectName(u"ImpButton")
+        self.ImpButton.setProperty('CommomButtonViewPageFunc', True)
         self.ImpButton.setMinimumSize(QSize(100, 30))
         self.ImpButton.setMaximumSize(QSize(120, 30))
-        # self.ImpButton.setStyleSheet(u"QPushButton{\n"
-        #                              "	background-color: rgb(61, 80, 95);\n"
-        #                              "	border-radius: 15px;\n"
-        #                              "	border: 2px solid #F98600;\n"
-        #                              "}\n"
-        #                              "\n"
-        #                              "QPushButton:hover{\n"
-        #                              "	color: #F98600;\n"
-        #                              "	font-size: 14px;\n"
-        #                              "}\n"
-        #                              "\n"
-        #                              "QPushButton:checked{\n"
-        #                              "	color: white;\n"
-        #                              "	background-color: rgb(125, 63, 0);\n"
-        #                              "	font-size: 14px;\n"
-        #                              "}")
+
         self.ImpButton.setCheckable(True)
         self.ImpButton.clicked.connect(self.imp_file)
 
@@ -1247,24 +1223,10 @@ class Ui_MainWindow(object):
 
         self.DatButton = QPushButton(self.ButtonsFilesFrame)
         self.DatButton.setObjectName(u"DatButton")
+        self.DatButton.setProperty('CommomButtonViewPageFunc', True)
         self.DatButton.setMinimumSize(QSize(100, 30))
         self.DatButton.setMaximumSize(QSize(120, 30))
-        # self.DatButton.setStyleSheet(u"QPushButton{\n"
-        #                              "	background-color: rgb(61, 80, 95);\n"
-        #                              "	border-radius: 15px;\n"
-        #                              "	border: 2px solid #F98600;\n"
-        #                              "}\n"
-        #                              "\n"
-        #                              "QPushButton:hover{\n"
-        #                              "	color: #F98600;\n"
-        #                              "	font-size: 14px;\n"
-        #                              "}\n"
-        #                              "\n"
-        #                              "QPushButton:checked{\n"
-        #                              "	color: white;\n"
-        #                              "	background-color: rgb(125, 63, 0);\n"
-        #                              "	font-size: 14px;\n"
-        #                              "}")
+
         self.DatButton.setCheckable(True)
         self.DatButton.clicked.connect(self.dat_file)
 
@@ -1272,24 +1234,10 @@ class Ui_MainWindow(object):
 
         self.DeleteButton = QPushButton(self.ButtonsFilesFrame)
         self.DeleteButton.setObjectName(u"DeleteButton")
+        self.DeleteButton.setProperty('CommomButtonViewPageFunc', True)
         self.DeleteButton.setMinimumSize(QSize(100, 30))
         self.DeleteButton.setMaximumSize(QSize(120, 30))
-        # self.DeleteButton.setStyleSheet(u"QPushButton{\n"
-        #                                 "	background-color: rgb(61, 80, 95);\n"
-        #                                 "	border-radius: 15px;\n"
-        #                                 "	border: 2px solid #F98600;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QPushButton:hover{\n"
-        #                                 "	color: #F98600;\n"
-        #                                 "	font-size: 14px;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QPushButton:checked{\n"
-        #                                 "	color: white;\n"
-        #                                 "	background-color: rgb(125, 63, 0);\n"
-        #                                 "	font-size: 14px;\n"
-        #                                 "}")
+
         self.DeleteButton.setCheckable(True)
         self.DeleteButton.clicked.connect(self.delele_file)
 
@@ -1323,18 +1271,10 @@ class Ui_MainWindow(object):
         self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.ExcuteButton = QPushButton(self.frame_8)
         self.ExcuteButton.setObjectName(u"ExcuteButton")
+        self.ExcuteButton.setProperty('CommomButtonViewPageFunc', True)
         self.ExcuteButton.setMinimumSize(QSize(100, 30))
         self.ExcuteButton.setMaximumSize(QSize(100, 30))
-        # self.ExcuteButton.setStyleSheet(u"QPushButton{\n"
-        #                                 "	background-color: rgb(61, 80, 95);\n"
-        #                                 "	border-radius: 15px;\n"
-        #                                 "	border: 2px solid #F98600;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QPushButton:checked{\n"
-        #                                 "	color: #F98600;\n"
-        #                                 "	font-size: 14px;\n"
-        #                                 "}")
+
         self.ExcuteButton.setCheckable(True)
         self.ExcuteButton.setChecked(False)
         self.ExcuteButton.clicked.connect(self.execute_function)
@@ -1348,7 +1288,10 @@ class Ui_MainWindow(object):
         self.progressBarExecute.setValue(24)
         self.progressBarExecute.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.progressBarExecute.setRange(0, 1) # Range fixo para não animar
-        self.progressBarExecute.setVisible(True)
+        self.progressBarExecute.setHidden(False)
+        self.progressBarExecute.setStyleSheet(
+            u"background-color: #C3C3C3;"
+        )
         self.pbe_is_running = False
 
         self.gridLayout_8.addWidget(self.progressBarExecute, 1, 0, 1, 1)
@@ -2182,7 +2125,9 @@ class Ui_MainWindow(object):
                     'sea_water_salinity': 'Salinity',
                     'sea_water_temperature': 'Temperature',
                     '10 metre U wind component': 'Wind',
-                    '10 metre V wind component': 'Wind'
+                    '10-meter_eastward_wind': 'Wind',
+                    '10 metre V wind component': 'Wind',
+                    '10-meter_northward_wind': 'Wind'
                 }
 
                 var_list = set()

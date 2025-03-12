@@ -101,7 +101,9 @@ class WindVar(CheckVariables):
         self.variables = None
         self.var_names = {
             '10 metre U wind component': 'U component of wind',
+            '10-meter_eastward_wind': 'U component of wind',
             '10 metre V wind component': 'V component of wind',
+            '10-meter_northward_wind': 'V component of wind',
             'latitude': 'latitude coordinate',
             'longitude': 'longitude coordinate',
             'Valid Time': 'time variable',
@@ -109,7 +111,8 @@ class WindVar(CheckVariables):
             'time': 'time variable'
         }
         self.varname_map = {
-            'u': ['10 metre U wind component', 'U component of wind', 'eastward_wind'],
+            'u': ['10 metre U wind component', 'U component of wind', 'eastward_wind',
+                  '10-metre_eastward_wind', '10-metre_northward_wind'],
             'v': ['10 metre V wind component', 'V component of wind', 'northward_wind'],
             'time': ['Valid time', 'time', 'Valid Time', 'Valid time'],
             'longitude': ['longitude', 'Longitude'],
