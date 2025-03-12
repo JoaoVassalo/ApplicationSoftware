@@ -41,44 +41,15 @@ class Ui_Form(object):
 
         self.comboBox = QComboBox(Form)
         self.comboBox.setObjectName(u"comboBox")
+        self.comboBox.setProperty('CommomComboBox', True)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.comboBox.sizePolicy().hasHeightForWidth())
         self.comboBox.setSizePolicy(sizePolicy)
-        self.comboBox.setMinimumSize(QSize(0, 30))
-        self.comboBox.setMaximumSize(QSize(16777215, 30))
-        self.comboBox.setStyleSheet(u"QComboBox{\n"
-                                      "	background-color: white;\n"
-                                      "	border-radius: 12px;\n"
-                                      "	border: 2px solid #F98600;\n"
-                                      "	color: black;\n"
-                                      "	padding-left: 15px;\n"
-                                      "    padding-right: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::drop-down {\n"
-                                      "    border: none;\n"
-                                      "    width: 20px;  /*tamanho da seta*/\n"
-                                      "    background-color: #F98600;\n"
-                                      "    border-top-right-radius: 10px;\n"
-                                      "    border-bottom-right-radius: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::down-arrow {\n"
-                                      "    width: 10px;\n"
-                                      "    height: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox QAbstractItemView {\n"
-                                      "    border: 1px solid #F98600;\n"
-                                      "    background-color: white;\n"
-                                      "    color: black;\n"
-                                      "    selection-background-color: orange;\n"
-                                      "    selection-color: black;\n"
-                                      "    padding: 5px;\n"
-                                      "    border-radius: 5px;\n"
-                                      "}")
+        self.comboBox.setMinimumSize(QSize(0, 20))
+        self.comboBox.setMaximumSize(QSize(16777215, 20))
+
         self.set_list_combobox()
 
         self.verticalLayout.addWidget(self.comboBox)
@@ -92,30 +63,11 @@ class Ui_Form(object):
 
         self.file_name = QLineEdit(Form)
         self.file_name.setObjectName(u"file_name")
+        self.file_name.setProperty('commonLineEditDownloadPage', True)
         self.file_name.setMinimumSize(QSize(0, 30))
         self.file_name.setMaximumSize(QSize(16777215, 30))
-        self.file_name.setStyleSheet(u"QLineEdit {\n"
-                                                   "	border-radius: 15px;\n"
-                                                   "	border: 2px solid #F98600;\n"
-                                                   "	color: white;\n"
-                                                   "}\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "")
 
         self.verticalLayout.addWidget(self.file_name)
-
-        self.textEdit = QTextEdit(Form)
-        self.textEdit.setObjectName(u"textEdit")
-        sizePolicy.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
-        self.textEdit.setSizePolicy(sizePolicy)
-        self.textEdit.setMinimumSize(QSize(9, 60))
-        self.textEdit.setMaximumSize(QSize(16777215, 60))
-        self.textEdit.setReadOnly(True)
-
-        self.verticalLayout.addWidget(self.textEdit)
-
 
         self.retranslateUi(Form)
 
