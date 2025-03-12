@@ -28,8 +28,14 @@ class Ui_Form(object):
     def setupUi(self, Form, file_name, file):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(610, 220)
-        Form.setMaximumSize(QSize(610, 220))
+        Form.resize(16777215, 250)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
+        Form.setSizePolicy(sizePolicy)
+        Form.setMaximumSize(QSize(16777215, 250))
+        # Form.setMaximumSize(QSize(610, 250))
 
         self.file_name = file_name
         self.file = file
@@ -49,6 +55,8 @@ class Ui_Form(object):
         self.label.setText(QCoreApplication.translate("Form", f"File: {self.file_name}", None))
 
         self.horizontalLayout.addWidget(self.label)
+        self.horizontalSpacer_lay = QSpacerItem(10, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalLayout.addItem(self.horizontalSpacer_lay)
 
         self.frame = QFrame(Form)
         self.frame.setObjectName(u"frame")
@@ -86,7 +94,7 @@ class Ui_Form(object):
                                       "	border-radius: 10px;\n"
                                       "}")
         icon = QIcon()
-        icon.addFile(u":/icons/icons/cruz - laranja.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u":/icons/icons/cruz - verde escuro.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(QSize(15, 15))
 
@@ -159,8 +167,7 @@ class Ui_Form(object):
                     new.setText(header_idx, QCoreApplication.translate("Form", f'{min_value}', None))
 
         self.treeWidget.setObjectName(u"treeWidget")
-        self.treeWidget.setMinimumSize(QSize(600, 160))
-        self.treeWidget.setMaximumSize(QSize(600, 160))
+        self.treeWidget.setMinimumSize(QSize(16777215, 200))
 
         self.gridLayout.addWidget(self.treeWidget, 1, 0, 1, 1)
 
@@ -174,6 +181,34 @@ class Ui_Form(object):
         t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
         return t_formated
 
+    def setstylesheet(self):
+        self.treeWidget.setStyleSheet("""
+                    QTreeWidget {
+                        background-color: #C3C3C3;
+                        color: black;
+                        border: 2px solid #2C423F;
+                        border-radius: 5px;
+                    }
+                    QTreeWidget::item {
+                        height: 30px;
+                        padding: 5px;
+                    }
+                    QTreeWidget::item:selected {
+                        background-color: #596869;
+                        color: white;
+                    }
+                    QTreeWidget::item:hover {
+                        background-color: #6F1A07;
+                    }
+                    QHeaderView::section {
+                        background-color: #2C423F;
+                        padding: 5px;
+                        border: 1px solid #3B4252;
+                        font-weight: bold;
+                        color: white;
+                    }
+                """)
+
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.checkBox.setText("")
@@ -184,3 +219,4 @@ class Ui_Form(object):
             ___qtreewidgetitem.setText(idx, QCoreApplication.translate("Form", self.header[idx], None))
 
         del self.file
+        self.setstylesheet()
