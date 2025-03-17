@@ -415,7 +415,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         time_index = pd.to_datetime(wind[self.time_name].values)
         mask = (time_index.year == self.year_selected) & (time_index.month == self.month_selected)
-        dataset_filtrado = wind.sel(valid_time=wind[self.time_name][mask])
+        selection_to_filter = {
+            self.time_name: wind[self.time_name][mask]
+        }
+        dataset_filtrado = wind.sel(selection_to_filter)
         time_index_filter = pd.to_datetime(dataset_filtrado[self.time_name].values)
         dias_unicos = time_index_filter.day.unique().to_list()
         horas_unicas = time_index_filter.hour.unique().to_list()
@@ -467,7 +470,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_ylabel('Days', fontsize=18)
 
         cb = fig.colorbar(im, ax=ax, orientation='vertical')
-        cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=18)
+        cb.set_label(f'Wind velocity [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
         cb.set_ticks(np.arange(self.current_min, self.current_max, 2))
         cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(self.current_min, self.current_max, 2)])
 
@@ -493,7 +496,10 @@ class Ui_WindButton_LonLatProfile(object):
 
         time_index = pd.to_datetime(wind[self.time_name].values)
         mask = (time_index.year == self.year_selected) & (time_index.month == self.month_selected)
-        dataset_filtrado = wind.sel(valid_time=wind[self.time_name][mask])
+        selection_to_filter = {
+            self.time_name: wind[self.time_name][mask]
+        }
+        dataset_filtrado = wind.sel(selection_to_filter)
         time_index_filter = pd.to_datetime(dataset_filtrado[self.time_name].values)
         dias_unicos = time_index_filter.day.unique().to_list()
         horas_unicas = time_index_filter.hour.unique().to_list()
