@@ -490,6 +490,10 @@ if __name__ == "__main__":
                 padding: 4px;
             }
             
+            [CommomFrame_PPA="true"] {
+                background-color: #C3C3C3;
+            }
+            
             /*
             ------------------------------------------------------------------------------------------------------------
             #frame_buttons_analysis {

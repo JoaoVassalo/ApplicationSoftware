@@ -11,6 +11,8 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
@@ -43,8 +45,10 @@ class Ui_Form(object):
         self.AreaImpact_Page.setObjectName(u"AreaImpact_Page")
         self.gL_AiPage = QGridLayout(self.AreaImpact_Page)
         self.gL_AiPage.setObjectName(u"gridLayout")
+
         self.frame_to_button_AI = QFrame(self.AreaImpact_Page)
         self.frame_to_button_AI.setObjectName(u"frame_to_button_AI")
+        self.frame_to_button_AI.setProperty("ViewCommomFrame_PPA", True)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -56,9 +60,10 @@ class Ui_Form(object):
         self.frame_to_button_AI.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_2 = QVBoxLayout(self.frame_to_button_AI)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, -1, -1, -1)
+        self.verticalLayout_2.setContentsMargins(5, -1, -1, -1)
         self.selectfile_button_AI = QPushButton(self.frame_to_button_AI)
         self.selectfile_button_AI.setObjectName(u"selectfile_button_AI")
+        self.selectfile_button_AI.setProperty('CommomButton', True)
         self.selectfile_button_AI.setMinimumSize(QSize(150, 30))
         self.selectfile_button_AI.setMaximumSize(QSize(150, 30))
         self.selectfile_button_AI.clicked.connect(self.search_file_ai)
@@ -842,6 +847,70 @@ class Ui_Form(object):
         self.gL_CcPage.setAlignment(self.frame_to_button_CC, Qt.AlignmentFlag.AlignTop)
 
         QMetaObject.connectSlotsByName(Form)
+        self.getstyle = """
+            [ViewCommomFrame_PPA="true"] {
+                background-color: #C3C3C3;
+                border: none;
+            }
+            
+            [CommomButton="true"] {
+                background-color: #C3C3C3;
+                border-radius: 6px;
+                font-size: 14px;
+                font-style: italic;
+                font-weight: bold;
+                color: #4C5B61;
+            }
+            
+            [CommomButton='true']:hover {
+                color: #6F1A07;
+                font-size: 14px;
+            }
+            
+            [CommomButton='true']:checked {
+                font-size: 14px;
+            }
+        """
+        Form.setStyleSheet(self.getstyle)
+        self.setstylesheet()
+
+        shadow_elements = {
+            'selectfile_button_AI'
+        }
+        for x in shadow_elements:
+            effect = QtWidgets.QGraphicsDropShadowEffect(Form)
+            effect.setBlurRadius(18)
+            effect.setXOffset(0)
+            effect.setYOffset(0)
+            effect.setColor(QColor(0, 0, 0, 255))
+            getattr(self, x).setGraphicsEffect(effect)
+
+    def setstylesheet(self):
+        self.IndividualAnalysis_Tab.setStyleSheet("""
+            QTabWidget::pane { 
+                border: 1px solid #2C423F; /* Green border */
+                background: #C3C3C3; 
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+                border-top-right-radius: 6px;
+            }
+            QTabBar::tab {
+                background: #C3C3C3; 
+                padding: 6px; 
+                border: 1px solid #2C423F; 
+                border-bottom: none;
+                border-top-left-radius: 2px; 
+                border-top-right-radius: 2px; 
+            }
+            QTabBar::tab:selected { 
+                background: #2C423F; /* Green background for selected tab */
+                color: white;
+                font-weight: bold;
+            }
+            QTabBar::tab:hover {
+                background: #F5F9E9; /* Lighter green when hovering */
+            }
+        """)
 
     @staticmethod
     def clear_frame_data(grid):
