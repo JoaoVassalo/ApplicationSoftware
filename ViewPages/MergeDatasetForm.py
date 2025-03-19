@@ -30,6 +30,7 @@ class Ui_Form(object):
 
         self.verticalLayout_5 = QVBoxLayout(Form)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_5.setSpacing(0)
         self.label = QLabel(Form)
         self.label.setObjectName(u"label")
 
@@ -37,24 +38,16 @@ class Ui_Form(object):
 
         self.lineEdit = QLineEdit(Form)
         self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setProperty('commonLineEditDownloadPage', True)
         self.lineEdit.setMinimumSize(QSize(0, 30))
         self.lineEdit.setMaximumSize(QSize(16777215, 30))
-        self.lineEdit.setStyleSheet(u"QLineEdit {\n"
-                                                   "	border-radius: 15px;\n"
-                                                   "	border: 2px solid #F98600;\n"
-                                                   "	color: white;\n"
-                                                   "}\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "")
 
         self.verticalLayout_5.addWidget(self.lineEdit)
 
-        self.textEdit = QTextEdit(Form)
-        self.textEdit.setObjectName(u"textEdit")
-
-        self.verticalLayout_5.addWidget(self.textEdit)
+        # self.textEdit = QTextEdit(Form)
+        # self.textEdit.setObjectName(u"textEdit")
+        #
+        # self.verticalLayout_5.addWidget(self.textEdit)
 
 
         self.retranslateUi(Form)
