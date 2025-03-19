@@ -12,6 +12,8 @@ from PySide6.QtCore import (QCoreApplication, QSize)
 from PySide6.QtWidgets import (QFrame, QGridLayout, QGroupBox,
     QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QSizePolicy, QSpacerItem, QVBoxLayout, QCheckBox)
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -40,6 +42,7 @@ class Ui_Form:
         self.VLayout_VarButton_AI.setObjectName(u"VLayout_VarButton_AI")
         self.frame_variables_AI = QFrame(self.main_frame_AI)
         self.frame_variables_AI.setObjectName(u"frame_variables_AI")
+        self.frame_variables_AI.setProperty("commomFrame", True)
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
@@ -201,6 +204,35 @@ class Ui_Form:
         self.graph_layout.addWidget(self.canvas)
         self.hori_frame.addLayout(self.graph_layout)
         self.Fig_Frame_AI.setLayout(self.hori_frame)
+
+        self.canvas.figure.set_facecolor("#C3C3C3")
+
+        self.stylesheet = """
+            #main_frame_AI {
+                background-color: #C3C3C3;
+                border: none;
+            }
+            
+            [commomFrame='true'] {
+                border-radius: 10px;
+                border: none;
+                background-color: #C3C3C3;
+            }
+        """
+        self.main_frame_AI.setStyleSheet(self.stylesheet)
+
+        shadow_elements = {
+            'savebutton_AI',
+            'import_button_AI',
+            'Fig_Frame_AI'
+        }
+        for x in shadow_elements:
+            effect = QtWidgets.QGraphicsDropShadowEffect(self.main_frame_AI)
+            effect.setBlurRadius(18)
+            effect.setXOffset(0)
+            effect.setYOffset(0)
+            effect.setColor(QColor(0, 0, 0, 255))
+            getattr(self, x).setGraphicsEffect(effect)
 
         self.set_graph()
         self.set_page()

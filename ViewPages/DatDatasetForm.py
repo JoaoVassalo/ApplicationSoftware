@@ -30,6 +30,7 @@ class Ui_Form(object):
 
         self.main_page = page
         self.filelist = filelist
+        self.form_main_page = Form
 
         self.verticalLayout_5 = QVBoxLayout(Form)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -47,6 +48,7 @@ class Ui_Form(object):
 
         self.comboBox_2 = QComboBox(Form)
         self.comboBox_2.setObjectName(u"comboBox_2")
+        self.comboBox_2.setProperty('CommomComboBoxFilterPage', True)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -54,37 +56,6 @@ class Ui_Form(object):
         self.comboBox_2.setSizePolicy(sizePolicy)
         self.comboBox_2.setMinimumSize(QSize(0, 30))
         self.comboBox_2.setMaximumSize(QSize(16777215, 30))
-        self.comboBox_2.setStyleSheet(u"QComboBox{\n"
-                                      "	background-color: white;\n"
-                                      "	border-radius: 12px;\n"
-                                      "	border: 2px solid #F98600;\n"
-                                      "	color: black;\n"
-                                      "	padding-left: 15px;\n"
-                                      "    padding-right: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::drop-down {\n"
-                                      "    border: none;\n"
-                                      "    width: 20px;  /*tamanho da seta*/\n"
-                                      "    background-color: #F98600;\n"
-                                      "    border-top-right-radius: 10px;\n"
-                                      "    border-bottom-right-radius: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::down-arrow {\n"
-                                      "    width: 10px;\n"
-                                      "    height: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox QAbstractItemView {\n"
-                                      "    border: 1px solid #F98600;\n"
-                                      "    background-color: white;\n"
-                                      "    color: black;\n"
-                                      "    selection-background-color: orange;\n"
-                                      "    selection-color: black;\n"
-                                      "    padding: 5px;\n"
-                                      "    border-radius: 5px;\n"
-                                      "}")
 
         self.verticalLayout_2.addWidget(self.comboBox_2)
 
@@ -103,41 +74,11 @@ class Ui_Form(object):
 
         self.comboBox_3 = QComboBox(Form)
         self.comboBox_3.setObjectName(u"comboBox_3")
+        self.comboBox_3.setProperty('CommomComboBoxFilterPage', True)
         sizePolicy.setHeightForWidth(self.comboBox_3.sizePolicy().hasHeightForWidth())
         self.comboBox_3.setSizePolicy(sizePolicy)
         self.comboBox_3.setMinimumSize(QSize(0, 30))
         self.comboBox_3.setMaximumSize(QSize(16777215, 30))
-        self.comboBox_3.setStyleSheet(u"QComboBox{\n"
-                                      "	background-color: white;\n"
-                                      "	border-radius: 12px;\n"
-                                      "	border: 2px solid #F98600;\n"
-                                      "	color: black;\n"
-                                      "	padding-left: 15px;\n"
-                                      "    padding-right: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::drop-down {\n"
-                                      "    border: none;\n"
-                                      "    width: 20px;  /*tamanho da seta*/\n"
-                                      "    background-color: #F98600;\n"
-                                      "    border-top-right-radius: 10px;\n"
-                                      "    border-bottom-right-radius: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::down-arrow {\n"
-                                      "    width: 10px;\n"
-                                      "    height: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox QAbstractItemView {\n"
-                                      "    border: 1px solid #F98600;\n"
-                                      "    background-color: white;\n"
-                                      "    color: black;\n"
-                                      "    selection-background-color: orange;\n"
-                                      "    selection-color: black;\n"
-                                      "    padding: 5px;\n"
-                                      "    border-radius: 5px;\n"
-                                      "}")
 
         self.verticalLayout_3.addWidget(self.comboBox_3)
 
@@ -159,36 +100,55 @@ class Ui_Form(object):
 
         self.lineEdit = QLineEdit(Form)
         self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setProperty('commonLineEditDownloadPage', True)
         self.lineEdit.setMinimumSize(QSize(0, 30))
         self.lineEdit.setMaximumSize(QSize(16777215, 30))
-        self.lineEdit.setStyleSheet(u"QLineEdit {\n"
-                                                   "	border-radius: 15px;\n"
-                                                   "	border: 2px solid #F98600;\n"
-                                                   "	color: white;\n"
-                                                   "}\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "")
 
         self.verticalLayout_4.addWidget(self.lineEdit)
 
-
         self.verticalLayout_5.addLayout(self.verticalLayout_4)
-
-        self.textEdit = QTextEdit(Form)
-        self.textEdit.setObjectName(u"textEdit")
-        self.textEdit.setMinimumSize(QSize(0, 60))
-        self.textEdit.setMaximumSize(QSize(16777215, 60))
-
-        self.verticalLayout_5.addWidget(self.textEdit)
-
 
         self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
         self.set_combobox_values()
-    # setupUi
+        self.setstylesheet()
+
+    def setstylesheet(self):
+        self.form_main_page.setStyleSheet("""
+            [CommomComboBoxFilterPage='true'] {
+                background-color: #C3C3C3; /*829191*/
+                border-radius: 15px;
+                border: 2px solid #2C423F;
+                color: black;
+                padding-left: 15px;
+                padding-right: 10px;
+            }
+
+            [CommomComboBoxFilterPage='true']::down-arrow {
+                width: 15px;
+                height: 15px;
+                image: url(':/icons/icons/seta_baixo - branca.png');
+            }
+
+            [CommomComboBoxFilterPage='true']::drop-down {
+                border: none;
+                width: 15px;  /*tamanho da seta*/
+                background-color: #2C423F;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            QComboBox QAbstractiItemView {
+                border: 1px solid #2C423F;
+                background-color: white;
+                color: black;
+                selection-background-color: orange;
+                selection-color: black;
+                padding: 5px;
+                border-radius: 5px;
+            }
+        """)
 
     def set_combobox_values(self):
         self.f = xr.open_dataset(f'{self.main_page.project.caminho}\\{self.filelist[0]}')
@@ -203,5 +163,3 @@ class Ui_Form(object):
         self.label_2.setText(QCoreApplication.translate("Form", u"U component", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"V component", None))
         self.label_4.setText(QCoreApplication.translate("Form", u"Final File Name", None))
-    # retranslateUi
-

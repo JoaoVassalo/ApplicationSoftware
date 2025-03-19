@@ -28,6 +28,8 @@ class Ui_Form(object):
         Form.setMinimumSize(QSize(200, 200))
         Form.setMaximumSize(QSize(240, 200))
 
+        self.form_main_page = Form
+
         self.main_page = page
         self.filelist = file
         self.file = xr.open_dataset(f'{self.main_page.project.caminho}\\{self.filelist[0]}')
@@ -46,6 +48,7 @@ class Ui_Form(object):
 
         self.comboBox_4 = QComboBox(Form)
         self.comboBox_4.setObjectName(u"comboBox_4")
+        self.comboBox_4.setProperty('CommomComboBoxFilterPage', True)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -53,37 +56,37 @@ class Ui_Form(object):
         self.comboBox_4.setSizePolicy(sizePolicy)
         self.comboBox_4.setMinimumSize(QSize(0, 30))
         self.comboBox_4.setMaximumSize(QSize(16777215, 30))
-        self.comboBox_4.setStyleSheet(u"QComboBox{\n"
-                                    "	background-color: white;\n"
-                                    "	border-radius: 12px;\n"
-                                    "	border: 2px solid #F98600;\n"
-                                    "	color: black;\n"
-                                    "	padding-left: 15px;\n"
-                                    "    padding-right: 10px;\n"
-                                    "}\n"
-                                    "\n"
-                                    "QComboBox::drop-down {\n"
-                                    "    border: none;\n"
-                                    "    width: 20px;  /*tamanho da seta*/\n"
-                                    "    background-color: #F98600;\n"
-                                    "    border-top-right-radius: 10px;\n"
-                                    "    border-bottom-right-radius: 10px;\n"
-                                    "}\n"
-                                    "\n"
-                                    "QComboBox::down-arrow {\n"
-                                    "    width: 10px;\n"
-                                    "    height: 10px;\n"
-                                    "}\n"
-                                    "\n"
-                                    "QComboBox QAbstractItemView {\n"
-                                    "    border: 1px solid #F98600;\n"
-                                    "    background-color: white;\n"
-                                    "    color: black;\n"
-                                    "    selection-background-color: orange;\n"
-                                    "    selection-color: black;\n"
-                                    "    padding: 5px;\n"
-                                    "    border-radius: 5px;\n"
-                                    "}")
+        # self.comboBox_4.setStyleSheet(u"QComboBox{\n"
+        #                             "	background-color: white;\n"
+        #                             "	border-radius: 12px;\n"
+        #                             "	border: 2px solid #F98600;\n"
+        #                             "	color: black;\n"
+        #                             "	padding-left: 15px;\n"
+        #                             "    padding-right: 10px;\n"
+        #                             "}\n"
+        #                             "\n"
+        #                             "QComboBox::drop-down {\n"
+        #                             "    border: none;\n"
+        #                             "    width: 20px;  /*tamanho da seta*/\n"
+        #                             "    background-color: #F98600;\n"
+        #                             "    border-top-right-radius: 10px;\n"
+        #                             "    border-bottom-right-radius: 10px;\n"
+        #                             "}\n"
+        #                             "\n"
+        #                             "QComboBox::down-arrow {\n"
+        #                             "    width: 10px;\n"
+        #                             "    height: 10px;\n"
+        #                             "}\n"
+        #                             "\n"
+        #                             "QComboBox QAbstractItemView {\n"
+        #                             "    border: 1px solid #F98600;\n"
+        #                             "    background-color: white;\n"
+        #                             "    color: black;\n"
+        #                             "    selection-background-color: orange;\n"
+        #                             "    selection-color: black;\n"
+        #                             "    padding: 5px;\n"
+        #                             "    border-radius: 5px;\n"
+        #                             "}")
         self.comboBox_4.addItems(['Wind', 'Current'])
         self.comboBox_4.setCurrentIndex(0)
         self.comboBox_4.currentIndexChanged.connect(self.set_combos_values)
@@ -107,41 +110,42 @@ class Ui_Form(object):
 
         self.comboBox_2 = QComboBox(Form)
         self.comboBox_2.setObjectName(u"comboBox_2")
+        self.comboBox_2.setProperty('CommomComboBoxFilterPage', True)
         sizePolicy.setHeightForWidth(self.comboBox_2.sizePolicy().hasHeightForWidth())
         self.comboBox_2.setSizePolicy(sizePolicy)
         self.comboBox_2.setMinimumSize(QSize(0, 30))
         self.comboBox_2.setMaximumSize(QSize(16777215, 30))
-        self.comboBox_2.setStyleSheet(u"QComboBox{\n"
-                                      "	background-color: white;\n"
-                                      "	border-radius: 12px;\n"
-                                      "	border: 2px solid #F98600;\n"
-                                      "	color: black;\n"
-                                      "	padding-left: 15px;\n"
-                                      "    padding-right: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::drop-down {\n"
-                                      "    border: none;\n"
-                                      "    width: 20px;  /*tamanho da seta*/\n"
-                                      "    background-color: #F98600;\n"
-                                      "    border-top-right-radius: 10px;\n"
-                                      "    border-bottom-right-radius: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::down-arrow {\n"
-                                      "    width: 10px;\n"
-                                      "    height: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox QAbstractItemView {\n"
-                                      "    border: 1px solid #F98600;\n"
-                                      "    background-color: white;\n"
-                                      "    color: black;\n"
-                                      "    selection-background-color: orange;\n"
-                                      "    selection-color: black;\n"
-                                      "    padding: 5px;\n"
-                                      "    border-radius: 5px;\n"
-                                      "}")
+        # self.comboBox_2.setStyleSheet(u"QComboBox{\n"
+        #                               "	background-color: white;\n"
+        #                               "	border-radius: 12px;\n"
+        #                               "	border: 2px solid #F98600;\n"
+        #                               "	color: black;\n"
+        #                               "	padding-left: 15px;\n"
+        #                               "    padding-right: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QComboBox::drop-down {\n"
+        #                               "    border: none;\n"
+        #                               "    width: 20px;  /*tamanho da seta*/\n"
+        #                               "    background-color: #F98600;\n"
+        #                               "    border-top-right-radius: 10px;\n"
+        #                               "    border-bottom-right-radius: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QComboBox::down-arrow {\n"
+        #                               "    width: 10px;\n"
+        #                               "    height: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QComboBox QAbstractItemView {\n"
+        #                               "    border: 1px solid #F98600;\n"
+        #                               "    background-color: white;\n"
+        #                               "    color: black;\n"
+        #                               "    selection-background-color: orange;\n"
+        #                               "    selection-color: black;\n"
+        #                               "    padding: 5px;\n"
+        #                               "    border-radius: 5px;\n"
+        #                               "}")
 
         self.verticalLayout_2.addWidget(self.comboBox_2)
 
@@ -160,41 +164,42 @@ class Ui_Form(object):
 
         self.comboBox_3 = QComboBox(Form)
         self.comboBox_3.setObjectName(u"comboBox_3")
+        self.comboBox_3.setProperty('CommomComboBoxFilterPage', True)
         sizePolicy.setHeightForWidth(self.comboBox_3.sizePolicy().hasHeightForWidth())
         self.comboBox_3.setSizePolicy(sizePolicy)
         self.comboBox_3.setMinimumSize(QSize(0, 30))
         self.comboBox_3.setMaximumSize(QSize(16777215, 30))
-        self.comboBox_3.setStyleSheet(u"QComboBox{\n"
-                                      "	background-color: white;\n"
-                                      "	border-radius: 12px;\n"
-                                      "	border: 2px solid #F98600;\n"
-                                      "	color: black;\n"
-                                      "	padding-left: 15px;\n"
-                                      "    padding-right: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::drop-down {\n"
-                                      "    border: none;\n"
-                                      "    width: 20px;  /*tamanho da seta*/\n"
-                                      "    background-color: #F98600;\n"
-                                      "    border-top-right-radius: 10px;\n"
-                                      "    border-bottom-right-radius: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox::down-arrow {\n"
-                                      "    width: 10px;\n"
-                                      "    height: 10px;\n"
-                                      "}\n"
-                                      "\n"
-                                      "QComboBox QAbstractItemView {\n"
-                                      "    border: 1px solid #F98600;\n"
-                                      "    background-color: white;\n"
-                                      "    color: black;\n"
-                                      "    selection-background-color: orange;\n"
-                                      "    selection-color: black;\n"
-                                      "    padding: 5px;\n"
-                                      "    border-radius: 5px;\n"
-                                      "}")
+        # self.comboBox_3.setStyleSheet(u"QComboBox{\n"
+        #                               "	background-color: white;\n"
+        #                               "	border-radius: 12px;\n"
+        #                               "	border: 2px solid #F98600;\n"
+        #                               "	color: black;\n"
+        #                               "	padding-left: 15px;\n"
+        #                               "    padding-right: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QComboBox::drop-down {\n"
+        #                               "    border: none;\n"
+        #                               "    width: 20px;  /*tamanho da seta*/\n"
+        #                               "    background-color: #F98600;\n"
+        #                               "    border-top-right-radius: 10px;\n"
+        #                               "    border-bottom-right-radius: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QComboBox::down-arrow {\n"
+        #                               "    width: 10px;\n"
+        #                               "    height: 10px;\n"
+        #                               "}\n"
+        #                               "\n"
+        #                               "QComboBox QAbstractItemView {\n"
+        #                               "    border: 1px solid #F98600;\n"
+        #                               "    background-color: white;\n"
+        #                               "    color: black;\n"
+        #                               "    selection-background-color: orange;\n"
+        #                               "    selection-color: black;\n"
+        #                               "    padding: 5px;\n"
+        #                               "    border-radius: 5px;\n"
+        #                               "}")
 
         self.verticalLayout_3.addWidget(self.comboBox_3)
 
@@ -216,17 +221,9 @@ class Ui_Form(object):
 
         self.lineEdit = QLineEdit(Form)
         self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setProperty('commonLineEditDownloadPage', True)
         self.lineEdit.setMinimumSize(QSize(0, 30))
         self.lineEdit.setMaximumSize(QSize(16777215, 30))
-        self.lineEdit.setStyleSheet(u"QLineEdit {\n"
-                                                   "	border-radius: 15px;\n"
-                                                   "	border: 2px solid #F98600;\n"
-                                                   "	color: white;\n"
-                                                   "}\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "\n"
-                                                   "")
 
         self.verticalLayout_4.addWidget(self.lineEdit)
 
@@ -237,7 +234,43 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
-    # setupUi
+        self.setstylesheet()
+
+    def setstylesheet(self):
+        self.form_main_page.setStyleSheet("""
+            [CommomComboBoxFilterPage='true'] {
+                background-color: #C3C3C3; /*829191*/
+                border-radius: 15px;
+                border: 2px solid #2C423F;
+                color: black;
+                padding-left: 15px;
+                padding-right: 10px;
+            }
+
+            [CommomComboBoxFilterPage='true']::down-arrow {
+                width: 15px;
+                height: 15px;
+                image: url(':/icons/icons/seta_baixo - branca.png');
+            }
+
+            [CommomComboBoxFilterPage='true']::drop-down {
+                border: none;
+                width: 15px;  /*tamanho da seta*/
+                background-color: #2C423F;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+            }
+
+            QComboBox QAbstractiItemView {
+                border: 1px solid #2C423F;
+                background-color: white;
+                color: black;
+                selection-background-color: orange;
+                selection-color: black;
+                padding: 5px;
+                border-radius: 5px;
+            }
+        """)
 
     def set_combos_values(self):
         if self.comboBox_4.currentText() == 'Wind':
