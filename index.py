@@ -1937,7 +1937,12 @@ class Ui_MainWindow(object):
                 widget_to_remove.setParent(None)
 
         self.obj = self.varname_obj[selected_radio.text()]
-        self.verify = self.obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+        
+        if os.name == "posix":
+            self.verify = self.obj.check(f'{self.project.caminho}/{self.comboBox.currentText()}')
+        else:
+            self.verify = self.obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+        
         if isinstance(self.verify, bool):
             self.variables_names = self.obj.get_var_names(f'{self.project.caminho}\\{self.comboBox.currentText()}')
             self.set_graphbuttons(selected_radio.text())
