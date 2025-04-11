@@ -1,54 +1,31 @@
-from PySide6.QtWidgets import QApplication, QWidget, QTabWidget, QVBoxLayout, QLabel
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+import numpy as np
 
-app = QApplication([])
+# Criar a figura e os eixos
+fig, ax = plt.subplots(subplot_kw={'projection': ccrs.Mercator()})
+ax.set_extent([-60, -30, -40, 0], crs=ccrs.PlateCarree())
 
-# Main Window
-window = QWidget()
-layout = QVBoxLayout()
+# Adicionar feições geográficas
+ax.add_feature(cfeature.COASTLINE)
+ax.add_feature(cfeature.BORDERS, linestyle='-')
+ax.add_feature(cfeature.STATES, linestyle=':')
 
-# Tab Widget
-tab_widget = QTabWidget()
+# Criar dados fictícios de vento
+lon = np.linspace(-60, -30, 10)
+lat = np.linspace(-40, 0, 10)
+lons, lats = np.meshgrid(lon, lat)
+u = np.sin(lats * np.pi / 180)  # Componente u do vento
+v = np.cos(lons * np.pi / 180)  # Componente v do vento
 
-# Creating Tabs
-tab1 = QWidget()
-tab1_layout = QVBoxLayout()
-tab1_layout.addWidget(QLabel("Content of Tab 1"))
-tab1.setLayout(tab1_layout)
+# Plotar vetores
+ax.quiver(lons, lats, u, v, transform=ccrs.PlateCarree(), scale=30)
 
-tab2 = QWidget()
-tab2_layout = QVBoxLayout()
-tab2_layout.addWidget(QLabel("Content of Tab 2"))
-tab2.setLayout(tab2_layout)
+# Adicionar título e rótulos dos eixos
+ax.set_xlabel('Longitude', fontsize=10, labelpad=10)
+ax.set_ylabel('Latitude', fontsize=10, labelpad=10)
+ax.set_title('Exemplo de Mapa com Vetores', fontsize=12)
 
-tab_widget.addTab(tab1, "Area Impact")
-tab_widget.addTab(tab2, "Volume Impact")
-
-# Apply Custom Stylesheet
-tab_widget.setStyleSheet("""
-    QTabWidget::pane { 
-        border: 2px solid #4CAF50; 
-        background: white; 
-    }
-    QTabWidget::tab-bar {
-        alignment: left;
-        margin-left: 20px; /* Moves the entire tab bar to the right */
-    }
-    QTabBar::tab {
-        background: lightgray; 
-        padding: 10px; 
-        border: 1px solid gray; 
-        border-top-left-radius: 5px; 
-        border-top-right-radius: 5px;
-    }
-    QTabBar::tab:selected {
-        background: #4CAF50; 
-        color: white;
-        font-weight: bold;
-    }
-""")
-
-layout.addWidget(tab_widget)
-window.setLayout(layout)
-window.show()
-
-app.exec()
+# Mostrar o gráfico
+plt.show()

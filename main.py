@@ -160,7 +160,7 @@ shadow_elements = {
     'frame_5',
     'FunctionsFrame',
     'InformationAreaFiles',
-    'DeleteButton',
+    'RenameButton',
     'DatButton',
     'ImpButton',
     'FilterButton',

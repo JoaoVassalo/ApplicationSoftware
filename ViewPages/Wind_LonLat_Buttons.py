@@ -11,9 +11,12 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.basemap import Basemap
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
 import time
 from datetime import datetime
 import os
@@ -682,7 +685,7 @@ class Ui_WindButton_LonLatProfile(object):
         lon = self.dataset[self.lon_name].values
         lat = self.dataset[self.lat_name].values
 
-        self.ax_vec = self.figure.add_subplot(111)
+        # self.ax_vec = self.figure.add_subplot(111)
 
         dict_to_sel = {
             self.time_name: self.time_selected
@@ -694,15 +697,18 @@ class Ui_WindButton_LonLatProfile(object):
         self.lons, self.lats = np.meshgrid(lon, lat)
         lon_plot, lat_plot = self.lons[::self.step, ::self.step], self.lats[::self.step, ::self.step]
 
-        self.mp = Basemap(projection='merc',
-                     llcrnrlon=min(lon),
-                     llcrnrlat=min(lat),
-                     urcrnrlon=max(lon),
-                     urcrnrlat=max(lat),
-                     resolution='i',
-                     ax=self.ax_vec)
+        self.ax_vec = self.figure.add_subplot(111, projection=ccrs.Mercator())
+        self.ax_vec.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
-        x, y = self.mp(lon_plot, lat_plot)
+        # self.mp = Basemap(projection='merc',
+        #              llcrnrlon=min(lon),
+        #              llcrnrlat=min(lat),
+        #              urcrnrlon=max(lon),
+        #              urcrnrlat=max(lat),
+        #              resolution='i',
+        #              ax=self.ax_vec)
+        #
+        # x, y = self.mp(lon_plot, lat_plot)
 
         vec_mag = self.f_magnitude(u_plot, v_plot)
         u_norm = u_plot / vec_mag
@@ -713,47 +719,71 @@ class Ui_WindButton_LonLatProfile(object):
         colors = cmap(norm(vec_mag))
         colors = colors.reshape(-1, 4)
 
-        self.quiver = self.mp.quiver(x, y, u_norm[::-1], v_norm[::-1], color=colors, scale=30)
+        # self.quiver = self.mp.quiver(x, y, u_norm[::-1], v_norm[::-1], color=colors, scale=30)
+
+        self.quiver = self.ax_vec.quiver(lon_plot, lat_plot, u_norm[::-1], v_norm[::-1], color=colors,
+                                         scale=30, transform=ccrs.PlateCarree())
+
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax_vec, orientation='vertical', pad=0.05)
         cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].attrs['units']}]', fontsize=6, color="black")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='black')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
 
-        self.mp.drawcoastlines()
-        self.mp.drawstates()
-        self.mp.drawcountries()
+        self.ax_vec.add_feature(cfeature.COASTLINE)
+        self.ax_vec.add_feature(cfeature.BORDERS, linestyle='-')
+        self.ax_vec.add_feature(cfeature.STATES, linestyle=':')
 
-        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
-        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
+        gl = self.ax_vec.gridlines(draw_labels=True, linestyle='--', alpha=0.5)
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.xlabel_style = {'fontsize': 6, 'color': 'black'}
+        gl.ylabel_style = {'fontsize': 6, 'color': 'black'}
 
-        parallels = self.mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
-        meridians = self.mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
-
-        for lat, text_objects in parallels.items():
-            for text in text_objects[1]:
-                text.set_color("black")
-
-        for lon, text_objects in meridians.items():
-            for text in text_objects[1]:
-                text.set_color("black")
-
-        self.ax_vec.set_xlabel('Longitude', labelpad=15, fontsize=8)
-        self.ax_vec.set_ylabel('Latitude', labelpad=30, fontsize=8)
+        self.ax_vec.set_xlabel('Longitude', labelpad=15, fontsize=8, color='black')
+        self.ax_vec.set_ylabel('Latitude', labelpad=30, fontsize=8, color='black')
         self.ax_vec.set_aspect('equal', adjustable='box')
-        self.ax_vec.xaxis.label.set_color('black')
-        self.ax_vec.yaxis.label.set_color('black')
 
         self.canvas.draw()
         self.canvas.figure.subplots_adjust(
-            top=0.975,
-            bottom=0.116,
-            left=0.124,
-            right=0.97,
-            hspace=0.2,
-            wspace=0.2
+            top=0.975, bottom=0.116, left=0.124, right=0.97, hspace=0.2, wspace=0.2
         )
         self.canvas.figure.set_facecolor("#C3C3C3")
+
+        # self.mp.drawcoastlines()
+        # self.mp.drawstates()
+        # self.mp.drawcountries()
+        #
+        # lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        # lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
+        #
+        # parallels = self.mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
+        # meridians = self.mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
+        #
+        # for lat, text_objects in parallels.items():
+        #     for text in text_objects[1]:
+        #         text.set_color("black")
+        #
+        # for lon, text_objects in meridians.items():
+        #     for text in text_objects[1]:
+        #         text.set_color("black")
+        #
+        # self.ax_vec.set_xlabel('Longitude', labelpad=15, fontsize=8)
+        # self.ax_vec.set_ylabel('Latitude', labelpad=30, fontsize=8)
+        # self.ax_vec.set_aspect('equal', adjustable='box')
+        # self.ax_vec.xaxis.label.set_color('black')
+        # self.ax_vec.yaxis.label.set_color('black')
+        #
+        # self.canvas.draw()
+        # self.canvas.figure.subplots_adjust(
+        #     top=0.975,
+        #     bottom=0.116,
+        #     left=0.124,
+        #     right=0.97,
+        #     hspace=0.2,
+        #     wspace=0.2
+        # )
+        # self.canvas.figure.set_facecolor("#C3C3C3")
         self.last_step = self.step
 
     def save_figure(self):

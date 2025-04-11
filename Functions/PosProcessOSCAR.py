@@ -129,6 +129,7 @@ class TotalConc(PosProcessOSCAR):
 class MassBalance:
     def __init__(self, path):
         self.pathfile = path
+        self.dataframe = None
         self.extract_data()
 
     @staticmethod
@@ -141,11 +142,14 @@ class MassBalance:
 
     def extract_data(self):
         file = pd.read_csv(self.pathfile, sep=',')
+        self.dataframe = file if len(file.columns) == 12 else None
 
 
 class ChemicComposi:
     def __init__(self, path):
         self.pathfile = path
+        self.dataframe = None
+        self.composition = None
         self.extract_data()
 
     def extract_data(self):
@@ -192,12 +196,57 @@ class ChemicComposi:
                     dict_table[line.split(',')[0].replace('\x00', '').strip()] = data
                     step += 1
 
+            self.dataframe = dict_time_tables
+            self.composition = name_composition
+
+
+class ParticleDistribution:
+    def __init__(self, path):
+        self.pathfile = path
+        self.dataframe = None
+        self.composition = None
+        self.extract_data()
+
+    def extract_data(self):
+        with open(self.pathfile, 'r', encoding='utf-8', errors='ignore') as f:
+            linhas = f.readlines()
+
+        indices_time = [i for i, linha in enumerate(linhas) if 'time:' in linha.lower()]
+        indices_time.append(len(linhas))
+
+        diameters = False
+        for i in range(len(indices_time) - 1):
+            inicio = indices_time[i]
+            fim = indices_time[i + 1]
+            bloco = linhas[inicio:fim]
+
+            encontrou_fractional = any('fractional size distribution:' in linha.lower() for linha in bloco)
+
+            if encontrou_fractional:
+                for linha in bloco:
+                    if linha.lower().strip().startswith('diam (um):') and not diameters:
+                        columns = (linha.strip().split(':', 1)[1].strip()).split()[:]
+                        if all(diam == columns[0] for diam in columns):
+                            return
+                        else:
+                            dict_values = {
+
+                            }
+                            diameters = True
+                    if linha.lower().strip().startswith('by mass:'):
+                        dados = linha.strip().split(':', 1)[1].strip()
+                        break
+            else:
+                print(f"\n⛔ Intervalo {inicio}-{fim} NÃO contém 'Fractional size distribution:'")
+
 
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.oilthck.log"
 # OilThick(file_path)
-file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.totconc.log"
-TotalConc(file_path)
+# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.totconc.log"
+# TotalConc(file_path)
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.masbal.log"
 # MassBalance(file_path)
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC_chemcomp.txt"
 # ChemicComposi(file_path)
+file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC_ParticleDistribution.prt"
+ParticleDistribution(file_path)

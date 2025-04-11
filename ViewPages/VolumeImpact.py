@@ -19,37 +19,40 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Functions import ColorReference as Cr
 import random
+from PySide6.QtGui import QColor
+from PySide6 import QtWidgets
 
 class Ui_Form:
     def setupUi(self, frame, df):
-        self.main_frame_AI = frame
+        self.main_frame_VI = frame
         self.data = df
 
-        self.main_frame_AI.setObjectName(u"main_frame_AI")
+        self.main_frame_VI.setObjectName(u"main_frame_VI")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.main_frame_AI.sizePolicy().hasHeightForWidth())
-        self.main_frame_AI.setSizePolicy(sizePolicy)
-        self.main_frame_AI.setFrameShape(QFrame.Shape.StyledPanel)
-        self.main_frame_AI.setFrameShadow(QFrame.Shadow.Raised)
-        self.gridLayout_3 = QGridLayout(self.main_frame_AI)
+        sizePolicy.setHeightForWidth(self.main_frame_VI.sizePolicy().hasHeightForWidth())
+        self.main_frame_VI.setSizePolicy(sizePolicy)
+        self.main_frame_VI.setFrameShape(QFrame.Shape.StyledPanel)
+        self.main_frame_VI.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_3 = QGridLayout(self.main_frame_VI)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.VLayout_VarButton_AI = QVBoxLayout()
         self.VLayout_VarButton_AI.setSpacing(0)
         self.VLayout_VarButton_AI.setObjectName(u"VLayout_VarButton_AI")
-        self.frame_variables_AI = QFrame(self.main_frame_AI)
-        self.frame_variables_AI.setObjectName(u"frame_variables_AI")
+        self.frame_variables_VI = QFrame(self.main_frame_VI)
+        self.frame_variables_VI.setObjectName(u"frame_variables_VI")
+        self.frame_variables_VI.setProperty("commomFrame", True)
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.frame_variables_AI.sizePolicy().hasHeightForWidth())
-        self.frame_variables_AI.setSizePolicy(sizePolicy1)
-        self.frame_variables_AI.setMinimumSize(QSize(300, 0))
-        self.frame_variables_AI.setMaximumSize(QSize(300, 16777215))
-        self.frame_variables_AI.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_variables_AI.setFrameShadow(QFrame.Shadow.Raised)
-        self.gridLayout_6 = QGridLayout(self.frame_variables_AI)
+        sizePolicy1.setHeightForWidth(self.frame_variables_VI.sizePolicy().hasHeightForWidth())
+        self.frame_variables_VI.setSizePolicy(sizePolicy1)
+        self.frame_variables_VI.setMinimumSize(QSize(300, 0))
+        self.frame_variables_VI.setMaximumSize(QSize(300, 16777215))
+        self.frame_variables_VI.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_variables_VI.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_6 = QGridLayout(self.frame_variables_VI)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.HLayout_barplot_AI = QHBoxLayout()
         self.HLayout_barplot_AI.setObjectName(u"HLayout_barplot_AI")
@@ -57,7 +60,7 @@ class Ui_Form:
 
         self.HLayout_barplot_AI.addItem(self.horizontalSpacer_6)
 
-        self.BarPlot_AI = QGroupBox(self.frame_variables_AI)
+        self.BarPlot_AI = QGroupBox(self.frame_variables_VI)
         self.BarPlot_AI.setObjectName(u"BarPlot_AI")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
@@ -84,7 +87,7 @@ class Ui_Form:
 
         self.HLayout_lineplot_AI.addItem(self.horizontalSpacer_3)
 
-        self.LinePlot_AI = QGroupBox(self.frame_variables_AI)
+        self.LinePlot_AI = QGroupBox(self.frame_variables_VI)
         self.LinePlot_AI.setObjectName(u"LinePlot_AI")
         sizePolicy2.setHeightForWidth(self.LinePlot_AI.sizePolicy().hasHeightForWidth())
         self.LinePlot_AI.setSizePolicy(sizePolicy2)
@@ -113,14 +116,14 @@ class Ui_Form:
         self.VLayout_figname_label_AI = QVBoxLayout()
         self.VLayout_figname_label_AI.setSpacing(0)
         self.VLayout_figname_label_AI.setObjectName(u"VLayout_figname_label_AI")
-        self.figname_label_AI = QLabel(self.frame_variables_AI)
+        self.figname_label_AI = QLabel(self.frame_variables_VI)
         self.figname_label_AI.setObjectName(u"figname_label_AI")
         self.figname_label_AI.setMinimumSize(QSize(0, 20))
         self.figname_label_AI.setMaximumSize(QSize(16777215, 20))
 
         self.VLayout_figname_label_AI.addWidget(self.figname_label_AI)
 
-        self.LineEdit_AI = QLineEdit(self.frame_variables_AI)
+        self.LineEdit_AI = QLineEdit(self.frame_variables_VI)
         self.LineEdit_AI.setObjectName(u"LineEdit_AI")
         self.LineEdit_AI.setMinimumSize(QSize(150, 25))
         self.LineEdit_AI.setMaximumSize(QSize(150, 25))
@@ -143,12 +146,12 @@ class Ui_Form:
 
         self.HLayout_savebutton_AI.addItem(self.horizontalSpacer_8)
 
-        self.savebutton_AI = QPushButton(self.frame_variables_AI)
-        self.savebutton_AI.setObjectName(u"savebutton_AI")
-        self.savebutton_AI.setMinimumSize(QSize(150, 30))
-        self.savebutton_AI.setMaximumSize(QSize(150, 30))
+        self.savebutton_VI = QPushButton(self.frame_variables_VI)
+        self.savebutton_VI.setObjectName(u"savebutton_VI")
+        self.savebutton_VI.setMinimumSize(QSize(150, 30))
+        self.savebutton_VI.setMaximumSize(QSize(150, 30))
 
-        self.HLayout_savebutton_AI.addWidget(self.savebutton_AI)
+        self.HLayout_savebutton_AI.addWidget(self.savebutton_VI)
 
         self.horizontalSpacer_7 = QSpacerItem(20, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -161,32 +164,32 @@ class Ui_Form:
         self.gridLayout_6.addLayout(self.VLayout_figsave_AI, 2, 0, 1, 1)
 
 
-        self.VLayout_VarButton_AI.addWidget(self.frame_variables_AI)
+        self.VLayout_VarButton_AI.addWidget(self.frame_variables_VI)
 
         self.verticalSpacer_AI = QSpacerItem(20, 5, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.VLayout_VarButton_AI.addItem(self.verticalSpacer_AI)
 
-        self.import_button_AI = QPushButton(self.main_frame_AI)
-        self.import_button_AI.setObjectName(u"import_button_AI")
-        self.import_button_AI.setMinimumSize(QSize(150, 30))
-        self.import_button_AI.setMaximumSize(QSize(150, 30))
+        self.import_button_VI = QPushButton(self.main_frame_VI)
+        self.import_button_VI.setObjectName(u"import_button_VI")
+        self.import_button_VI.setMinimumSize(QSize(150, 30))
+        self.import_button_VI.setMaximumSize(QSize(150, 30))
 
-        self.VLayout_VarButton_AI.addWidget(self.import_button_AI)
+        self.VLayout_VarButton_AI.addWidget(self.import_button_VI)
 
 
         self.gridLayout_3.addLayout(self.VLayout_VarButton_AI, 0, 0, 1, 1)
 
-        self.Fig_Frame_AI = QFrame(self.main_frame_AI)
-        self.Fig_Frame_AI.setObjectName(u"Fig_Frame_AI")
-        sizePolicy.setHeightForWidth(self.Fig_Frame_AI.sizePolicy().hasHeightForWidth())
-        self.Fig_Frame_AI.setSizePolicy(sizePolicy)
-        self.Fig_Frame_AI.setFrameShape(QFrame.Shape.StyledPanel)
-        self.Fig_Frame_AI.setFrameShadow(QFrame.Shadow.Raised)
+        self.Fig_Frame_VI = QFrame(self.main_frame_VI)
+        self.Fig_Frame_VI.setObjectName(u"Fig_Frame_VI")
+        sizePolicy.setHeightForWidth(self.Fig_Frame_VI.sizePolicy().hasHeightForWidth())
+        self.Fig_Frame_VI.setSizePolicy(sizePolicy)
+        self.Fig_Frame_VI.setFrameShape(QFrame.Shape.StyledPanel)
+        self.Fig_Frame_VI.setFrameShadow(QFrame.Shadow.Raised)
 
-        self.gridLayout_3.addWidget(self.Fig_Frame_AI, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.Fig_Frame_VI, 0, 1, 1, 1)
 
-        self.hori_frame = QHBoxLayout(self.Fig_Frame_AI)
+        self.hori_frame = QHBoxLayout(self.Fig_Frame_VI)
 
         self.retranslateUi()
         self.bar_variables = []
@@ -195,12 +198,41 @@ class Ui_Form:
         self.figure, self.ax_mass = plt.subplots()  # Figure(figsize=(6, 6))
         self.ax_area = self.ax_mass.twinx()
         self.canvas = FigureCanvas(self.figure)
-        self.toolbar = NavigationToolbar(self.canvas, self.Fig_Frame_AI)
+        self.toolbar = NavigationToolbar(self.canvas, self.Fig_Frame_VI)
         # self.toolbar = CustomNavigationToolbar(self.canvas, self.frame)  # Use the custom toolbar
+        self.canvas.figure.set_facecolor("#C3C3C3")
+
         self.graph_layout.addWidget(self.toolbar)
         self.graph_layout.addWidget(self.canvas)
         self.hori_frame.addLayout(self.graph_layout)
-        self.Fig_Frame_AI.setLayout(self.hori_frame)
+        self.Fig_Frame_VI.setLayout(self.hori_frame)
+
+        shadow_elements = {
+            'savebutton_VI',
+            'import_button_VI',
+            'Fig_Frame_VI'
+        }
+        for x in shadow_elements:
+            effect = QtWidgets.QGraphicsDropShadowEffect(self.main_frame_VI)
+            effect.setBlurRadius(18)
+            effect.setXOffset(0)
+            effect.setYOffset(0)
+            effect.setColor(QColor(0, 0, 0, 255))
+            getattr(self, x).setGraphicsEffect(effect)
+
+        self.stylesheet = """
+                    #main_frame_VI {
+                        background-color: #C3C3C3;
+                        border: none;
+                    }
+
+                    [commomFrame='true'] {
+                        border-radius: 10px;
+                        border: none;
+                        background-color: #C3C3C3;
+                    }
+                """
+        self.main_frame_VI.setStyleSheet(self.stylesheet)
 
         self.set_graph()
         self.set_page()
@@ -381,5 +413,5 @@ class Ui_Form:
         self.BarPlot_AI.setTitle(QCoreApplication.translate("Form", u"Bar Plot", None))
         self.LinePlot_AI.setTitle(QCoreApplication.translate("Form", u"Line Plot", None))
         self.figname_label_AI.setText(QCoreApplication.translate("Form", u"Fig name", None))
-        self.savebutton_AI.setText(QCoreApplication.translate("Form", u"Save Figure", None))
-        self.import_button_AI.setText(QCoreApplication.translate("Form", u"Import to Project", None))
+        self.savebutton_VI.setText(QCoreApplication.translate("Form", u"Save Figure", None))
+        self.import_button_VI.setText(QCoreApplication.translate("Form", u"Import to Project", None))

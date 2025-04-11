@@ -10,7 +10,9 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
-from mpl_toolkits.basemap import Basemap
+# from mpl_toolkits.basemap import Basemap
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
@@ -619,46 +621,39 @@ class Ui_WindButton_LonLatProfile(object):
         cmap = cm.get_cmap(self.current_scale)
         norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
-        self.ax = self.figure.add_subplot(111)
+        # Gráfico novo
+        self.ax = self.figure.add_subplot(111, projection=ccrs.Mercator())
+        self.ax.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
-        mp = Basemap(projection='merc',
-                     llcrnrlon=min(lon),
-                     llcrnrlat=min(lat),
-                     urcrnrlon=max(lon),
-                     urcrnrlat=max(lat),
-                     resolution='i',
-                     ax=self.ax)
+        self.im = self.ax.imshow(water_temp_filtered, cmap=cmap, norm=norm, origin="lower",
+                                 extent=(min(lon), max(lon), min(lat), max(lat)), transform=ccrs.PlateCarree())
+        self.im.set_data(water_temp_filtered)
 
-        self.im = mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
         cbar.set_label(f'{self.dataset[self.sali_name].units}', fontsize=6, color="black")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='black')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
 
-        mp.drawcoastlines()
-        mp.drawstates()
-        mp.drawcountries()
-        mp.fillcontinents(color='lightgreen', lake_color='lightblue')
+        self.ax.add_feature(cfeature.COASTLINE)
+        self.ax.add_feature(cfeature.BORDERS, linestyle="-")
+        self.ax.add_feature(cfeature.STATES, linestyle=":")
+        self.ax.add_feature(cfeature.LAND, color='#5F7470')
+        self.ax.add_feature(cfeature.LAKES, color='#2A324B')
 
         lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
         lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
 
-        parallels = mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
-        meridians = mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
+        gl = self.ax.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.xlocator = plt.MultipleLocator(lon_label_step)
+        gl.ylocator = plt.MultipleLocator(lat_label_step)
+        gl.xlabel_style = {'fontsize': 6, 'color': 'black'}
+        gl.ylabel_style = {'fontsize': 6, 'color': 'black'}
 
-        for lat, text_objects in parallels.items():
-            for text in text_objects[1]:
-                text.set_color("black")
-
-        for lon, text_objects in meridians.items():
-            for text in text_objects[1]:
-                text.set_color("black")
-
-        self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8)
-        self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8)
-        self.ax.xaxis.label.set_color('black')
-        self.ax.yaxis.label.set_color('black')
+        self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8, color='black')
+        self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8, color='black')
         self.ax.set_aspect('equal')
 
         self.canvas.draw()
@@ -671,6 +666,59 @@ class Ui_WindButton_LonLatProfile(object):
             wspace=0.2
         )
         self.canvas.figure.set_facecolor("#C3C3C3")
+
+        # self.ax = self.figure.add_subplot(111)
+        #
+        # mp = Basemap(projection='merc',
+        #              llcrnrlon=min(lon),
+        #              llcrnrlat=min(lat),
+        #              urcrnrlon=max(lon),
+        #              urcrnrlat=max(lat),
+        #              resolution='i',
+        #              ax=self.ax)
+        #
+        # self.im = mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
+        # cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
+        # cbar.set_label(f'{self.dataset[self.sali_name].units}', fontsize=6, color="black")
+        # cbar.ax.tick_params(labelsize=8)
+        # cbar.ax.yaxis.set_tick_params(color='black')
+        # plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
+        #
+        # mp.drawcoastlines()
+        # mp.drawstates()
+        # mp.drawcountries()
+        # mp.fillcontinents(color='lightgreen', lake_color='lightblue')
+        #
+        # lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        # lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
+        #
+        # parallels = mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
+        # meridians = mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
+        #
+        # for lat, text_objects in parallels.items():
+        #     for text in text_objects[1]:
+        #         text.set_color("black")
+        #
+        # for lon, text_objects in meridians.items():
+        #     for text in text_objects[1]:
+        #         text.set_color("black")
+        #
+        # self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8)
+        # self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8)
+        # self.ax.xaxis.label.set_color('black')
+        # self.ax.yaxis.label.set_color('black')
+        # self.ax.set_aspect('equal')
+        #
+        # self.canvas.draw()
+        # self.canvas.figure.subplots_adjust(
+        #     top=0.975,
+        #     bottom=0.116,
+        #     left=0.124,
+        #     right=0.97,
+        #     hspace=0.2,
+        #     wspace=0.2
+        # )
+        # self.canvas.figure.set_facecolor("#C3C3C3")
 
     def save_fig(self):
         dataset_filtered = self.dataset.sel({self.time_name: self.time_selected, self.depth_name: self.depth_selected})

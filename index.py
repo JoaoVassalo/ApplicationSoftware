@@ -12,7 +12,7 @@ from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Bu
                        Temperature_LonDepthProfile_Buttons, Temperature_Dataframe_Buttons, Salinity_LonLat_Buttons,
                        Salinity_Average_Buttons, Salinity_LatDepthProfile_Buttons, Salinity_LonDepthProfile_Buttons,
                        Salinity_Dataframe_Buttons, VarInfo_Widgets, ConcatDatasetForm, MergeDatasetForm, DatDatasetForm,
-                       ImpDatasetForm, FilterDatasetForm, Individual_Pages_POSprocess)
+                       ImpDatasetForm, FilterDatasetForm, RenameDatasetForm, Individual_Pages_POSprocess)
 import VarVerify
 import os
 import xarray as xr
@@ -119,6 +119,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.stackedWidget = QStackedWidget(self.main_screen_widget)
         self.stackedWidget.setObjectName(u"stackedWidget")
+
         self.download_page = QWidget()
         self.download_page.setObjectName(u"download_page")
         self.download_page.setMinimumSize(QSize(859, 0))
@@ -1232,16 +1233,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.DatButton, 2, 0, 1, 1)
 
-        self.DeleteButton = QPushButton(self.ButtonsFilesFrame)
-        self.DeleteButton.setObjectName(u"DeleteButton")
-        self.DeleteButton.setProperty('CommomButtonViewPageFunc', True)
-        self.DeleteButton.setMinimumSize(QSize(100, 30))
-        self.DeleteButton.setMaximumSize(QSize(120, 30))
+        self.RenameButton = QPushButton(self.ButtonsFilesFrame)
+        self.RenameButton.setObjectName(u"RenameButton")
+        self.RenameButton.setProperty('CommomButtonViewPageFunc', True)
+        self.RenameButton.setMinimumSize(QSize(100, 30))
+        self.RenameButton.setMaximumSize(QSize(120, 30))
 
-        self.DeleteButton.setCheckable(True)
-        self.DeleteButton.clicked.connect(self.delele_file)
+        self.RenameButton.setCheckable(True)
+        self.RenameButton.clicked.connect(self.delele_file)
 
-        self.gridLayout_7.addWidget(self.DeleteButton, 2, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.RenameButton, 2, 1, 1, 1)
 
         self.gridLayout_10.addWidget(self.ButtonsFilesFrame, 0, 0, 1, 1)
 
@@ -2228,7 +2229,7 @@ class Ui_MainWindow(object):
                     self.DatButton.setChecked(False)
                     self.FilterButton.setChecked(False)
                     self.ImpButton.setChecked(False)
-                    self.DeleteButton.setChecked(False)
+                    self.RenameButton.setChecked(False)
 
                     self.frame_filter = QFrame()
                     self.concatframe = ConcatDatasetForm.Ui_Form()
@@ -2261,7 +2262,7 @@ class Ui_MainWindow(object):
                 self.DatButton.setChecked(False)
                 self.FilterButton.setChecked(False)
                 self.ImpButton.setChecked(False)
-                self.DeleteButton.setChecked(False)
+                self.RenameButton.setChecked(False)
 
                 self.frame_filter = QFrame()
                 self.mergeframe = MergeDatasetForm.Ui_Form()
@@ -2298,7 +2299,7 @@ class Ui_MainWindow(object):
                 self.MergeButton.setChecked(False)
                 self.FilterButton.setChecked(False)
                 self.ImpButton.setChecked(False)
-                self.DeleteButton.setChecked(False)
+                self.RenameButton.setChecked(False)
 
                 self.frame_filter = QFrame()
                 self.datframe = DatDatasetForm.Ui_Form()
@@ -2340,7 +2341,7 @@ class Ui_MainWindow(object):
                 self.MergeButton.setChecked(False)
                 self.FilterButton.setChecked(False)
                 self.DatButton.setChecked(False)
-                self.DeleteButton.setChecked(False)
+                self.RenameButton.setChecked(False)
 
                 self.frame_filter = QFrame()
                 self.impframe = ImpDatasetForm.Ui_Form()
@@ -2386,7 +2387,7 @@ class Ui_MainWindow(object):
                 self.MergeButton.setChecked(False)
                 self.DatButton.setChecked(False)
                 self.ImpButton.setChecked(False)
-                self.DeleteButton.setChecked(False)
+                self.RenameButton.setChecked(False)
 
                 self.frame_filter = QFrame()
                 self.filterframe = FilterDatasetForm.Ui_Form()
@@ -2409,13 +2410,24 @@ class Ui_MainWindow(object):
             self.func_file = None
 
     def delele_file(self):
-        if self.DeleteButton.isChecked():
+        def update_kargs():
+            self.func_file = FileFunctions.Rename(self.fileList_View, self.project.caminho,
+                                                  self.filterframe.lineEdit.text())
+            self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
+                                     new_name=self.filterframe.lineEdit_2.text())
+
+
+        if self.RenameButton.isChecked():
             if len(self.fileList_View) == 0:
                 QMessageBox.warning(self.file_page_main_screen, "Warning", "You must select at least one .nc file "
-                                                                           "to delete.")
-                self.DeleteButton.setChecked(False)
+                                                                           "to rename.")
+                self.RenameButton.setChecked(False)
+            elif len(self.fileList_View) > 1:
+                QMessageBox.warning(self.file_page_main_screen, "Warning", "You must select only one .nc file "
+                                                                           "to rename.")
+                self.RenameButton.setChecked(False)
             else:
-                self.currentButton_onfilepage = self.DeleteButton
+                self.currentButton_onfilepage = self.RenameButton
                 self.clear_filterframe_container()
                 self.ConcatButrton.setChecked(False)
                 self.MergeButton.setChecked(False)
@@ -2423,7 +2435,19 @@ class Ui_MainWindow(object):
                 self.ImpButton.setChecked(False)
                 self.FilterButton.setChecked(False)
 
-                self.func_file = FileFunctions.Delete(self.fileList_View, self.project.caminho, '')
+                self.frame_filter = QFrame()
+                self.filterframe = RenameDatasetForm.Ui_Form()
+                self.filterFieldFile_layout.addWidget(self.frame_filter)
+                self.filterframe.setupUi(self, self.frame_filter, self.fileList_View)
+                self.filterframe.comboBox_5.currentIndexChanged.connect(update_kargs)
+                self.filterframe.lineEdit.textChanged.connect(update_kargs)
+                self.filterframe.lineEdit_2.textChanged.connect(update_kargs)
+
+                self.func_file = FileFunctions.Rename(self.fileList_View, self.project.caminho,
+                                                      self.filterframe.lineEdit.text())
+                self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
+                                         new_name=self.filterframe.lineEdit_2.text())
+
         else:
             self.clear_filterframe_container()
             self.func_file = None
@@ -2569,7 +2593,7 @@ class Ui_MainWindow(object):
         self.FilterButton.setText(QCoreApplication.translate("MainWindow", u"Filter", None))
         self.ImpButton.setText(QCoreApplication.translate("MainWindow", u".IMP", None))
         self.DatButton.setText(QCoreApplication.translate("MainWindow", u".DAT", None))
-        self.DeleteButton.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
+        self.RenameButton.setText(QCoreApplication.translate("MainWindow", u"Rename", None))
         self.ExcuteButton.setText(QCoreApplication.translate("MainWindow", u"Execute", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"SIMULATION PAGE", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"SETTINGS", None))

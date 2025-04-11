@@ -229,13 +229,29 @@ class Imp(FilesExtension):
                 raise Exception('u and v components must be different')
 
 
-class Delete(FilesExtension):
+class Rename(FilesExtension):
     def __init__(self, filelist, path, filename):
         self.filelist = filelist
         self.path = path
         self.filename = filename
+        self.variable_to_change = None
+        self.new_name = None
+        self.new_file_name = None
         super().__init__()
 
+    def set_kargs(self, **kargs):
+        self.variable_to_change = kargs['var']
+        self.new_name = kargs['new_name']
+        self.new_file_name = self.filelist[-1] if self.filename == "" else self.filename
+        self.new_file_name = self.new_file_name if self.new_file_name.endswith(".nc") else f"{self.new_file_name}.nc"
+
     def run(self):
-        for file in self.filelist:
-            os.remove(f'{self.path}\\{file}')
+        dset = xr.open_dataset(f"{self.path}\\{self.filelist[-1]}").load()
+        new_data = dset.rename(
+            {
+                self.variable_to_change: self.new_name
+            }
+        )
+        dset.close()
+        del dset
+        new_data.to_netcdf(f"{self.path}\\{self.new_file_name}", format="NETCDF4", mode="w")
