@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QHBoxLayout, QLabel,
     QLineEdit, QSizePolicy, QTextEdit, QVBoxLayout,
     QWidget)
 import xarray as xr
+import os
 
 class Ui_Form(object):
     def setupUi(self, page, Form, filelist):
@@ -151,7 +152,8 @@ class Ui_Form(object):
         """)
 
     def set_combobox_values(self):
-        self.f = xr.open_dataset(f'{self.main_page.project.caminho}\\{self.filelist[0]}')
+        file_path = os.path.join(self.main_page.projeto.caminho, self.filelist[0])
+        self.f = xr.open_dataset(file_path)
         self.variables = [f'{var}' for var in list(self.f.variables) if self.f[var].ndim > 1]
         self.comboBox_2.addItems(self.variables)
         self.comboBox_2.setCurrentIndex(0)

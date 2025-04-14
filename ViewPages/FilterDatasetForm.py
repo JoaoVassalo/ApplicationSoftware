@@ -21,6 +21,7 @@ import xarray as xr
 from datetime import datetime
 import re
 import numpy as np
+import os
 
 
 class Ui_Form(object):
@@ -405,7 +406,8 @@ class Ui_Form(object):
         self.set_list_combobox_2()
 
     def set_variable_list(self):
-        self.f = xr.open_dataset(f'{self.main_page.project.caminho}\\{self.filelist[0]}')
+        file_path = os.path.join(self.main_page.project.caminho, self.filelist[0])
+        self.f = xr.open_dataset(file_path)
         self.var = list(self.f.variables)
         self.comboBox_5.addItem('All variables')
         self.comboBox_5.addItems([f'{var_item}' for var_item in self.var if self.f[var_item].ndim > 1])

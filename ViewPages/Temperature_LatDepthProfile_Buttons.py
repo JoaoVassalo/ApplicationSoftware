@@ -427,14 +427,16 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_xlabel(f'Latitude [{self.dataset[self.lat_name].attrs['units']}]', labelpad=20, fontsize=18)
         ax.set_ylabel('Depth [m]', labelpad=20, fontsize=18)
         plt.tick_params(axis='both', which='major', labelsize=16)
-
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
+        
         os.makedirs(path_to_save, exist_ok=True)
 
         time_to_format = str(self.time_selected).split('.')[0]
         t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
+        file_path = os.path.join(path_to_save, 'DEPTHvsLAT')
 
-        plt.savefig(f'{path_to_save}\\DEPTHvsLAT_{t_formated}_LONcoord{self.comboBox.currentText()}.png',
+        plt.savefig(f'{file_path}_{t_formated}_LONcoord{self.comboBox.currentText()}.png',
                     transparent=True)
         plt.close()
 

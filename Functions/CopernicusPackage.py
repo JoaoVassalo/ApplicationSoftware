@@ -78,35 +78,44 @@ class CopernicusDownloader:
         return var_name
 
     def stop(self):
+        file_path = os.path.join(self.projectpath, "Temp", "Copernicus")
+
         if hasattr(self, 'func') and self.func.is_alive():
             self.func.terminate()
             self.func.join()
-        if os.path.isdir(f'{self.projectpath}\\Temp\\Copernicus'):
-            shutil.rmtree(f'{self.projectpath}\\Temp\\Copernicus')
+            
+
+        if os.path.isdir(file_path):
+            shutil.rmtree(file_path)
         self.processing_ = False
 
     def process(self, dataset, request, shared_dict):
         try:
-            temp_path = f'{self.projectpath}\\Temp\\Copernicus'
+            temp_path = os.path.join(self.projectpath, "Temp", "Copernicus")
             os.makedirs(temp_path, exist_ok=True)
 
             self.client = cdsapi.Client()
 
             if len(request) == 1:
-                self.client.retrieve(dataset, request[0]).download(f'{self.projectpath}\\{self.file}')
+                file_path = os.path.join(self.projectpath, self.file)
+                self.client.retrieve(dataset, request[0]).download(file_path)
             else:
                 dict_files = []
                 for idx in range(len(request)):
-                    self.client.retrieve(dataset, request[idx]).download(f'{temp_path}\\_{idx}_.nc')
-                    dict_files.append(xr.open_dataset(f'{temp_path}\\_{idx}_.nc'))
+                    file_path = os.path.join(temp_path, '_{idx}_.nc')
+                    self.client.retrieve(dataset, request[idx]).download(file_path)
+                    dict_files.append(xr.open_dataset(file_path))
 
                 dim_name = self.get_dim_name(dict_files[0])
+                file_path = os.path.join(self.projectpath,self.file)
                 f_file = xr.concat(dict_files, dim=f'{dim_name}')
-                f_file.to_netcdf(f'{self.projectpath}\\{self.file}', format='NETCDF4')
+                f_file.to_netcdf(file_path, format='NETCDF4')
                 del f_file
                 del dict_files
-                if os.path.isdir(f'{self.projectpath}\\Temp\\Copernicus'):
-                    shutil.rmtree(f'{self.projectpath}\\Temp\\Copernicus')
+
+                file_path = os.path.join(self.projectpath,"Temp","Copernicus")
+                if os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
 
             shared_dict['processing'] = True
         except Exception as e:

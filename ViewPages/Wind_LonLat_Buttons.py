@@ -836,10 +836,11 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_xlabel('Longitude', labelpad=40, fontsize=18)
         ax.set_ylabel('Latitude', labelpad=55, fontsize=18)
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
         os.makedirs(path_to_save, exist_ok=True)
 
-        plt.savefig(f'{path_to_save}\\Wind Velocity for {self.mainpage.comboBox.currentText()[:-3]} _ '
+        file_path = os.path.join(path_to_save, 'Wind Velocity')
+        plt.savefig(f'{file_path} for {self.mainpage.comboBox.currentText()[:-3]} _ '
                     f'{self.t_formated}.png', transparent=True)
 
     def start_save_animation(self):
@@ -955,9 +956,11 @@ class Ui_WindButton_LonLatProfile(object):
                 self.fig_anim, self.update, frames=len(self.time_anim) - 1, interval=5000
             )
 
-            path_to_save = f'{self.mainpage.project.caminho}\\Animations'
+            path_to_save = os.path.join(self.mainpage.project.caminho, 'Animations')
             os.makedirs(path_to_save, exist_ok=True)
-            self.save_name = f'{path_to_save}\\WindVelocity for {self.mainpage.comboBox.currentText()[:-3]}.gif'
+            file_path = os.path.join(path_to_save, 'WindVelocity')
+
+            self.save_name = f'{file_path} for {self.mainpage.comboBox.currentText()[:-3]}.gif'
             self.ani.save(
                 self.save_name,
                 writer='pillow',

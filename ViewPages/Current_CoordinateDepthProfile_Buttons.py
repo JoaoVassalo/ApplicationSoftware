@@ -597,12 +597,14 @@ class Ui_WindButton_LonLatProfile(object):
         axs.set_ylabel('Depth [m]', fontsize=18, color='black')
         axs.tick_params(axis='both', which='major', labelsize=16, color='black', labelcolor='black')
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, "figs")
         os.makedirs(path_to_save, exist_ok=True)
 
         section = 'Eastward' if var == 'Latitude' else 'Northward'
 
-        plt.savefig(f'{path_to_save}\\{section} SeawaterVelocity for {var} '
+        file_path = os.path.join(path_to_save, section)
+    
+        plt.savefig(f'{file_path} SeawaterVelocity for {var} '
                     f'{round(float(self.coordComboBox.currentText()), ndigits=2)} at {self.t_formated} '
                     f'for {self.mainpage.comboBox.currentText()[:-3]}.png', transparent=True)
         plt.close()

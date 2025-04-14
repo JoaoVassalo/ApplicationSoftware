@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHBoxLayout
     QLabel, QLineEdit, QSizePolicy, QVBoxLayout,
     QWidget)
 import xarray as xr
+import os
 
 class Ui_Form(object):
     def setupUi(self, page, Form, file):
@@ -32,7 +33,8 @@ class Ui_Form(object):
 
         self.main_page = page
         self.filelist = file
-        self.file = xr.open_dataset(f'{self.main_page.project.caminho}\\{self.filelist[0]}')
+        file_path = os.path.join(self.main_page.project.caminho, self.filelist[0])
+        self.file = xr.open_dataset(file_path)
         self.variables = [f'{var}' for var in list(self.file.variables) if self.file[var].ndim > 1]
 
         self.gridLayout = QGridLayout(Form)

@@ -759,10 +759,11 @@ class Ui_WindButton_LonLatProfile(object):
 
         plt.title(self.t_formated, fontsize=20)
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
         os.makedirs(path_to_save, exist_ok=True)
 
-        plt.savefig(f'{path_to_save}\\TemperatureMap for {self.mainpage.comboBox.currentText()[:-3]} _ '
+        file_path = os.path.join(path_to_save, 'TemperatureMap')
+        plt.savefig(f'{file_path} for {self.mainpage.comboBox.currentText()[:-3]} _ '
                     f'{self.t_formated} _ {self.depth_selected}m.png', transparent=True)
         plt.close()
 
@@ -859,9 +860,11 @@ class Ui_WindButton_LonLatProfile(object):
                 self.fig_anim, self.update, frames=len(self.time) - 1, interval=5000
             )
 
-            path_to_save = f'{self.mainpage.project.caminho}\\Animations'
+            path_to_save = os.path.join(self.mainpage.project.caminho, 'Animations')
+            
             os.makedirs(path_to_save, exist_ok=True)
-            self.save_name = (f'{path_to_save}\\Temperature for {self.mainpage.comboBox.currentText()[:-3]} _ '
+            file_path = os.path.join(path_to_save, 'Temperature')
+            self.save_name = (f'{file_path} for {self.mainpage.comboBox.currentText()[:-3]} _ '
                               f'{int(self.depth_selected)}m.gif')
             self.ani.save(
                 self.save_name,
