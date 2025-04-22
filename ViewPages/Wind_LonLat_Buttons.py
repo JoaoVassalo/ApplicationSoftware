@@ -652,18 +652,6 @@ class Ui_WindButton_LonLatProfile(object):
             u_plot = self.dataset[self.u_name].sel(dict_to_sel).values[::self.step, ::self.step]
             v_plot = self.dataset[self.v_name].sel(dict_to_sel).values[::self.step, ::self.step]
 
-            lon_plot, lat_plot = self.lons[::self.step, ::self.step], self.lats[::self.step, ::self.step]
-            x, y = self.mp(lon_plot, lat_plot)
-
-            xx = x.flatten()
-            yy = y.flatten()
-            new_position = list(zip(xx, yy))
-
-            self.quiver.X = xx
-            self.quiver.Y = yy
-            self.quiver.XY = new_position
-            self.quiver.N = len(xx)
-
             vec_mag = self.f_magnitude(u_plot, v_plot)
             u_norm = u_plot / vec_mag
             v_norm = v_plot / vec_mag
@@ -685,7 +673,6 @@ class Ui_WindButton_LonLatProfile(object):
         lon = self.dataset[self.lon_name].values
         lat = self.dataset[self.lat_name].values
 
-        # self.ax_vec = self.figure.add_subplot(111)
 
         dict_to_sel = {
             self.time_name: self.time_selected
@@ -700,16 +687,6 @@ class Ui_WindButton_LonLatProfile(object):
         self.ax_vec = self.figure.add_subplot(111, projection=ccrs.Mercator())
         self.ax_vec.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
-        # self.mp = Basemap(projection='merc',
-        #              llcrnrlon=min(lon),
-        #              llcrnrlat=min(lat),
-        #              urcrnrlon=max(lon),
-        #              urcrnrlat=max(lat),
-        #              resolution='i',
-        #              ax=self.ax_vec)
-        #
-        # x, y = self.mp(lon_plot, lat_plot)
-
         vec_mag = self.f_magnitude(u_plot, v_plot)
         u_norm = u_plot / vec_mag
         v_norm = v_plot / vec_mag
@@ -718,8 +695,6 @@ class Ui_WindButton_LonLatProfile(object):
         norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
         colors = cmap(norm(vec_mag))
         colors = colors.reshape(-1, 4)
-
-        # self.quiver = self.mp.quiver(x, y, u_norm[::-1], v_norm[::-1], color=colors, scale=30)
 
         self.quiver = self.ax_vec.quiver(lon_plot, lat_plot, u_norm[::-1], v_norm[::-1], color=colors,
                                          scale=30, transform=ccrs.PlateCarree())
@@ -734,63 +709,38 @@ class Ui_WindButton_LonLatProfile(object):
         self.ax_vec.add_feature(cfeature.BORDERS, linestyle='-')
         self.ax_vec.add_feature(cfeature.STATES, linestyle=':')
 
-        gl = self.ax_vec.gridlines(draw_labels=True, linestyle='--', alpha=0.5)
+        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
+
+        gl = self.ax_vec.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
         gl.top_labels = False
         gl.right_labels = False
-        gl.xlabel_style = {'fontsize': 6, 'color': 'black'}
-        gl.ylabel_style = {'fontsize': 6, 'color': 'black'}
+        gl.bottom_labels = True
+        gl.left_labels = True
+        gl.xlocator = plt.MultipleLocator(lon_label_step)
+        gl.ylocator = plt.MultipleLocator(lat_label_step)
+        gl.xlabel_style = {'fontsize': 6, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 6, 'color': '#08090A'}
 
-        self.ax_vec.set_xlabel('Longitude', labelpad=15, fontsize=8, color='black')
-        self.ax_vec.set_ylabel('Latitude', labelpad=30, fontsize=8, color='black')
-        self.ax_vec.set_aspect('equal', adjustable='box')
+        self.ax_vec.annotate('Longitude', xy=(0.5, -0.09), xycoords='axes fraction',
+                    ha='center', fontsize=8, color='#08090A')
+
+        self.ax_vec.annotate('Latitude', xy=(-0.15, 0.5), xycoords='axes fraction',
+                    ha='center', rotation=90, fontsize=8, color='#08090A')
 
         self.canvas.draw()
         self.canvas.figure.subplots_adjust(
             top=0.975, bottom=0.116, left=0.124, right=0.97, hspace=0.2, wspace=0.2
         )
         self.canvas.figure.set_facecolor("#C3C3C3")
-
-        # self.mp.drawcoastlines()
-        # self.mp.drawstates()
-        # self.mp.drawcountries()
-        #
-        # lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
-        # lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
-        #
-        # parallels = self.mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
-        # meridians = self.mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
-        #
-        # for lat, text_objects in parallels.items():
-        #     for text in text_objects[1]:
-        #         text.set_color("black")
-        #
-        # for lon, text_objects in meridians.items():
-        #     for text in text_objects[1]:
-        #         text.set_color("black")
-        #
-        # self.ax_vec.set_xlabel('Longitude', labelpad=15, fontsize=8)
-        # self.ax_vec.set_ylabel('Latitude', labelpad=30, fontsize=8)
-        # self.ax_vec.set_aspect('equal', adjustable='box')
-        # self.ax_vec.xaxis.label.set_color('black')
-        # self.ax_vec.yaxis.label.set_color('black')
-        #
-        # self.canvas.draw()
-        # self.canvas.figure.subplots_adjust(
-        #     top=0.975,
-        #     bottom=0.116,
-        #     left=0.124,
-        #     right=0.97,
-        #     hspace=0.2,
-        #     wspace=0.2
-        # )
-        # self.canvas.figure.set_facecolor("#C3C3C3")
         self.last_step = self.step
 
     def save_figure(self):
         lon = self.dataset[self.lon_name].values
         lat = self.dataset[self.lat_name].values
 
-        fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
+        fig, ax = plt.subplots(figsize=(12, 12), subplot_kw={'projection': ccrs.Mercator()})
+        ax.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
         dict_to_sel = {
             self.time_name: self.time_selected
@@ -802,15 +752,6 @@ class Ui_WindButton_LonLatProfile(object):
         lons, lats = np.meshgrid(lon, lat)
         lon_plot, lat_plot = lons[::self.step, ::self.step], lats[::self.step, ::self.step]
 
-        mp = Basemap(projection='merc',
-                     llcrnrlon=min(lon),
-                     llcrnrlat=min(lat),
-                     urcrnrlon=max(lon),
-                     urcrnrlat=max(lat),
-                     resolution='i')
-
-        x, y = mp(lon_plot, lat_plot)
-
         vec_mag = self.f_magnitude(u_plot, v_plot)
         u_norm = u_plot / vec_mag
         v_norm = v_plot / vec_mag
@@ -820,21 +761,35 @@ class Ui_WindButton_LonLatProfile(object):
         colors = cmap(norm(vec_mag))
         colors = colors.reshape(-1, 4)
 
-        mp.quiver(x, y, u_norm[::-1], v_norm[::-1], color=colors, scale=30)
+        ax.quiver(lon_plot, lat_plot, u_norm[::-1], v_norm[::-1], color=colors, scale=30, transform=ccrs.PlateCarree())
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
         cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
-        mp.drawcoastlines()
-        mp.drawstates()
-        mp.drawcountries()
+        ax.add_feature(cfeature.COASTLINE)
+        ax.add_feature(cfeature.BORDERS, linestyle='-')
+        ax.add_feature(cfeature.STATES, linestyle=':')
 
-        mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=17)
-        mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=17)
+        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
 
-        plt.title(f'Wind Velocity - {self.t_formated}', fontsize=18)
-        ax.set_xlabel('Longitude', labelpad=40, fontsize=18)
-        ax.set_ylabel('Latitude', labelpad=55, fontsize=18)
+        gl = ax.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.bottom_labels = True
+        gl.left_labels = True
+        gl.xlocator = plt.MultipleLocator(lon_label_step)
+        gl.ylocator = plt.MultipleLocator(lat_label_step)
+        gl.xlabel_style = {'fontsize': 6, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 6, 'color': '#08090A'}
+
+        self.ax_vec.annotate('Longitude', xy=(0.5, -0.09), xycoords='axes fraction',
+                             ha='center', fontsize=8, color='#08090A')
+
+        self.ax_vec.annotate('Latitude', xy=(-0.15, 0.5), xycoords='axes fraction',
+                             ha='center', rotation=90, fontsize=8, color='#08090A')
+
+        plt.title(f'{self.t_formated}', fontsize=18)
 
         path_to_save = f'{self.mainpage.project.caminho}\\figs'
         os.makedirs(path_to_save, exist_ok=True)
@@ -900,38 +855,44 @@ class Ui_WindButton_LonLatProfile(object):
         self.time_anim = list(self.dataset[self.time_name].values)
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
         lons, lats = np.meshgrid(lon, lat)
-        lon_plot, lat_plot = lons[::self.step, ::self.step], lats[::self.step, ::self.step]
+        self.lon2d_anim, self.lat2d_anim = lons[::self.step, ::self.step], lats[::self.step, ::self.step]
 
-        self.fig_anim = plt.figure(figsize=(12, 12))
-        subfigs = self.fig_anim.subfigures(1, 1)
-        axs = subfigs.subplots(1, 1)
+        self.fig_anim, self.axs = plt.subplots(figsize=(12, 12), subplot_kw={'projection': ccrs.Mercator()})
+        self.axs.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
         time_to_format = str(self.time[0]).split('.')[0]
         t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
         plt.title(t_formated, fontsize=20)
 
-        mp = Basemap(projection='merc',
-                     llcrnrlon=min(lon),
-                     llcrnrlat=min(lat),
-                     urcrnrlon=max(lon),
-                     urcrnrlat=max(lat),
-                     resolution='i',
-                     ax=axs)
-        mp.drawcoastlines()
-        mp.drawstates()
-        mp.drawcountries()
-        mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=17)
-        mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=17)
+        self.axs.add_feature(cfeature.COASTLINE)
+        self.axs.add_feature(cfeature.BORDERS, linestyle="-")
+        self.axs.add_feature(cfeature.STATES, linestyle=":")
+        self.axs.add_feature(cfeature.LAND, color='#5F7470')
+        self.axs.add_feature(cfeature.LAKES, color='#2A324B')
 
-        x, y = mp(lon_plot, lat_plot)
+        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
 
-        axs.set_xlabel('Longitude', labelpad=40, fontsize=18)
-        axs.set_ylabel('Latitude', labelpad=55, fontsize=18)
+        gl = self.axs.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.bottom_labels = True
+        gl.left_labels = True
+        gl.xlocator = plt.MultipleLocator(lon_label_step)
+        gl.ylocator = plt.MultipleLocator(lat_label_step)
+        gl.xlabel_style = {'fontsize': 9, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 9, 'color': '#08090A'}
+
+        self.axs.annotate('Longitude', xy=(0.5, -0.08), xycoords='axes fraction',
+                          ha='center', fontsize=12, color='#08090A')
+
+        self.axs.annotate('Latitude', xy=(-0.08, 0.5), xycoords='axes fraction',
+                          ha='center', rotation=90, fontsize=12, color='#08090A')
 
         self.cmap_anim = cm.get_cmap(self.current_scale)
         self.norm_anim = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
-        cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=axs,
+        cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=self.axs,
                                       orientation='vertical', pad=0.05)
         cbar.set_label(f'Vector magnitude [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
@@ -948,7 +909,8 @@ class Ui_WindButton_LonLatProfile(object):
         colors = self.cmap_anim(self.norm_anim(vec_mag_first))
         colors = colors.reshape(-1, 4)
 
-        self.quiver_anim = mp.quiver(x, y, u_norm_first, v_norm_first, color=colors, scale=30)
+        self.quiver_anim = self.axs.quiver(self.lon2d_anim, self.lat2d_anim, u_norm_first, v_norm_first, color=colors,
+                                           scale=30, transform=ccrs.PlateCarree())
 
         try:
             self.ani = FuncAnimation(

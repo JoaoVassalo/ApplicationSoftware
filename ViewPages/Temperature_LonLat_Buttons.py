@@ -613,7 +613,13 @@ class Ui_WindButton_LonLatProfile(object):
     def plot_profile(self):
         dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
         water_temp_filtered = dataset_filtered[self.temp_name].values
-        self.im.set_data(water_temp_filtered)
+
+        if hasattr(self, 'im'):
+            self.im.remove()
+
+        self.im = self.ax.pcolormesh(self.lon2d, self.lat2d, water_temp_filtered, cmap=self.cmap, norm=self.norm,
+                                shading='auto', transform=ccrs.PlateCarree())
+
         self.canvas.draw()
 
     def first_profile(self):
@@ -622,16 +628,16 @@ class Ui_WindButton_LonLatProfile(object):
 
         dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        self.lon2d, self.lat2d = np.meshgrid(lon, lat)
         water_temp, water_temp_filtered = self.dataset[self.temp_name].values, dataset_filtered[self.temp_name].values
 
-        cmap = cm.get_cmap(self.current_scale)
-        norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
+        self.cmap = cm.get_cmap(self.current_scale)
+        self.norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
-        # Novo gráfico
         self.ax = self.figure.add_subplot(111, projection=ccrs.Mercator())
         self.ax.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
-        cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
+        cbar = plt.colorbar(cm.ScalarMappable(norm=self.norm, cmap=self.cmap), ax=self.ax, orientation='vertical', pad=0.05)
         cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=6, color="black")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='black')
@@ -649,115 +655,70 @@ class Ui_WindButton_LonLatProfile(object):
         gl = self.ax.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
         gl.top_labels = False
         gl.right_labels = False
+        gl.bottom_labels = True
+        gl.left_labels = True
         gl.xlocator = plt.MultipleLocator(lon_label_step)
         gl.ylocator = plt.MultipleLocator(lat_label_step)
-        gl.xlabel_style = {'fontsize': 6, 'color': 'black'}
-        gl.ylabel_style = {'fontsize': 6, 'color': 'black'}
+        gl.xlabel_style = {'fontsize': 7, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 7, 'color': '#08090A'}
 
-        self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8, color='black')
-        self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8, color='black')
-        self.ax.set_aspect('equal')
+        self.ax.annotate('Longitude', xy=(0.5, -0.1), xycoords='axes fraction',
+                    ha='center', fontsize=9, color='#08090A')
 
-        self.im = self.ax.imshow(
-            water_temp_filtered, cmap=cmap, norm=norm, origin='lower',
-            extent=(min(lon), max(lon), min(lat), max(lat)),
-            transform=ccrs.PlateCarree()
-        )
+        self.ax.annotate('Latitude', xy=(-0.15, 0.5), xycoords='axes fraction',
+                    ha='center', rotation=90, fontsize=9, color='#08090A')
 
-        self.im.set_data(water_temp_filtered)
+        self.im = self.ax.pcolormesh(self.lon2d, self.lat2d, water_temp_filtered, cmap=self.cmap, norm=self.norm,
+                      shading='auto', transform=ccrs.PlateCarree())
 
         self.canvas.draw()
         self.canvas.figure.set_facecolor("#C3C3C3")
 
-        # self.ax = self.figure.add_subplot(111)
-        #
-        # mp = Basemap(projection='merc',
-        #              llcrnrlon=min(lon),
-        #              llcrnrlat=min(lat),
-        #              urcrnrlon=max(lon),
-        #              urcrnrlat=max(lat),
-        #              resolution='i',
-        #              ax=self.ax)
-        #
-        # self.im = mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
-        # cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax, orientation='vertical', pad=0.05)
-        # cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=6, color="black")
-        # cbar.ax.tick_params(labelsize=8)
-        # cbar.ax.yaxis.set_tick_params(color='black')
-        # plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
-        #
-        # mp.drawcoastlines()
-        # mp.drawstates()
-        # mp.drawcountries()
-        # mp.fillcontinents(color='lightgreen', lake_color='lightblue')
-        #
-        # lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
-        # lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
-        #
-        # parallels = mp.drawparallels(np.arange(min(lat), max(lat), lat_label_step), labels=[1, 0, 0, 0], fontsize=6)
-        # meridians = mp.drawmeridians(np.arange(min(lon), max(lon), lon_label_step), labels=[0, 0, 0, 1], fontsize=6)
-        #
-        # for lat, text_objects in parallels.items():
-        #     for text in text_objects[1]:
-        #         text.set_color("black")
-        #
-        # for lon, text_objects in meridians.items():
-        #     for text in text_objects[1]:
-        #         text.set_color("black")
-        #
-        # self.ax.set_xlabel('Longitude', labelpad=15, fontsize=8)
-        # self.ax.set_ylabel('Latitude', labelpad=30, fontsize=8)
-        # self.ax.xaxis.label.set_color('black')
-        # self.ax.yaxis.label.set_color('black')
-        # self.ax.set_aspect('equal')
-        #
-        # self.canvas.draw()
-        # self.canvas.figure.subplots_adjust(
-        #     top=0.975,
-        #     bottom=0.116,
-        #     left=0.124,
-        #     right=0.97,
-        #     hspace=0.2,
-        #     wspace=0.2
-        # )
-        # self.canvas.figure.set_facecolor("#C3C3C3")
-
     def save_fig(self):
         dataset_filtered = self.dataset.sel(time=self.time_selected, depth=self.depth_selected)
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        lon2d, lat2d = np.meshgrid(lon, lat)
         water_temp, water_temp_filtered = self.dataset[self.temp_name].values, dataset_filtered[self.temp_name].values
 
         cmap = cm.get_cmap(self.current_scale)
         norm = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
 
-        fig, ax = plt.subplots(figsize=(14, 14), constrained_layout=True, facecolor=None)
+        fig, ax = plt.subplots(figsize=(12, 12), subplot_kw={'projection': ccrs.Mercator()})
+        ax.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
-        mp = Basemap(projection='merc',
-                     llcrnrlon=min(lon),
-                     llcrnrlat=min(lat),
-                     urcrnrlon=max(lon),
-                     urcrnrlat=max(lat),
-                     resolution='i')
+        ax.add_feature(cfeature.COASTLINE)
+        ax.add_feature(cfeature.BORDERS, linestyle="-")
+        ax.add_feature(cfeature.STATES, linestyle=":")
+        ax.add_feature(cfeature.LAND, color='#5F7470')
+        ax.add_feature(cfeature.LAKES, color='#2A324B')
 
-        mp.imshow(water_temp_filtered, cmap=cmap, norm=norm)
+        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
+
+        gl = ax.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.bottom_labels = True
+        gl.left_labels = True
+        gl.xlocator = plt.MultipleLocator(lon_label_step)
+        gl.ylocator = plt.MultipleLocator(lat_label_step)
+        gl.xlabel_style = {'fontsize': 9, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 9, 'color': '#08090A'}
+
+        ax.annotate('Longitude', xy=(0.5, -0.08), xycoords='axes fraction',
+                    ha='center', fontsize=12, color='#08090A')
+
+        ax.annotate('Latitude', xy=(-0.08, 0.5), xycoords='axes fraction',
+                    ha='center', rotation=90, fontsize=12, color='#08090A')
+
+        ax.pcolormesh(lon2d, lat2d, water_temp_filtered, cmap=cmap, norm=norm,
+                            shading='auto', transform=ccrs.PlateCarree())
+
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
         cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
-        mp.drawcoastlines()
-        mp.drawstates()
-        mp.drawcountries()
-        mp.fillcontinents(color='lightgreen', lake_color='lightblue')
-
-        mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=17)
-        mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=17)
-
-        ax.set_xlabel('Longitude', labelpad=40, fontsize=18)
-        ax.set_ylabel('Latitude', labelpad=55, fontsize=18)
-
-        ax.set_aspect('equal')
-
-        plt.title(self.t_formated, fontsize=20)
+        plt.title(f'{self.t_formated} - {self.depth_selected}m', fontsize=20)
 
         path_to_save = f'{self.mainpage.project.caminho}\\figs'
         os.makedirs(path_to_save, exist_ok=True)
@@ -807,43 +768,53 @@ class Ui_WindButton_LonLatProfile(object):
             time_to_format = str(self.time[frame]).split('.')[0]
             t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
             plt.title(t_formated, fontsize=20)
-            self.img.set_data(data)
+
+            if hasattr(self, 'img'):
+                self.img.remove()
+
+            self.img = self.axs.pcolormesh(self.lon2d_anim, self.lat2d_anim, data, cmap=self.cmap_anim, norm=self.norm_anim,
+                                         shading='auto', transform=ccrs.PlateCarree())
 
     def save_anim(self):
-
         self.cmap_anim = cm.get_cmap(self.current_scale)
         self.norm_anim = plt.Normalize(vmin=self.current_min, vmax=self.current_max)
         lon, lat = self.dataset[self.lon_name].values, self.dataset[self.lat_name].values
+        self.lon2d_anim, self.lat2d_anim = np.meshgrid(lon, lat)
         time = list(self.dataset[self.time_name].values)
 
-        self.fig_anim = plt.figure(figsize=(12, 12))
-        subfigs = self.fig_anim.subfigures(1, 1)
-        axs = subfigs.subplots(1, 1)
+        self.fig_anim, self.axs = plt.subplots(figsize=(12, 12), subplot_kw={'projection': ccrs.Mercator()})
+        self.axs.set_extent([min(lon), max(lon), min(lat), max(lat)], crs=ccrs.PlateCarree())
 
         time_to_format = str(self.time[0]).split('.')[0]
         t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%m-%d-%Y-%Hh')
         plt.title(t_formated, fontsize=20)
 
-        mp = Basemap(projection='merc',
-                     llcrnrlon=min(lon),
-                     llcrnrlat=min(lat),
-                     urcrnrlon=max(lon),
-                     urcrnrlat=max(lat),
-                     resolution='i')
+        self.axs.add_feature(cfeature.COASTLINE)
+        self.axs.add_feature(cfeature.BORDERS, linestyle="-")
+        self.axs.add_feature(cfeature.STATES, linestyle=":")
+        self.axs.add_feature(cfeature.LAND, color='#5F7470')
+        self.axs.add_feature(cfeature.LAKES, color='#2A324B')
 
-        mp.drawcoastlines()
-        mp.drawstates()
-        mp.drawcountries()
-        mp.fillcontinents(color='lightgreen', lake_color='lightblue')
+        lat_label_step = (max(lat) - min(lat)) // 3 if (max(lat) - min(lat)) > 3 else 3
+        lon_label_step = (max(lon) - min(lon)) // 3 if (max(lon) - min(lon)) > 3 else 3
 
-        mp.drawparallels(np.arange(min(lat), max(lat), 3), labels=[1, 0, 0, 0], fontsize=17)
-        mp.drawmeridians(np.arange(min(lon), max(lon), 3), labels=[0, 0, 0, 1], fontsize=17)
+        gl = self.axs.gridlines(draw_labels=True, linestyle="--", alpha=0.5)
+        gl.top_labels = False
+        gl.right_labels = False
+        gl.bottom_labels = True
+        gl.left_labels = True
+        gl.xlocator = plt.MultipleLocator(lon_label_step)
+        gl.ylocator = plt.MultipleLocator(lat_label_step)
+        gl.xlabel_style = {'fontsize': 9, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 9, 'color': '#08090A'}
 
-        axs.set_xlabel('Longitude', labelpad=40, fontsize=18)
-        axs.set_ylabel('Latitude', labelpad=55, fontsize=18)
-        axs.set_aspect('equal')
+        self.axs.annotate('Longitude', xy=(0.5, -0.08), xycoords='axes fraction',
+                    ha='center', fontsize=12, color='#08090A')
 
-        cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=axs, orientation='vertical', pad=0.05)
+        self.axs.annotate('Latitude', xy=(-0.08, 0.5), xycoords='axes fraction',
+                    ha='center', rotation=90, fontsize=12, color='#08090A')
+
+        cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=self.axs, orientation='vertical', pad=0.05)
         cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
@@ -852,7 +823,8 @@ class Ui_WindButton_LonLatProfile(object):
             self.depth_name: self.depth_selected
         })
 
-        self.img = mp.imshow(data_first, cmap=self.cmap_anim, norm=self.norm_anim)
+        self.img = self.axs.pcolormesh(self.lon2d_anim, self.lat2d_anim, data_first, cmap=self.cmap_anim, norm=self.norm_anim,
+                      shading='auto', transform=ccrs.PlateCarree())
 
         try:
             self.ani = FuncAnimation(

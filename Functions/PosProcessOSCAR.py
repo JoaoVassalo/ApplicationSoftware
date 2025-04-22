@@ -211,33 +211,56 @@ class ParticleDistribution:
         with open(self.pathfile, 'r', encoding='utf-8', errors='ignore') as f:
             linhas = f.readlines()
 
-        indices_time = [i for i, linha in enumerate(linhas) if 'time:' in linha.lower()]
-        indices_time.append(len(linhas))
+        try:
+            indices_time = [i for i, linha in enumerate(linhas) if 'time:' in linha.lower()]
+            indices_time.append(len(linhas))
+        except ExceptionGroup as _:
+            return
+
+        found_fractional = any('fractional size distribution:' in l_.lower() for l_ in linhas)
+        if not found_fractional:
+            return
 
         diameters = False
+        columns = None
+        dict_values = None
+        qty = 0
         for i in range(len(indices_time) - 1):
             inicio = indices_time[i]
             fim = indices_time[i + 1]
             bloco = linhas[inicio:fim]
 
-            encontrou_fractional = any('fractional size distribution:' in linha.lower() for linha in bloco)
+            found_fractional = any('fractional size distribution:' in linha.lower() for linha in bloco)
 
-            if encontrou_fractional:
+            if found_fractional:
                 for linha in bloco:
                     if linha.lower().strip().startswith('diam (um):') and not diameters:
                         columns = (linha.strip().split(':', 1)[1].strip()).split()[:]
+                        del columns[0]
                         if all(diam == columns[0] for diam in columns):
-                            return
+                            continue
                         else:
-                            dict_values = {
 
+                            dict_values = {
+                                col: 0.
+                                for col in columns
                             }
                             diameters = True
-                    if linha.lower().strip().startswith('by mass:'):
-                        dados = linha.strip().split(':', 1)[1].strip()
+                    if linha.lower().strip().startswith('by mass:') and diameters:
+                        dados = (linha.strip().split(':', 1)[1].strip()).split()[1:]
+                        dados_filter = [
+                            float(v)
+                            for v in dados
+                        ]
+                        for j in range(len(dados_filter)):
+                            dict_values[columns[j]] += dados_filter[j]
+                        qty += 1
                         break
-            else:
-                print(f"\n⛔ Intervalo {inicio}-{fim} NÃO contém 'Fractional size distribution:'")
+
+        for key, item in dict_values.items():
+            dict_values[key] = item/qty
+
+        self.dataframe = dict_values
 
 
 # file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.oilthck.log"

@@ -20,6 +20,7 @@ from ViewPages import AreaImpact_Page as Ai_
 from ViewPages import VolumeImpact as Vi_
 from ViewPages import MassBalance as Mb_
 from ViewPages import ChemicalComposition as Cc_
+from ViewPages import ParticleDistribution as Pd_
 
 class Ui_Form(object):
     def setupUi(self, Form, framepage):
@@ -285,7 +286,7 @@ class Ui_Form(object):
 
     def set_mb_page(self):
         self.mb_df = Ppo.MassBalance(self.mb_pathfile)
-        if self.mb_df is not None:
+        if self.mb_df.dataframe is not None:
             self.main_frame_mb_ = QFrame()
             self.main_frame_page_mb = Mb_.Ui_Form()
             self.gL_Mbpage.addWidget(self.main_frame_mb_)
@@ -295,36 +296,46 @@ class Ui_Form(object):
 
     def set_cc_page(self):
         self.cc_df = Ppo.ChemicComposi(self.cc_pathfile)
-        if self.cc_df is not None:
+        if self.cc_df.dataframe is not None:
             self.main_frame_cc_ = QFrame()
             self.main_frame_page_cc = Cc_.Ui_Form()
             self.gL_CcPage.addWidget(self.main_frame_cc_)
             self.main_frame_page_cc.setupUi(self.main_frame_cc_, self.cc_df)
 
+    def set_pd_page(self):
+        self.pd_df = Ppo.ParticleDistribution(self.pd_pathfile)
+        if self.pd_df.dataframe is not None:
+            self.main_frame_pd_ = QFrame()
+            self.main_frame_page_pd = Pd_.Ui_Form()
+            self.gL_PdPage.addWidget(self.main_frame_pd_)
+            self.main_frame_page_pd.setupUi(self.main_frame_pd_, self.pd_df.dataframe)
+
     def search_file_ai(self):
         self.ai_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
-                                                   "Arquivos de Texto (*.txt *.log)")
+                                                   "Arquivos de Texto (*.txt *.log *.prt)")
         if self.ai_pathfile:
             self.clear_frame_data(self.gL_AiPage)
             self.set_ai_page()
 
     def search_file_vi(self):
         self.vi_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
-                                                      "Arquivos de Texto (*.txt *.log)")
+                                                      "Arquivos de Texto (*.txt *.log *.prt)")
         self.set_vi_page()
 
     def search_file_mb(self):
         self.mb_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
-                                                      "Arquivos de Texto (*.txt *.log)")
+                                                      "Arquivos de Texto (*.txt *.log *.prt)")
         self.set_mb_page()
 
     def search_file_cc(self):
         self.cc_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
-                                                      "Arquivos de Texto (*.txt *.log)")
+                                                      "Arquivos de Texto (*.txt *.log *.prt)")
         self.set_cc_page()
 
     def search_file_pd(self):
-        return
+        self.pd_pathfile, _ = QFileDialog.getOpenFileName(self.framewindow, "Selecionar Arquivo", "",
+                                                          "Arquivos de Texto (*.txt *.log *.prt)")
+        self.set_pd_page()
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
