@@ -12,6 +12,7 @@ from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize)
 from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QLabel,
     QLineEdit, QRadioButton, QSizePolicy, QVBoxLayout)
 import xarray as xr
+import os
 
 
 class Ui_Form(object):
@@ -160,7 +161,8 @@ class Ui_Form(object):
             self.lineEdit.setDisabled(True)
 
     def set_variable_list(self):
-        with xr.open_dataset(f'{self.main_page.project.caminho}\\{self.filelist[0]}') as self.f:
+        file_path = os.path.join(self.main_page.project.caminho, self.filelist[0])
+        with xr.open_dataset(file_path) as self.f:
             self.var = list(self.f.variables)
 
         self.comboBox_5.addItems([f'{var_item}' for var_item in self.var])

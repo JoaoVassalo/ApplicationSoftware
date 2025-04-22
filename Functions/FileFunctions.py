@@ -32,9 +32,11 @@ class Concat(FilesExtension):
     def run(self):
         datasets = []
         for file in self.filelist:
-            datasets.append(xr.open_dataset(f'{self.path}\\{file}'))
+            file_path = os.path.join(self.path,file)
+            datasets.append(xr.open_dataset(file_path))
         final_ds = xr.concat(datasets, dim=self.dim_to_concat)
-        final_ds.to_netcdf(f'{self.path}\\{self.filename}', format='NETCDF4')
+        file_path = os.path.join(self.path, self.filename)
+        final_ds.to_netcdf(file_path, format='NETCDF4')
         del datasets
 
 
@@ -49,9 +51,11 @@ class Merge(FilesExtension):
     def run(self):
         datasets = []
         for file in self.filelist:
-            datasets.append(xr.open_dataset(f'{self.path}\\{file}'))
+            file_path = os.path.join(self.path, file)
+            datasets.append(xr.open_dataset(file_path))
         final_ds = xr.merge(datasets)
-        final_ds.to_netcdf(f'{self.path}\\{self.filename}', format='NETCDF4')
+        file_path = os.path.join(self.path,self.filename)
+        final_ds.to_netcdf(file_path, format='NETCDF4')
         del datasets
 
 
@@ -82,7 +86,8 @@ class Filter(FilesExtension):
         return datetime64_value
 
     def run(self):
-        dataset = xr.open_dataset(f'{self.path}\\{self.filelist[0]}')
+        file_path = os.path.join(self.path/self.filelist[0])
+        dataset = xr.open_dataset(file_path)
 
         if self.dim_to_filter == 'time' or self.dim_to_filter == 'valid_time':
             start, finish = self.str2time(self.start), self.str2time(self.finish)
@@ -109,7 +114,8 @@ class Filter(FilesExtension):
             else:
                 dataset_filtered = dataset[self.var_to_filter].sel(dict_key)
 
-        dataset_filtered.to_netcdf(f'{self.path}\\{self.filename}', format='NETCDF4')
+        file_path = os.path.join(self.path, self.filename)
+        dataset_filtered.to_netcdf(file_path, format='NETCDF4')
         del dataset, dataset_filtered
 
 
@@ -127,9 +133,11 @@ class Dat(FilesExtension):
         self.v_component = kargs['v_component']
 
     def run(self):
-        os.makedirs(f'{self.path}\\DatFiles', exist_ok=True)
+        file_path = os.path.join(self.path, "DatFiles")
+        os.makedirs(file_path, exist_ok=True)
         if self.u_component != self.v_component:
-            dataset = xr.open_dataset(f'{self.path}\\{self.filelist[0]}')
+            file_path = os.path.join(self.path,self.filelist[0])
+            dataset = xr.open_dataset(file_path)
 
             lon, lat = dataset['longitude'].values, dataset['latitude'].values
             times_ = dataset['valid_time'].values
@@ -145,7 +153,8 @@ class Dat(FilesExtension):
                 'latitude'].values.size
 
             # Criação de arquivo .dat com base nos dados do arquivo netcdf -------------------------------------------------
-            with open(f'{self.path}\\DatFiles\\{self.filename}', 'w') as w_file:
+            file_path = os.path.join(self.path, "DatFiles", self.filename)
+            with open(file_path, 'w') as w_file:
                 w_file.write(
                     f"""xy  {x}  {y}
             projection  lonlat
@@ -190,11 +199,15 @@ class Imp(FilesExtension):
         self.v_component = kargs['v_component']
 
     def run(self):
-        os.makedirs(f'{self.path}\\ImpFiles', exist_ok=True)
-        dataset = xr.open_dataset(f'{self.path}\\{self.filelist[0]}')
+        file_path = os.path.join(self.path, "ImpFiles")
+        os.makedirs(file_path, exist_ok=True)
 
+        file_path = os.path.join(self.path, self.filelist[0])
+        dataset = xr.open_dataset(file_path)
+
+        file_path = os.path.join(self.path, "ImpFiles", self.filename)
         if self.type == 'Wind':
-            with open(f'{self.path}\\ImpFiles\\{self.filename}', 'w') as w_imp:
+            with open(file_path, 'w') as w_imp:
                 w_imp.write(
                     f"FORMAT	ASCII_3D\n"
                     f"FILE  ***path_to_file***.dat\n"
@@ -205,7 +218,7 @@ class Imp(FilesExtension):
             del dataset
         else:
             if self.u_component != self.v_component:
-                with open(f'{self.path}\\ImpFiles\\{self.filename}', 'w') as w_imp:
+                with open(file_path, 'w') as w_imp:
                     w_imp.write(
                         f"FORMAT	NetCDF\n"
                         f"PROJECTION	LONLAT\n"
@@ -246,7 +259,8 @@ class Rename(FilesExtension):
         self.new_file_name = self.new_file_name if self.new_file_name.endswith(".nc") else f"{self.new_file_name}.nc"
 
     def run(self):
-        dset = xr.open_dataset(f"{self.path}\\{self.filelist[-1]}").load()
+        file_path = os.path.join(self.path, self.filelist[-1])
+        dset = xr.open_dataset(file_path).load()
         new_data = dset.rename(
             {
                 self.variable_to_change: self.new_name
@@ -254,4 +268,6 @@ class Rename(FilesExtension):
         )
         dset.close()
         del dset
-        new_data.to_netcdf(f"{self.path}\\{self.new_file_name}", format="NETCDF4", mode="w")
+
+        file_path = os.path.join(self.path, self.new_file_name)
+        new_data.to_netcdf(file_path, format="NETCDF4", mode="w")

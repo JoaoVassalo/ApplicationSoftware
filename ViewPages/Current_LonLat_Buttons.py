@@ -844,9 +844,11 @@ class Ui_WindButton_LonLatProfile(object):
                 self.fig_anim, self.update, frames=len(self.time) - 1, interval=5000
             )
 
-            path_to_save = f'{self.mainpage.project.caminho}\\Animations'
+            path_to_save = os.path.join(self.mainpage.project.caminho, 'Animations')
             os.makedirs(path_to_save, exist_ok=True)
-            self.save_name = (f'{path_to_save}\\SeaWaterVelocity for {self.mainpage.comboBox.currentText()[:-3]} _ '
+            file_path = os.path.join(path_to_save, 'SeaWaterVelocity')
+
+            self.save_name = (f'{file_path} for {self.mainpage.comboBox.currentText()[:-3]} _ '
                               f'{int(self.depth_selected)}m.gif')
             self.ani.save(
                 self.save_name,
@@ -920,10 +922,14 @@ class Ui_WindButton_LonLatProfile(object):
 
         plt.title(f'{self.t_formated} - {self.depth_selected}m', fontsize=20)
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
+        
         os.makedirs(path_to_save, exist_ok=True)
 
-        plt.savefig(f'{path_to_save}\\SeaWater Velocity for {self.mainpage.comboBox.currentText()[:-3]} _ '
+        file_path = os.path.join(path_to_save, 'SeaWater Velocity')
+
+        plt.savefig(f'{file_path} for {self.mainpage.comboBox.currentText()[:-3]} _ '
+
                     f'{self.t_formated} _ {self.depth_selected}m.png', transparent=True)
         plt.close()
 

@@ -1938,13 +1938,13 @@ class Ui_MainWindow(object):
 
         self.obj = self.varname_obj[selected_radio.text()]
         
-        if os.name == "posix":
-            self.verify = self.obj.check(f'{self.project.caminho}/{self.comboBox.currentText()}')
-        else:
-            self.verify = self.obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+        file_path = os.path.join(self.project.caminho, self.comboBox.currentText())
+       
+        self.verify = self.obj.check(file_path)
         
         if isinstance(self.verify, bool):
-            self.variables_names = self.obj.get_var_names(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+            self.variables_names = self.obj.get_var_names(file_path)
+
             self.set_graphbuttons(selected_radio.text())
         else:
             QMessageBox.warning(self.view_page_main_screen, "Warning", f"{self.verify}")
@@ -2101,11 +2101,17 @@ class Ui_MainWindow(object):
             if widget_to_remove:
                 widget_to_remove.setParent(None)
 
+                
+
         if len(variable) == 1:
             self.obj = self.varname_obj[variable[0]]
-            self.verify = self.obj.check(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+            file_path = os.path.join(self.project.caminho, self.comboBox.currentText())
+            self.verify = self.obj.check(file_path)
+            
+
             if isinstance(self.verify, bool):
-                self.variables_names = self.obj.get_var_names(f'{self.project.caminho}\\{self.comboBox.currentText()}')
+                self.variables_names = self.obj.get_var_names(file_path)
+                
                 self.set_oneradio_only(variable[0])
                 self.set_graphbuttons(variable[0])
             else:
@@ -2124,7 +2130,9 @@ class Ui_MainWindow(object):
             self.frame_container = QFrame()
             self.gridLayout_5.addWidget(self.frame_container)
         if self.comboBox.currentText() != '' and self.comboBox.currentText() != 'Choose a file...':
-            with xr.open_dataset(f'{self.project.caminho}\\{self.comboBox.currentText()}') as self.file:
+            file_path = os.path.join(self.project.caminho, self.comboBox.currentText())
+
+            with xr.open_dataset(file_path) as self.file:
                 variable_name_map = {
                     'eastward_sea_water_velocity': 'Current',
                     'northward_sea_water_velocity': 'Current',
@@ -2161,7 +2169,8 @@ class Ui_MainWindow(object):
             return
         else:
             current_file = self.FileListCombox.currentText()
-            file = xr.open_dataset(f'{self.project.caminho}\\{current_file}')
+            file_path = os.path.join(self.project.caminho, current_file)
+            file = xr.open_dataset(file_path)
             info_dict = [current_file, file]
             try:
                 file_widget = VarInfo_Widgets.FileFormWidget(info_dict, self.scrollAreaWidgetContents)
@@ -2205,7 +2214,8 @@ class Ui_MainWindow(object):
         def check_variables():
             varlist_files = []
             for file in self.fileList_View:
-                f = xr.open_dataset(f'{self.project.caminho}\\{file}')
+                file_path = os.path.join(self.project.caminho, file)
+                f = xr.open_dataset(file_path)
                 varlist_files.append(list(f.variables))
             del f
 

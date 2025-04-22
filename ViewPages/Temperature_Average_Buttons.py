@@ -306,13 +306,14 @@ class Ui_WindButton_LonLatProfile(object):
         plt.tick_params(axis='both', which='major', labelsize=16)
         plt.gca().invert_yaxis()
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
         os.makedirs(path_to_save, exist_ok=True)
 
         time_to_format = str(self.time_selected).split('.')[0]
         t_formated = datetime.strptime(time_to_format, '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d-%Hh')
+        file_path = os.path.join(path_to_save, 'AverageTemperature')
 
-        plt.savefig(f'{path_to_save}\\AverageTemperature_{t_formated}.png', transparent=True)
+        plt.savefig(f'{file_path}_{t_formated}.png', transparent=True)
         plt.close()
 
     def retranslateUi(self, WindButton_LonLatProfile):

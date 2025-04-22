@@ -482,10 +482,11 @@ class Ui_WindButton_LonLatProfile(object):
         ax.quiver(X, Y, vec_u, vec_v, scale=250, color='black', headwidth=3, headlength=5, width=0.001,
                   headaxislength=4.5)
 
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
         os.makedirs(path_to_save, exist_ok=True)
 
-        plt.savefig(f'{path_to_save}\\{self.year_selected}_{self.month_selected}.png', transparent=True)
+        file_path = os.path.join(path_to_save, self.year_selected)
+        plt.savefig(f'{file_path}_{self.month_selected}.png', transparent=True)
         plt.close()
 
     def plot_average_wind(self):  # .data, year, month

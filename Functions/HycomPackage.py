@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import xarray as xr
 import lxml
+import os
 
 
 class HycomDownloader:
@@ -180,7 +181,8 @@ class HycomDownloader:
                     final_old = final_file
 
         if processing_:
-            final_file.to_netcdf(f'{self.projectpath}\\{self.file}', format='NETCDF4')
+            file_path = os.path.join(self.projectpath, self.file)
+            final_file.to_netcdf(file_path, format='NETCDF4')
 
         if final_file:
             del final_file

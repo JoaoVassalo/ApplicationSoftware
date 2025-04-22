@@ -179,9 +179,11 @@ class Ui_WindButton_LonLatProfile(object):
             raise e
 
     def save_df(self):
-        path_to_save = f'{self.mainpage.project.caminho}\\figs'
+        path_to_save = os.path.join(self.mainpage.project.caminho, 'figs')
+
         os.makedirs(path_to_save, exist_ok=True)
-        self.dataframe.to_excel(f'{path_to_save}\\AverageTemperatureDF_.xlsx')
+        file_path = os.path.join(path_to_save, 'AverageTemperatureDF_.xlsx')
+        self.dataframe.to_excel(file_path)
 
     def average_temp_df(self):
         df_temp = {
