@@ -32,7 +32,7 @@ class Concat(FilesExtension):
     def run(self):
         datasets = []
         for file in self.filelist:
-            file_path = os.path.join(self.path,file)
+            file_path = str(os.path.join(self.path, file))
             datasets.append(xr.open_dataset(file_path))
         final_ds = xr.concat(datasets, dim=self.dim_to_concat)
         file_path = os.path.join(self.path, self.filename)
@@ -86,7 +86,7 @@ class Filter(FilesExtension):
         return datetime64_value
 
     def run(self):
-        file_path = os.path.join(self.path/self.filelist[0])
+        file_path = os.path.join(self.path, self.filelist[0])
         dataset = xr.open_dataset(file_path)
 
         if self.dim_to_filter == 'time' or self.dim_to_filter == 'valid_time':
