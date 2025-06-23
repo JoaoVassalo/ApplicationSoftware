@@ -77,7 +77,7 @@ class Ui_Form(object):
     # setupUi
 
     def set_list_combobox(self):
-        file_path = os.path.join(self.main_page.project.caminho, self.filelist_to[0])
+        file_path = os.path.join(self.main_page.project, self.filelist_to[0])
         f = xr.open_dataset(file_path)
         var = list(f.variables)
         self.comboBox.addItems([f'{var_item}' for var_item in var if f[var_item].ndim == 1])

@@ -33,7 +33,7 @@ class Ui_Form(object):
 
         self.main_page = page
         self.filelist = file
-        file_path = os.path.join(self.main_page.project.caminho, self.filelist[0])
+        file_path = os.path.join(self.main_page.project, self.filelist[0])
         self.file = xr.open_dataset(file_path)
         self.variables = [f'{var}' for var in list(self.file.variables) if self.file[var].ndim > 1]
 

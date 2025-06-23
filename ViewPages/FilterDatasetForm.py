@@ -406,7 +406,7 @@ class Ui_Form(object):
         self.set_list_combobox_2()
 
     def set_variable_list(self):
-        file_path = os.path.join(self.main_page.project.caminho, self.filelist[0])
+        file_path = os.path.join(self.main_page.project, self.filelist[0])
         self.f = xr.open_dataset(file_path)
         self.var = list(self.f.variables)
         self.comboBox_5.addItem('All variables')
