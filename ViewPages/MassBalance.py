@@ -175,7 +175,7 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.frame, 1, 0, 1, 1)
 
         self.graph_layout = QVBoxLayout()
-        self.figure = Figure(figsize=(6, 6))
+        self.figure = Figure()  # figsize=(6, 6)
         self.canvas = FigureCanvas(self.figure)
         self.graph_layout.addWidget(self.canvas)
         self.canvas.figure.set_facecolor("#C3C3C3")
