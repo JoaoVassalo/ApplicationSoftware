@@ -12,7 +12,8 @@ from ViewPages import (Current_LonLat_Buttons, Current_CoordinateDepthProfile_Bu
                        Temperature_LonDepthProfile_Buttons, Temperature_Dataframe_Buttons, Salinity_LonLat_Buttons,
                        Salinity_Average_Buttons, Salinity_LatDepthProfile_Buttons, Salinity_LonDepthProfile_Buttons,
                        Salinity_Dataframe_Buttons, VarInfo_Widgets, ConcatDatasetForm, MergeDatasetForm, DatDatasetForm,
-                       ImpDatasetForm, FilterDatasetForm, RenameDatasetForm, Individual_Pages_POSprocess)
+                       ImpDatasetForm, FilterDatasetForm, RenameDatasetForm, Individual_Pages_POSprocess,
+                       Collective_Pages_POSprocess, Setting_Page)
 import VarVerify
 import os
 import xarray as xr
@@ -98,7 +99,8 @@ class Ui_MainWindow(object):
         MainWindow.showFullScreen()
         MainWindow.setFixedSize(MainWindow.size())
 
-        self.project = MainWindow.project
+        # self.project = MainWindow.project
+        self.project = None
         self.hycom_catalogs = {f'{catalog.nome}': catalog for catalog in MainWindow.hycomCatalog}
         self.copernicus_catalogs = {f'{catalog.nome}': catalog for catalog in MainWindow.copernicusCatalog}
 
@@ -1438,12 +1440,15 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addWidget(self.frame_25)
 
-        self.frame_26 = QFrame(self.settings_page)
-        self.frame_26.setObjectName(u"frame_26")
+        # self.frame_26 = QFrame(self.settings_page)
+        # self.frame_26.setObjectName(u"frame_26")
+        self.frame_26 = Setting_Page.ConfigPage()
+        self.frame_26.setup_ui()
+        self.frame_26.path_change.connect(lambda: self.set_project_path(self.frame_26.pathline.text()))
         sizePolicy.setHeightForWidth(self.frame_26.sizePolicy().hasHeightForWidth())
         self.frame_26.setSizePolicy(sizePolicy)
-        self.frame_26.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_26.setFrameShadow(QFrame.Shadow.Raised)
+        # self.frame_26.setFrameShape(QFrame.Shape.StyledPanel)
+        # self.frame_26.setFrameShadow(QFrame.Shadow.Raised)
 
         self.verticalLayout_9.addWidget(self.frame_26)
 
@@ -1593,6 +1598,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.icon_only_widget, 0, 0, 3, 1)
 
+        """ ------------------------------------------------------------- """
         self.header_widget = QWidget(self.centralwidget)
         self.header_widget.setObjectName(u"header_widget")
         self.header_widget.setMinimumSize(QSize(861, 60))
@@ -1620,7 +1626,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.menu_button)
 
-        self.label_4 = QLabel(self.header_widget)
+        self.label_4 = QLabel()  # self.header_widget
         self.label_4.setObjectName(u"label_4")
 
         self.horizontalLayout_4.addWidget(self.label_4)
@@ -1631,7 +1637,32 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_6)
 
+        self.buttonsMinimizeLayout = QHBoxLayout()
+        self.minimizebutton = QPushButton()
+        self.minimizebutton.setProperty("windowbuttons", True)
+        self.closebutton = QPushButton()
+        self.closebutton.setProperty("windowbuttons", True)
+        self.buttonsMinimizeLayout.addWidget(self.minimizebutton)
+        self.buttonsMinimizeLayout.addWidget(self.closebutton)
+        self.buttonsMinimizeLayout.setSpacing(5)
+
+        icon_minimize = QIcon()
+        icon_minimize.addFile(u":/icons/icons/minimize - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.minimizebutton.setIcon(icon_minimize)
+        self.minimizebutton.setIconSize(QSize(16, 16))
+
+        icon_close = QIcon()
+        icon_close.addFile(u":/icons/icons/cruz - branca.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.closebutton.setIcon(icon_close)
+        self.closebutton.setIconSize(QSize(16, 16))
+
+        self.minimizebutton.clicked.connect(MainWindow.showMinimized)
+        self.closebutton.clicked.connect(MainWindow.close)
+
+        self.horizontalLayout_5.addLayout(self.buttonsMinimizeLayout)
+
         self.gridLayout.addWidget(self.header_widget, 0, 2, 1, 1)
+        """ ------------------------------------------------------------- """
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -1662,6 +1693,15 @@ class Ui_MainWindow(object):
         self.variables_names = None
 
         QMetaObject.connectSlotsByName(MainWindow)
+
+    def set_project_path(self, projetc_name):
+        self.project = projetc_name
+        self.set_combobox_files()
+        self.clear_buttons_var_viewpage()
+        for i in reversed(range(self.layout_for_file_forms.count())):
+            widget_to_remove = self.layout_for_file_forms.itemAt(i).widget()
+            if widget_to_remove:
+                widget_to_remove.setParent(None)
 
     def get_variables_to_download(self):
         # Getting variables values to download
@@ -1755,7 +1795,7 @@ class Ui_MainWindow(object):
                                                    coordenates=self.coords_required,
                                                    catalog=self.hycom_catalogs[self.current_catalog].url,
                                                    file_name=self.file_name,
-                                                   project_path=self.project.caminho)
+                                                   project_path=self.project)
         else:
             self.package = CopernicusPackage.CopernicusDownloader(initial_date=self.initial_date_download,
                                                              final_date=self.final_date_download,
@@ -1763,7 +1803,7 @@ class Ui_MainWindow(object):
                                                              coordenates=self.coords_required,
                                                              catalog=self.copernicus_catalogs[self.current_catalog],
                                                              file_name=self.file_name,
-                                                             project_path=self.project.caminho
+                                                             project_path=self.project
                                                              )
 
         self.worker = DownloadWorker(
@@ -1780,14 +1820,14 @@ class Ui_MainWindow(object):
     def update_progress(self, message):
         QMessageBox.warning(self.download_page_screen, message, f"File {self.file_name} "
                                                                                 f"will be saved "
-                                                                                f"on {self.project.caminho}.")
+                                                                                f"on {self.project}.")
 
     def download_finished(self, message):
         if 'canceled!' in message:
             QMessageBox.warning(self.download_page_screen, message, f"Download was not concluded.")
         else:
             QMessageBox.warning(self.download_page_screen, message, f"File was saved on "
-                                                                    f"{self.project.caminho}.")
+                                                                    f"{self.project}.")
 
     def handle_error(self, error_message):
         QMessageBox.warning(self.download_page_screen, "Error!", f"{error_message}.")
@@ -1894,8 +1934,8 @@ class Ui_MainWindow(object):
         :return:
         """
         list_projects = [
-            f for f in os.listdir(self.project.caminho)
-            if os.path.isfile(os.path.join(self.project.caminho, f)) and f.endswith('.nc')
+            f for f in os.listdir(self.project)
+            if os.path.isfile(os.path.join(self.project, f)) and f.endswith('.nc')
         ]
 
         self.comboBox.clear()
@@ -1938,7 +1978,7 @@ class Ui_MainWindow(object):
 
         self.obj = self.varname_obj[selected_radio.text()]
         
-        file_path = os.path.join(self.project.caminho, self.comboBox.currentText())
+        file_path = os.path.join(self.project, self.comboBox.currentText())
        
         self.verify = self.obj.check(file_path)
         
@@ -2090,7 +2130,7 @@ class Ui_MainWindow(object):
                                        self.on_button_clicked(b, f))
                 self.frame_4_buttons_layout.addWidget(button)
 
-    def update_frame_buttons(self, variable):
+    def clear_buttons_var_viewpage(self):
         for i in reversed(range(self.layoutForRadioVar.count())):
             widget_to_remove = self.layoutForRadioVar.itemAt(i).widget()
             if widget_to_remove:
@@ -2101,11 +2141,21 @@ class Ui_MainWindow(object):
             if widget_to_remove:
                 widget_to_remove.setParent(None)
 
-                
+    def update_frame_buttons(self, variable):
+        # for i in reversed(range(self.layoutForRadioVar.count())):
+        #     widget_to_remove = self.layoutForRadioVar.itemAt(i).widget()
+        #     if widget_to_remove:
+        #         widget_to_remove.setParent(None)
+        #
+        # for i in reversed(range(self.frame_4_buttons_layout.count())):
+        #     widget_to_remove = self.frame_4_buttons_layout.itemAt(i).widget()
+        #     if widget_to_remove:
+        #         widget_to_remove.setParent(None)
+        self.clear_buttons_var_viewpage()
 
         if len(variable) == 1:
             self.obj = self.varname_obj[variable[0]]
-            file_path = os.path.join(self.project.caminho, self.comboBox.currentText())
+            file_path = os.path.join(self.project, self.comboBox.currentText())
             self.verify = self.obj.check(file_path)
             
 
@@ -2130,7 +2180,7 @@ class Ui_MainWindow(object):
             self.frame_container = QFrame()
             self.gridLayout_5.addWidget(self.frame_container)
         if self.comboBox.currentText() != '' and self.comboBox.currentText() != 'Choose a file...':
-            file_path = os.path.join(self.project.caminho, self.comboBox.currentText())
+            file_path = os.path.join(self.project, self.comboBox.currentText())
 
             with xr.open_dataset(file_path) as self.file:
                 variable_name_map = {
@@ -2169,7 +2219,7 @@ class Ui_MainWindow(object):
             return
         else:
             current_file = self.FileListCombox.currentText()
-            file_path = os.path.join(self.project.caminho, current_file)
+            file_path = os.path.join(self.project, current_file)
             file = xr.open_dataset(file_path)
             info_dict = [current_file, file]
             try:
@@ -2207,14 +2257,14 @@ class Ui_MainWindow(object):
     def concat_files(self):
 
         def update_kargs():
-            self.func_file = FileFunctions.Concat(self.fileList_View, self.project.caminho,
+            self.func_file = FileFunctions.Concat(self.fileList_View, self.project,
                                                   self.concatframe.file_name.text())
             self.func_file.set_kargs(dim=self.concatframe.comboBox.currentText())
 
         def check_variables():
             varlist_files = []
             for file in self.fileList_View:
-                file_path = os.path.join(self.project.caminho, file)
+                file_path = os.path.join(self.project, file)
                 f = xr.open_dataset(file_path)
                 varlist_files.append(list(f.variables))
             del f
@@ -2253,7 +2303,7 @@ class Ui_MainWindow(object):
                     self.concatframe.file_name.textChanged.connect(update_kargs)
                     self.concatframe.comboBox.currentTextChanged.connect(update_kargs)
 
-                    self.func_file = FileFunctions.Concat(self.fileList_View, self.project.caminho,
+                    self.func_file = FileFunctions.Concat(self.fileList_View, self.project,
                                                           self.concatframe.file_name.text())
                     self.func_file.set_kargs(dim=self.concatframe.comboBox.currentText())
         else:
@@ -2262,7 +2312,7 @@ class Ui_MainWindow(object):
 
     def merge_files(self):
         def update_kargs():
-            self.func_file = FileFunctions.Merge(self.fileList_View, self.project.caminho,
+            self.func_file = FileFunctions.Merge(self.fileList_View, self.project,
                                                  self.mergeframe.lineEdit.text())
 
         if self.MergeButton.isChecked():
@@ -2285,7 +2335,7 @@ class Ui_MainWindow(object):
                 self.mergeframe.setupUi(self, self.frame_filter)
                 self.mergeframe.lineEdit.textChanged.connect(update_kargs)
 
-                self.func_file = FileFunctions.Merge(self.fileList_View, self.project.caminho,
+                self.func_file = FileFunctions.Merge(self.fileList_View, self.project,
                                                           self.mergeframe.lineEdit.text())
         else:
             self.clear_filterframe_container()
@@ -2293,7 +2343,7 @@ class Ui_MainWindow(object):
 
     def dat_file(self):
         def update_kargs():
-            self.func_file = FileFunctions.Dat(self.fileList_View, self.project.caminho,
+            self.func_file = FileFunctions.Dat(self.fileList_View, self.project,
                                                self.datframe.lineEdit.text())
             self.func_file.set_kargs(u_component=self.datframe.comboBox_2.currentText(),
                                      v_component=self.datframe.comboBox_3.currentText())
@@ -2324,7 +2374,7 @@ class Ui_MainWindow(object):
                 self.datframe.comboBox_3.currentIndexChanged.connect(update_kargs)
                 self.datframe.lineEdit.textChanged.connect(update_kargs)
 
-                self.func_file = FileFunctions.Dat(self.fileList_View, self.project.caminho,
+                self.func_file = FileFunctions.Dat(self.fileList_View, self.project,
                                                    self.datframe.lineEdit.text())
                 self.func_file.set_kargs(u_component=self.datframe.comboBox_2.currentText(),
                                          v_component=self.datframe.comboBox_3.currentText())
@@ -2334,7 +2384,7 @@ class Ui_MainWindow(object):
 
     def imp_file(self):
         def update_kargs():
-            self.func_file = FileFunctions.Imp(self.fileList_View, self.project.caminho,
+            self.func_file = FileFunctions.Imp(self.fileList_View, self.project,
                                                self.impframe.lineEdit.text())
             self.func_file.set_kargs(type=self.impframe.comboBox_4.currentText(),
                                      u_component=self.impframe.comboBox_2.currentText(),
@@ -2367,7 +2417,7 @@ class Ui_MainWindow(object):
                 self.impframe.comboBox_3.currentIndexChanged.connect(update_kargs)
                 self.impframe.lineEdit.textChanged.connect(update_kargs)
 
-                self.func_file = FileFunctions.Imp(self.fileList_View, self.project.caminho,
+                self.func_file = FileFunctions.Imp(self.fileList_View, self.project,
                                                    self.impframe.lineEdit.text())
                 self.func_file.set_kargs(type=self.impframe.comboBox_4.currentText(),
                                          u_component=self.impframe.comboBox_2.currentText(),
@@ -2379,7 +2429,7 @@ class Ui_MainWindow(object):
 
     def filter_file(self):
         def update_kargs():
-            self.func_file = FileFunctions.Filter(self.fileList_View, self.project.caminho,
+            self.func_file = FileFunctions.Filter(self.fileList_View, self.project,
                                                   self.filterframe.lineEdit.text())
             self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
                                      dim=self.filterframe.comboBox.currentText(),
@@ -2413,7 +2463,7 @@ class Ui_MainWindow(object):
                 self.filterframe.comboBox_3.currentIndexChanged.connect(update_kargs)
                 self.filterframe.lineEdit.textChanged.connect(update_kargs)
 
-                self.func_file = FileFunctions.Filter(self.fileList_View, self.project.caminho,
+                self.func_file = FileFunctions.Filter(self.fileList_View, self.project,
                                                       self.filterframe.lineEdit.text())
                 self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
                                          dim=self.filterframe.comboBox.currentText(),
@@ -2426,7 +2476,7 @@ class Ui_MainWindow(object):
 
     def delele_file(self):
         def update_kargs():
-            self.func_file = FileFunctions.Rename(self.fileList_View, self.project.caminho,
+            self.func_file = FileFunctions.Rename(self.fileList_View, self.project,
                                                   self.filterframe.lineEdit.text())
             self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
                                      new_name=self.filterframe.lineEdit_2.text())
@@ -2458,7 +2508,7 @@ class Ui_MainWindow(object):
                 self.filterframe.lineEdit.textChanged.connect(update_kargs)
                 self.filterframe.lineEdit_2.textChanged.connect(update_kargs)
 
-                self.func_file = FileFunctions.Rename(self.fileList_View, self.project.caminho,
+                self.func_file = FileFunctions.Rename(self.fileList_View, self.project,
                                                       self.filterframe.lineEdit.text())
                 self.func_file.set_kargs(var=self.filterframe.comboBox_5.currentText(),
                                          new_name=self.filterframe.lineEdit_2.text())
@@ -2569,7 +2619,7 @@ class Ui_MainWindow(object):
     def set_posprocess_page(self, p: str):
         self.clear_frame_for_simulalitonpage()
         self.frame_analysis = QFrame()
-        self.ui_analysis_page = Individual_Pages_POSprocess.Ui_Form() if p == "i" else None
+        self.ui_analysis_page = Individual_Pages_POSprocess.Ui_Form() if p == "i" else Collective_Pages_POSprocess.Ui_Form()
         if self.ui_analysis_page:
             self.layout_simulation_page.addWidget(self.frame_analysis)
             self.ui_analysis_page.setupUi(self.frame_analysis, self.frame_18)
@@ -2597,7 +2647,7 @@ class Ui_MainWindow(object):
         self.CopernicusLabel.setText(QCoreApplication.translate("MainWindow", u"COPERNICUS", None))
         self.view_header.setText(QCoreApplication.translate("MainWindow", u"VIEW PAGE", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Choose a file", None))
-        self.set_combobox_files()
+        # self.set_combobox_files()
 
         self.file_header.setText(QCoreApplication.translate("MainWindow", u"FILE PAGE", None))
         self.filechooseLabel.setText(
