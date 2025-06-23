@@ -204,6 +204,7 @@ class ParticleDistribution:
     def __init__(self, path):
         self.pathfile = path
         self.dataframe = None
+        self.data = None
         self.composition = None
         self.extract_data()
 
@@ -224,7 +225,9 @@ class ParticleDistribution:
         diameters = False
         columns = None
         dict_values = None
+        dict_frame = None
         qty = 0
+        time_values = []
         for i in range(len(indices_time) - 1):
             inicio = indices_time[i]
             fim = indices_time[i + 1]
@@ -245,6 +248,13 @@ class ParticleDistribution:
                                 col: 0.
                                 for col in columns
                             }
+                            dict_frame = {
+                                col: [0.]
+                                for col in columns
+                            }
+                            for i_ in bloco[0].split(" "):
+                                if i_ != "time:" and i_ != "" and i_ != "days\n":
+                                    time_values.append(float(i_))
                             diameters = True
                     if linha.lower().strip().startswith('by mass:') and diameters:
                         dados = (linha.strip().split(':', 1)[1].strip()).split()[1:]
@@ -254,22 +264,18 @@ class ParticleDistribution:
                         ]
                         for j in range(len(dados_filter)):
                             dict_values[columns[j]] += dados_filter[j]
+                            dict_frame[columns[j]].append(dados_filter[j])
+                        for i_ in bloco[0].split(" "):
+                            if i_ != "time:" and i_ != "" and i_ != "days\n":
+                                time_values.append(float(i_))
                         qty += 1
                         break
+
+        dict_frame["time"] = time_values
+        dict_frame_values = Df(dict_frame)
 
         for key, item in dict_values.items():
             dict_values[key] = item/qty
 
         self.dataframe = dict_values
-
-
-# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.oilthck.log"
-# OilThick(file_path)
-# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.impact.summary.totconc.log"
-# TotalConc(file_path)
-# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC.masbal.log"
-# MassBalance(file_path)
-# file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC_chemcomp.txt"
-# ChemicComposi(file_path)
-file_path = r"C:\Users\UDESC\Documents\PosProcessamento - OSCAR\BMS40_mGS_TCC_ParticleDistribution.prt"
-ParticleDistribution(file_path)
+        self.data = dict_frame_values
