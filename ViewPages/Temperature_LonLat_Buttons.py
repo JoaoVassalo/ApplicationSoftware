@@ -706,10 +706,10 @@ class Ui_WindButton_LonLatProfile(object):
         gl.ylabel_style = {'fontsize': 9, 'color': '#08090A'}
 
         ax.annotate('Longitude', xy=(0.5, -0.08), xycoords='axes fraction',
-                    ha='center', fontsize=12, color='#08090A')
+                    ha='center', fontsize=22, color='#08090A')
 
         ax.annotate('Latitude', xy=(-0.08, 0.5), xycoords='axes fraction',
-                    ha='center', rotation=90, fontsize=12, color='#08090A')
+                    ha='center', rotation=90, fontsize=22, color='#08090A')
 
         ax.pcolormesh(lon2d, lat2d, water_temp_filtered, cmap=cmap, norm=norm,
                             shading='auto', transform=ccrs.PlateCarree())

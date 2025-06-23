@@ -763,7 +763,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         ax.quiver(lon_plot, lat_plot, u_norm[::-1], v_norm[::-1], color=colors, scale=30, transform=ccrs.PlateCarree())
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
+        cbar.set_label(f'Magnitude [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         ax.add_feature(cfeature.COASTLINE)
@@ -780,14 +780,14 @@ class Ui_WindButton_LonLatProfile(object):
         gl.left_labels = True
         gl.xlocator = plt.MultipleLocator(lon_label_step)
         gl.ylocator = plt.MultipleLocator(lat_label_step)
-        gl.xlabel_style = {'fontsize': 6, 'color': '#08090A'}
-        gl.ylabel_style = {'fontsize': 6, 'color': '#08090A'}
+        gl.xlabel_style = {'fontsize': 10, 'color': '#08090A'}
+        gl.ylabel_style = {'fontsize': 10, 'color': '#08090A'}
 
         self.ax_vec.annotate('Longitude', xy=(0.5, -0.09), xycoords='axes fraction',
-                             ha='center', fontsize=8, color='#08090A')
+                             ha='center', fontsize=12, color='#08090A')
 
         self.ax_vec.annotate('Latitude', xy=(-0.15, 0.5), xycoords='axes fraction',
-                             ha='center', rotation=90, fontsize=8, color='#08090A')
+                             ha='center', rotation=90, fontsize=12, color='#08090A')
 
         plt.title(f'{self.t_formated}', fontsize=18)
 
