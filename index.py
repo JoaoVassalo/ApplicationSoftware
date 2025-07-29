@@ -96,10 +96,12 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.showFullScreen()
-        MainWindow.setFixedSize(MainWindow.size())
 
-        # self.project = MainWindow.project
+        self._is_fullscreen = True
+        MainWindow.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.minimumWidth = 1200
+        self.minimumheigth = 800
+
         self.project = None
         self.hycom_catalogs = {f'{catalog.nome}': catalog for catalog in MainWindow.hycomCatalog}
         self.copernicus_catalogs = {f'{catalog.nome}': catalog for catalog in MainWindow.copernicusCatalog}
@@ -1640,16 +1642,24 @@ class Ui_MainWindow(object):
         self.buttonsMinimizeLayout = QHBoxLayout()
         self.minimizebutton = QPushButton()
         self.minimizebutton.setProperty("windowbuttons", True)
+        self.maximizebutton = QPushButton()
+        self.maximizebutton.setProperty("windowbuttons", True)
         self.closebutton = QPushButton()
         self.closebutton.setProperty("windowbuttons", True)
         self.buttonsMinimizeLayout.addWidget(self.minimizebutton)
+        self.buttonsMinimizeLayout.addWidget(self.maximizebutton)
         self.buttonsMinimizeLayout.addWidget(self.closebutton)
-        self.buttonsMinimizeLayout.setSpacing(5)
+        self.buttonsMinimizeLayout.setSpacing(8)
 
         icon_minimize = QIcon()
         icon_minimize.addFile(u":/icons/icons/minimize - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.minimizebutton.setIcon(icon_minimize)
         self.minimizebutton.setIconSize(QSize(16, 16))
+
+        icon_maximize = QIcon()
+        icon_maximize.addFile(u":/icons/icons/layersminimize - branco.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.maximizebutton.setIcon(icon_maximize)
+        self.maximizebutton.setIconSize(QSize(16, 16))
 
         icon_close = QIcon()
         icon_close.addFile(u":/icons/icons/cruz - branca.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -1658,7 +1668,6 @@ class Ui_MainWindow(object):
 
         self.minimizebutton.clicked.connect(MainWindow.showMinimized)
         self.closebutton.clicked.connect(MainWindow.close)
-
         self.horizontalLayout_5.addLayout(self.buttonsMinimizeLayout)
 
         self.gridLayout.addWidget(self.header_widget, 0, 2, 1, 1)
@@ -1676,6 +1685,11 @@ class Ui_MainWindow(object):
         self.CB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
         self.SB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
         self.ConfigB_1.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4))
+
+        self.DB_1.setDisabled(True)
+        self.VB_1.setDisabled(True)
+        self.CB_1.setDisabled(True)
+        self.SB_1.setDisabled(True)
 
         self.current_checked_button = None
 
@@ -1698,6 +1712,10 @@ class Ui_MainWindow(object):
         self.project = projetc_name
         self.set_combobox_files()
         self.clear_buttons_var_viewpage()
+        self.DB_1.setDisabled(False)
+        self.VB_1.setDisabled(False)
+        self.CB_1.setDisabled(False)
+        self.SB_1.setDisabled(False)
         for i in reversed(range(self.layout_for_file_forms.count())):
             widget_to_remove = self.layout_for_file_forms.itemAt(i).widget()
             if widget_to_remove:
