@@ -10,7 +10,6 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.animation import FuncAnimation
-from mpl_toolkits.basemap import Basemap
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import numpy as np
