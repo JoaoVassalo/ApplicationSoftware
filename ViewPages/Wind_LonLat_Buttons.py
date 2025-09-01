@@ -699,7 +699,7 @@ class Ui_WindButton_LonLatProfile(object):
                                          scale=30, transform=ccrs.PlateCarree())
 
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=self.ax_vec, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude dos Vetores [{self.dataset[self.u_name].attrs['units']}]', fontsize=6, color="black")
+        cbar.set_label(f"Magnitude dos Vetores [{self.dataset[self.u_name].attrs['units']}]", fontsize=6, color="black")
         cbar.ax.tick_params(labelsize=8)
         cbar.ax.yaxis.set_tick_params(color='black')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
@@ -762,7 +762,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         ax.quiver(lon_plot, lat_plot, u_norm[::-1], v_norm[::-1], color=colors, scale=30, transform=ccrs.PlateCarree())
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Magnitude [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
+        cbar.set_label(f"Magnitude [{self.dataset[self.u_name].attrs['units']}]", fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         ax.add_feature(cfeature.COASTLINE)
@@ -894,7 +894,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=self.axs,
                                       orientation='vertical', pad=0.05)
-        cbar.set_label(f'Vector magnitude [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
+        cbar.set_label(f"Vector magnitude [{self.dataset[self.u_name].attrs['units']}]", fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         u_first = self.dataset[self.u_name].sel(

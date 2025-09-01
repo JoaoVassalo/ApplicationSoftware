@@ -375,7 +375,7 @@ class Ui_WindButton_LonLatProfile(object):
         cbar.ax.yaxis.set_tick_params(color='black')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
 
-        ax.set_xlabel(f'Longitude [{self.dataset[self.lon_name].attrs['units']}]', labelpad=5, fontsize=8, color='black')
+        ax.set_xlabel(f"Longitude [{self.dataset[self.lon_name].attrs['units']}]", labelpad=5, fontsize=8, color='black')
         ax.set_ylabel('Depth [m]', labelpad=5, fontsize=8, color='black')
         ax.tick_params(axis='both', which='major', labelsize=7, color='black', labelcolor='black')
 
@@ -426,7 +426,7 @@ class Ui_WindButton_LonLatProfile(object):
         cbar.set_label(f'{self.dataset[self.temp_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
-        ax.set_xlabel(f'Longitude [{self.dataset[self.lon_name].attrs['units']}]', labelpad=20, fontsize=18)
+        ax.set_xlabel(f"Longitude [{self.dataset[self.lon_name].attrs['units']}]", labelpad=20, fontsize=18)
         ax.set_ylabel('Depth [m]', labelpad=20, fontsize=18)
         plt.tick_params(axis='both', which='major', labelsize=16)
 

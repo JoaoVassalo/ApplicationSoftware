@@ -470,7 +470,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_ylabel('Days', fontsize=18)
 
         cb = fig.colorbar(im, ax=ax, orientation='vertical')
-        cb.set_label(f'Wind velocity [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
+        cb.set_label(f"Wind velocity [{self.dataset[self.u_name].attrs['units']}]", fontsize=18)
         cb.set_ticks(np.arange(self.current_min, self.current_max, 2))
         cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(self.current_min, self.current_max, 2)])
 
@@ -552,7 +552,7 @@ class Ui_WindButton_LonLatProfile(object):
         ax.set_ylabel('Days', fontsize=8, color='black')
 
         cb = self.figure.colorbar(im, ax=ax, orientation='vertical')
-        cb.set_label(f'Wind velocity {self.dataset[self.u_name].attrs['units']}', fontsize=6, color="black")
+        cb.set_label(f"Wind velocity {self.dataset[self.u_name].attrs['units']}", fontsize=6, color="black")
         cb.set_ticks(np.arange(self.current_min, self.current_max, 2))
         cb.ax.set_yticklabels([f'{i:.2f}' for i in np.arange(self.current_min, self.current_max, 2)])
         cb.ax.tick_params(labelsize=8)
