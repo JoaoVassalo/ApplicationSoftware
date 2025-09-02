@@ -39,7 +39,7 @@ class CheckVariables(ABC):
             else:
                 self.message = (
                     'The selected dataset appears to be missing the following variables that are necessary '
-                    f'to plot the data: {', '.join(missing_values[:-1])} e {missing_values[-1]}.'
+                    f'to plot the data: {", ".join(missing_values[:-1])} e {missing_values[-1]}.'
                 )
 
         return self.message
