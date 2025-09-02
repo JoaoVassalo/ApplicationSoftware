@@ -497,7 +497,7 @@ class Ui_Form:
                 self.variables_list_for_ai = [value.replace("(mt)", f"").strip() for value in var_list_cols]
 
             novo_nome = {
-                col: col.replace("(mt)", f" {item["description"]}").strip()
+                col: col.replace("(mt)", f" {item['description']}").strip()
                 if type_ == "L" else col.replace("(mt)", f"").strip()
                 for col in df.columns
             }
