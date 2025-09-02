@@ -416,7 +416,7 @@ class Ui_WindButton_LonLatProfile(object):
         cbar.set_label(f'{self.dataset[self.sali_name].units}', fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
-        ax.set_xlabel(f'Longitude [{self.dataset[self.lon_name].attrs['units']}]', labelpad=20, fontsize=18)
+        ax.set_xlabel(f"Longitude [{self.dataset[self.lon_name].attrs['units']}]", labelpad=20, fontsize=18)
         ax.set_ylabel('Depth [m]', labelpad=20, fontsize=18)
         plt.tick_params(axis='both', which='major', labelsize=16)
 
