@@ -586,7 +586,7 @@ class Ui_WindButton_LonLatProfile(object):
         )
 
         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap=cmap), ax=axs, orientation='vertical', pad=0.05)
-        cbar.set_label(f'Vector Magnitude [{self.dataset[componente].attrs['units']}]', fontsize=18, color="black")
+        cbar.set_label(f"Vector Magnitude [{self.dataset[componente].attrs['units']}]", fontsize=18, color="black")
         cbar.ax.tick_params(labelsize=16)
         cbar.ax.yaxis.set_tick_params(color='black')
         plt.setp(plt.getp(cbar.ax.axes, 'yticklabels'), color='black')
