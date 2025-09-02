@@ -1908,8 +1908,8 @@ class Ui_MainWindow(object):
         if list_date['start'] == list_date['finish']:
             list_date['finish'] = datetime.now().date() - timedelta(weeks=1)
         '''  --------------------------------------------------------------------------------------------------  '''
-        self.fromDateEdit.setText(f'{list_date['start'].month}/{list_date['start'].day}/{list_date['start'].year}')
-        self.toDateEdit.setText(f'{list_date['finish'].month}/{list_date['finish'].day}/{list_date['finish'].year}')
+        self.fromDateEdit.setText(f"{list_date['start'].month}/{list_date['start'].day}/{list_date['start'].year}")
+        self.toDateEdit.setText(f"{list_date['finish'].month}/{list_date['finish'].day}/{list_date['finish'].year}")
         self.regionEdit.setText(region_to_info)
 
     def change_variables(self):
