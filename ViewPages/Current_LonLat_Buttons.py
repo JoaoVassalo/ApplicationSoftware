@@ -822,7 +822,7 @@ class Ui_WindButton_LonLatProfile(object):
 
         cbar = self.fig_anim.colorbar(cm.ScalarMappable(norm=self.norm_anim, cmap=self.cmap_anim), ax=self.axs,
                                       orientation='vertical', pad=0.05)
-        cbar.set_label(f'Vector magnitude [{self.dataset[self.u_name].attrs['units']}]', fontsize=18)
+        cbar.set_label(f"Vector magnitude [{self.dataset[self.u_name].attrs['units']}]", fontsize=18)
         cbar.ax.tick_params(labelsize=16)
 
         u_first = self.dataset[self.u_name].sel({self.time_name: self.time[0], self.depth_name: self.depth_selected}).values[::self.step,
